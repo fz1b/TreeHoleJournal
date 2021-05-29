@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# Project Description: Treehole
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Our project is a journal web app for the general public, particularly people needing emotional support. The goal is to create a place where people can record their moods and find someone to confide in. Users are able to create, tag, edit, and delete posts. The visibility of each post can be set to private, anonymous, or public. Anonymous and public posts can be viewed and be responded to by others.
 
-## Available Scripts
+### Who is it for?
 
-In the project directory, you can run:
+The general public (particularly people needing mental health support) who need a space to express their thoughts and ideas in a private, undisturbed space.
 
-### `yarn start`
+### What will it do? (What "human activity" will it support?)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Make private,anonymous, public posts.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Respond to others’ public posts.
 
-### `yarn test`
+Send direct messages.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### What type of data will it store?
 
-### `yarn build`
+Text, dates, and images.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### What will users be able to do with this data?
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+create/edit/delete/ change visibility.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### What is some additional functionality you can add/remove based on time Constraints?
 
-### `yarn eject`
+Add registered professional therapist access.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Project task requirements:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3-5 minimal requirements (will definitely complete)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Create static web page
+- Allow users to create, edit and delete a journal
+- User authentication
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### 3-7 "standard" requirements (will most likely complete)
 
-## Learn More
+- Allow users to include images, or locations to journals
+- Enable other users to comment on public posts
+- Find a journal written on a specific date from the calendar
+- Tag posts & filter public posts by tags
+- Control privacy settings
+- Direct messages
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 2-3 stretch requirements (plan to complete at least 1!)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Enable private chat between users
+- like/ vote/ dislike
+- Report abuse
+- Change font, background
+- Add music/video support
 
-### Code Splitting
+### Breakdown of requirements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Create static web page (Landing Page)
+    - Create nav bar
+    - Include calendar
+    - Display journals as cards
+2. Allow users to create, edit and delete a journal
+    - Construct Database
+    - Backend calls to the database: save, delete, edit, read
+3. User authentication
+- Login/Registration page
+- Database security (hashing)
+- Back-end authentication algorithm
 
-### Analyzing the Bundle Size
+## Sketch prototypes of some key tasks of your app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[https://lh5.googleusercontent.com/rNwf0Pg2X7CRhE-UIkkuPKdyATHj3CAauCD2y1M6K0YmwrHIERXOmQhr6vWH4qpRekIleVxe1o8i2tKbhhzdcMUTS8KDAZzxhXazlJvx8OF9Qz4CtuMeN26XhqZX5PQqCKFXYuOx](https://lh5.googleusercontent.com/rNwf0Pg2X7CRhE-UIkkuPKdyATHj3CAauCD2y1M6K0YmwrHIERXOmQhr6vWH4qpRekIleVxe1o8i2tKbhhzdcMUTS8KDAZzxhXazlJvx8OF9Qz4CtuMeN26XhqZX5PQqCKFXYuOx)
