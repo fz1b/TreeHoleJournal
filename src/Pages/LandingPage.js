@@ -1,10 +1,13 @@
 import {Component} from "react";
+import CardHolder from "../Components/CardHolder";
 
 
 export class LandingPage extends Component{
     render(){
         return(
-            <h1>Landing Page</h1>
+            <div className='LandingPage'>
+                <CardHolder databaseFlag=''/>
+            </div>
         )
     }
 }
