@@ -14,9 +14,9 @@ export class CardHolder extends Component{
     render() {
         return (
             <div className='CardHolder'>
-                {this.state.journals.map((journal,index)=>{
+                {this.state.journals.map((journal)=>{
                     return (
-                        <Card journal={journal}/>
+                        <Card journal={journal} id={journal.uniqueID}/>
                     )
                 })}
             </div>
@@ -28,18 +28,28 @@ export class CardHolder extends Component{
         // TODO: implement the function to pull data from the database
         let newDatabase = [
             {
+                uniqueID: '111',
                 Title: 'The First Journal',
-                Date: '',
+                Date: '2021.06.03',
                 EditDate: '',
-                CoverImage: 'https://news.ubc.ca/wp-content/uploads/2019/04/UBC.jpg',
+                CoverImage: 'https://media.sproutsocial.com/uploads/2018/04/Facebook-Cover-Photo-Size.png',
                 Content: 'This is the first Journal',
             },
             {
+                uniqueID: '222',
                 Title: 'The Second Journal',
+                Date: '2021.06.03',
+                EditDate: '',
+                CoverImage: '',
+                Content: 'This is the Second Journal',
+            },
+            {
+                uniqueID: '333',
+                Title: 'The Third Journal',
                 Date: '',
                 EditDate: '',
-                CoverImage: 'https://applyzones.com/uploads/schools/university-of-british-columbia-ubc/az-university-of-british-columbia-3.jpg',
-                Content: 'This is the Second Journal',
+                CoverImage: 'https://media.sproutsocial.com/uploads/2018/04/Facebook-Cover-Photo-Size.png',
+                Content: 'This is the Third Journal',
             },
         ];
         return newDatabase;
