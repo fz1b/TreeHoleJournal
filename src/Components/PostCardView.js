@@ -5,6 +5,6 @@ export class PostCardView extends Component{
 
 
     render(){
-
+        return <h1>Card</h1>
     }
 }
