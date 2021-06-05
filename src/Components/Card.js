@@ -16,7 +16,7 @@ function Card(props){
             <p className='JournalDate'>{props.journal.Date}</p>
             {
                 hasCoverImage &&
-                <img src={props.journal.CoverImage}  onError={(e)=>{e.target.src = Constants.BROKEN_IMAGE}} />
+                <img src={props.journal.CoverImage} alt='Image Not Available'  onError={(e)=>{e.target.src = Constants.BROKEN_IMAGE}} />
             }
             {
                 hasCoverImage &&
