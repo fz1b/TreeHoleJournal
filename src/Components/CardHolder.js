@@ -2,6 +2,7 @@ import {Component} from "react";
 import Card from "./Card";
 
 // Properties: database_flag
+// a container to hold journal cards
 export class CardHolder extends Component{
     constructor(props) {
         super(props);
@@ -27,6 +28,7 @@ export class CardHolder extends Component{
         )
     };
 
+    // pull all journals from the database
     pullFromDatabase(databaseFlag) {
         // fake database for now
         // TODO: implement the function to pull data from the database
@@ -75,6 +77,7 @@ export class CardHolder extends Component{
         return newDatabase;
     };
 
+    // delete a journal from the database
     deleteJournal(index) {
         // delete from fake database for now
         // TODO: implement the function to delete data from the database

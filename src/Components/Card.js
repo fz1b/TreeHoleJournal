@@ -1,9 +1,11 @@
 import {Component, useState} from "react";
 import Constants from "../Constants";
+import FullJournal from "./FullJournal";
 
 
 function Card(props){
     const [hasCoverImage, setHasCoverImage] = useState(true);
+    const [showFullJournal, setShowFullJournal] = useState(false);
 
     // make sure hasCoverImage flag agrees with the journal
     if (hasCoverImage !== props.journal.CoverImage){
@@ -16,7 +18,9 @@ function Card(props){
             <p className='JournalDate'>{props.journal.Date}</p>
             {
                 hasCoverImage &&
-                <img src={props.journal.CoverImage} alt='Image Not Available'  onError={(e)=>{e.target.src = Constants.BROKEN_IMAGE}} />
+                <img src={props.journal.CoverImage}
+                     alt='Image Not Available'
+                     onError={(e)=>{e.target.src = Constants.BROKEN_IMAGE}} />
             }
             {
                 hasCoverImage &&
@@ -26,8 +30,16 @@ function Card(props){
                 !hasCoverImage &&
                 <p className='JournalContentOnly'>{props.journal.Content}</p>
             }
-            <button type='button' className='ReadMore'>Read</button>
-            <button type='button' onClick={props.deleteJournal} className='DeleteJournal'>Delete</button>
+            <button type='button'
+                    className='ReadMore'
+                    onClick={()=>setShowFullJournal(!showFullJournal)} >
+                Read</button>
+            <button type='button' className='DeleteJournal' onClick={props.deleteJournal} >Delete</button>
+
+            {
+                showFullJournal &&
+                <FullJournal/>
+            }
         </div>
     )
 }
