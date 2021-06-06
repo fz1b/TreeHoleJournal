@@ -2,7 +2,7 @@ import {Component, useState} from "react";
 import Constants from "../Constants";
 import FullJournal from "./FullJournal";
 
-
+// card view for individual journals
 function Card(props){
     const [hasCoverImage, setHasCoverImage] = useState(true);
     const [showFullJournal, setShowFullJournal] = useState(false);
@@ -44,7 +44,9 @@ function Card(props){
                 showFullJournal &&
                 <FullJournal journal={props.journal}
                              hasCoverImage={hasCoverImage}
-                             closePopup={()=>setShowFullJournal(!showFullJournal)}/>
+                             closePopup={()=>setShowFullJournal(!showFullJournal)}
+                             editJournal={props.editJournal}
+                             deleteJournal={props.deleteJournal}/>
             }
         </div>
     )
