@@ -19,7 +19,7 @@ function Card(props){
             {
                 hasCoverImage &&
                 <img src={props.journal.CoverImage}
-                     alt='Image Not Available'
+                     alt='Not Available'
                      onError={(e)=>{e.target.src = Constants.BROKEN_IMAGE}} />
             }
             {
@@ -34,11 +34,17 @@ function Card(props){
                     className='ReadMore'
                     onClick={()=>setShowFullJournal(!showFullJournal)} >
                 Read</button>
-            <button type='button' className='DeleteJournal' onClick={props.deleteJournal} >Delete</button>
+
+            <button type='button'
+                    className='DeleteJournal'
+                    onClick={props.deleteJournal} >
+                Delete</button>
 
             {
                 showFullJournal &&
-                <FullJournal/>
+                <FullJournal journal={props.journal}
+                             hasCoverImage={hasCoverImage}
+                             closePopup={()=>setShowFullJournal(!showFullJournal)}/>
             }
         </div>
     )
