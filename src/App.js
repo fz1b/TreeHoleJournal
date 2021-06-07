@@ -11,9 +11,9 @@ import {
 function App() {
   return (
       <Router>
-          <switch>
+          <Switch>
               <Route exact path='/' component={LandingPage}/>
-          </switch>
+          </Switch>
       </Router>
   );
 }
