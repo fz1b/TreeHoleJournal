@@ -33,3 +33,13 @@
   border: 1px solid #f0f0f0;
   border-radius: 2px;
 }
+.pro-sidebar{
+  height:100vh !important;
+  position: fixed !important;
+}
+.pro-sidebar-inner{
+  background:#3c7791 !important;
+}
+.pro-icon-wrapper{
+  background-color: none !important;
+}
