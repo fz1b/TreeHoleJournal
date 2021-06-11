@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './calenderStyle.css'
-function Calender(){
+function MyCalendar(){
   const [value, onChange] = useState(new Date());
 return(
   <div>
@@ -13,4 +13,4 @@ return(
   </div>
 );
 }
-export default Calender
+export default MyCalendar
