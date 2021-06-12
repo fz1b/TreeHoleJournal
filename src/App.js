@@ -1,6 +1,5 @@
-
-import './App.css';
-import {LandingPage} from "./Pages/LandingPage";
+import {LandingPage} from "./pages/LandingPage";
+import 'semantic-ui-css/semantic.min.css'
 import {
     BrowserRouter as Router,
     Switch,
