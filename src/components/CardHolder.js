@@ -1,9 +1,8 @@
 import { Component } from "react";
-import Product from "./Feelings";
+import Feelings from "../components/Feelings";
 import products from "../feelings";
 import DatabaseHandler from "../DatabaseHandler";
 import { Container, Col, Row } from "react-bootstrap";
-import Modal from "./Modal"
 
 // Properties: database_flag
 // a container to hold journal cards
@@ -15,10 +14,6 @@ export class CardHolder extends Component {
       journals: this.pullFromDatabase(this.databaseFlag),
       list: products,
     };
-  }
-
-  removeAll() {
-    this.setState({ list: [] });
   }
 
   remove(index) {
@@ -48,10 +43,10 @@ export class CardHolder extends Component {
       <>
         <Container>
           <Row>
-            {this.state.list.map((product, index) => (
-                <Col key = {product._id} sm={12} md={6} lg={6}>
-                <Product
-                product={product}
+            {this.state.list.map((f, index) => (
+                <Col key = {f._id} sm={12} md={6} lg={6}>
+                <Feelings
+                feelings={f}
                 removeItem={this.remove.bind(this, index)}
               />
                 </Col>

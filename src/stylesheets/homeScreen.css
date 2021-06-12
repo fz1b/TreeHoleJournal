@@ -61,14 +61,6 @@ div.card img.crop {
   object-fit: cover;
 }
 
-ul {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 0;
-}
-
 /* ================Flexbox====================== */
 
 #title {
