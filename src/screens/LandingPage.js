@@ -1,9 +1,9 @@
 import { Component } from "react";
-import CardHolder from "../tmp2/CardHolder";
-import MyCalendar from "../tmp2/MyCalendar";
-import Header from "../tmp2/Header";
+import CardHolder from "../components/CardHolder";
+import MyCalendar from "../components/MyCalendar";
+import Header from "../components/Header";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
-import InputForm from "../tmp2/InputForm";
+import InputForm from "../components/InputForm";
 
 export class LandingPage extends Component {
   render() {

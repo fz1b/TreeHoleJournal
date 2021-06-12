@@ -1,4 +1,4 @@
-import {LandingPage} from "./tmp/LandingPage";
+import {LandingPage} from "./screens/LandingPage";
 import 'semantic-ui-css/semantic.min.css'
 import {
     BrowserRouter as Router,
