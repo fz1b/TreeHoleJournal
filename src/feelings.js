@@ -1,52 +1,55 @@
 const products = [
   {
-    name: "Lorem Ipsum",
-    image: "https://dummyimage.com/640x360/fff/aaa",
+    name: "Sunset Painting",
+    image: "https://feelingnifty.com/wp-content/uploads/2020/04/Sunset-cityscape-painting-tutorial.png",
     weather: "sunny",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce laoreet pulvinar neque, dignissim aliquam lorem commodo in. Nam interdum tincidunt lorem quis interdum. Suspendisse ut sagittis augue, at aliquam enim. Mauris at ultricies eros. Mauris sed tristique leo, ac iaculis eros. Mauris odio arcu, varius a risus in, ullamcorper semper libero. Curabitur eget pulvinar ante. Nulla sed imperdiet lectus. Vestibulum scelerisque magna nec dui suscipit tincidunt. Morbi ut ullamcorper nisi.",
+      "Painting brings me happiness. Enjoy this sunset cityscape!",
   },
   {
-    name: "Lorem Ipsum",
-    image: "https://dummyimage.com/640x360/fff/aaa",
+    name: "Sweet Dessert",
+    image: "https://afoodcentriclife.com/wp-content/uploads/2018/12/vanilla-bean-creme-brulee-34.jpg",
     weather: "sunny",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce laoreet pulvinar neque, dignissim aliquam lorem commodo in. Nam interdum tincidunt lorem quis interdum. Suspendisse ut sagittis augue, at aliquam enim. Mauris at ultricies eros. Mauris sed tristique leo, ac iaculis eros. Mauris odio arcu, varius a risus in, ullamcorper semper libero. Curabitur eget pulvinar ante. Nulla sed imperdiet lectus. Vestibulum scelerisque magna nec dui suscipit tincidunt. Morbi ut ullamcorper nisi.",
+      "Creme Brulee - fairy tale of the kitchen, my favorite!",
   },
   {
-    name: "Lorem Ipsum",
-    image: "https://dummyimage.com/640x360/fff/aaa",
+    name: "Beach and Sunshine",
+    image: "https://www.metasport.live/wp-content/uploads/2020/05/Mooloolaba.jpg",
     weather: "sunny",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce laoreet pulvinar neque, dignissim aliquam lorem commodo in. Nam interdum tincidunt lorem quis interdum. Suspendisse ut sagittis augue, at aliquam enim. Mauris at ultricies eros. Mauris sed tristique leo, ac iaculis eros. Mauris odio arcu, varius a risus in, ullamcorper semper libero. Curabitur eget pulvinar ante. Nulla sed imperdiet lectus. Vestibulum scelerisque magna nec dui suscipit tincidunt. Morbi ut ullamcorper nisi.",
+      "Live the sunshine, swim the sea, drink the wild air!",
   },
   {
-    name: "Lorem Ipsum",
-    image: "https://dummyimage.com/640x360/fff/aaa",
+    name: "Butchart Gardens",
+    image: "https://t4.ftcdn.net/jpg/01/95/24/65/360_F_195246518_hoWMZgY4HKfi6qAgBubzObQsgPSZKKDr.jpg",
     weather: "sunny",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce laoreet pulvinar neque, dignissim aliquam lorem commodo in. Nam interdum tincidunt lorem quis interdum. Suspendisse ut sagittis augue, at aliquam enim. Mauris at ultricies eros. Mauris sed tristique leo, ac iaculis eros. Mauris odio arcu, varius a risus in, ullamcorper semper libero. Curabitur eget pulvinar ante. Nulla sed imperdiet lectus. Vestibulum scelerisque magna nec dui suscipit tincidunt. Morbi ut ullamcorper nisi.",
+    description:"So many beautiful spots to explore~"
   },
   {
-    name: "Lorem Ipsum",
-    image: "https://dummyimage.com/640x360/fff/aaa",
+    name: "Gyu-Kaku Japanese BBQ",
+    image: "https://wpcdn.us-midwest-1.vip.tn-cloud.net/www.charlottemagazine.com/content/uploads/2020/02/grill_1901-1.jpg",
     weather: "sunny",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce laoreet pulvinar neque, dignissim aliquam lorem commodo in. Nam interdum tincidunt lorem quis interdum. Suspendisse ut sagittis augue, at aliquam enim. Mauris at ultricies eros. Mauris sed tristique leo, ac iaculis eros. Mauris odio arcu, varius a risus in, ullamcorper semper libero. Curabitur eget pulvinar ante. Nulla sed imperdiet lectus. Vestibulum scelerisque magna nec dui suscipit tincidunt. Morbi ut ullamcorper nisi.",
+    description:"Food is amazing and it's pretty fun to grill it up yourself. Recommend!"
   },
   {
-    name: "Lorem Ipsum",
-    image: "https://dummyimage.com/640x360/fff/aaa",
+    name: "UBC Koerner Library",
+    image: "https://www.grad.ubc.ca/sites/default/files/image/news/koerner-library-evening-767x479-credit-don-erhardt.jpg",
     weather: "sunny",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce laoreet pulvinar neque, dignissim aliquam lorem commodo in. Nam interdum tincidunt lorem quis interdum. Suspendisse ut sagittis augue, at aliquam enim. Mauris at ultricies eros. Mauris sed tristique leo, ac iaculis eros. Mauris odio arcu, varius a risus in, ullamcorper semper libero. Curabitur eget pulvinar ante. Nulla sed imperdiet lectus. Vestibulum scelerisque magna nec dui suscipit tincidunt. Morbi ut ullamcorper nisi.",
+    description:"Yes! One of those wide-awake study nights at UBC."
   },
   {
-    name: "Lorem Ipsum",
-    image: "https://dummyimage.com/640x360/fff/aaa",
+    name: "Lake Louise National Park",
+    image: "https://res.cloudinary.com/rocimages/image/upload/s--12Driihv--/images/banff-lake-louise/3401/gallery/lake-louise-inn-912910_gallery.jpg",
     weather: "sunny",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce laoreet pulvinar neque, dignissim aliquam lorem commodo in. Nam interdum tincidunt lorem quis interdum. Suspendisse ut sagittis augue, at aliquam enim. Mauris at ultricies eros. Mauris sed tristique leo, ac iaculis eros. Mauris odio arcu, varius a risus in, ullamcorper semper libero. Curabitur eget pulvinar ante. Nulla sed imperdiet lectus. Vestibulum scelerisque magna nec dui suscipit tincidunt. Morbi ut ullamcorper nisi.",
+      "The weather is perfect and the scenery is totally stunning. I never get bored of visiting, always something new to discover!",
+  },
+  {
+    name: "Vancouver Aquarium",
+    image: "https://blooloop.com/wp-content/uploads/2021/04/vancouver-aquarium-herschend-768x480.jpeg",
+    weather: "sunny",
+    description:"Sea otters are so lovely and smart~"
   }
 ];
 export default products;
