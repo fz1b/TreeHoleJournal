@@ -11,19 +11,19 @@ export default function Product(props) {
 
   return (
     <div className="card">
-      <img className="crop" src={props.product.image} />
+      <img className="crop" src={props.feelings.image} />
       <div className="card-container">
         <h4 className="gradient">
-          <b>{props.product.name}</b>
+          <b>{props.feelings.name}</b>
         </h4>
-        <p>{props.product.location}</p>
+        <p>{props.feelings.weather}</p>
         <button onClick={() => showDetails()} className="ui mini button">
           More Info
         </button>
         <button onClick={() => props.removeItem()} className="ui negative button mini">
           Delete
         </button>
-        {show && <Modal details={props.product} action={showDetails}/>}
+        {show && <Modal details={props.feelings} action={showDetails}/>}
       </div>
     </div>
   );
