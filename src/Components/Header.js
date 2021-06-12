@@ -178,8 +178,8 @@ export default function PrimarySearchAppBar() {
 
     return (
         <ThemeProvider theme={theme}>
-            <div className={classes.grow} position="sticky">
-                <AppBar>
+            <div className={classes.grow}>
+                <AppBar classes={classes.positionSticky}>
                     <Toolbar>
                         <IconButton
                             edge="start"
