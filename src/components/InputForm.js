@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../stylesheets/inputForm.css";
 
 export default function InputForm(prop) {
   const [name, setName] = useState("");
