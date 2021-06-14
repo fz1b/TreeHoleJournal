@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
+import Box from '@material-ui/core/Box';
 
-export default function Product(props) {
+
+export default function Feelings(props) {
+
   const [show, setShow] = useState(false);
 
   const showDetails = () => {
@@ -58,15 +62,10 @@ export default function Product(props) {
       <CardContainer>
         <EntryTitle>{props.feelings.name}</EntryTitle>
         <Weather>{props.feelings.weather}</Weather>
-        <button onClick={() => showDetails()} className="ui mini button">
+        <Button onClick={() => showDetails()} variant="outlined" size="small" >
           More Info
-        </button>
-        <button
-          onClick={() => props.removeItem()}
-          className="ui negative button mini"
-        >
-          Delete
-        </button>
+        </Button>
+        <Button onClick={() => props.removeItem()} variant="contained" color="secondary" size="small">Delete</Button>
         {show && <Modal details={props.feelings} action={showDetails} />}
       </CardContainer>
     </Card>
