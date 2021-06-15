@@ -16,7 +16,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
-import { Button } from 'react-bootstrap';
+import Button from "@material-ui/core/Button";
 
 const drawerWidth = 240;
 
@@ -111,6 +111,13 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
+    loginButton: {
+        color: 'inherit',
+        size: 'medium',
+        [theme.breakpoints.up('sm')]: {
+            fontSize: '1.25rem',
+        },
+    },
     headerBottomMargin: theme.mixins.toolbar,
 }));
 
@@ -130,6 +137,7 @@ export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+    // TODO: endpoint to connect to authentication
     const isLoggedIn = false;
 
     const handleDrawerOpen = () => {
@@ -217,6 +225,45 @@ export default function PrimarySearchAppBar() {
         </Menu>
     );
 
+    const appBarRightSideDesktop = (
+        <div className={classes.sectionDesktop}>
+            <IconButton aria-label="show 4 new mails" color="inherit">
+                <Badge badgeContent={4} color="secondary">
+                    <MailIcon />
+                </Badge>
+            </IconButton>
+            <IconButton aria-label="show 17 new notifications" color="inherit">
+                <Badge badgeContent={17} color="secondary">
+                    <NotificationsIcon />
+                </Badge>
+            </IconButton>
+            <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+            >
+                <AccountCircle />
+            </IconButton>
+        </div>
+    );
+
+    const appBarRightSideMobile = (
+        <div className={classes.sectionMobile}>
+            <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+            >
+                <MoreIcon />
+            </IconButton>
+        </div>
+    );
+
     return (
         <ThemeProvider theme={theme}>
             <div className={`${classes.grow} ${classes.root}`}>
@@ -239,79 +286,51 @@ export default function PrimarySearchAppBar() {
                         <Typography className={classes.titleMd} variant="h4" noWrap>
                             TreeHole
                         </Typography>
-                        <Typography 
-                            className={classes.titleSm} 
+                        <Typography
+                            className={classes.titleSm}
                             variant="h6" noWrap
-                            style={{paddingLeft:'1.5rem'}}>
+                            style={{ paddingLeft: '1.5rem' }}>
                             My Journals
                         </Typography>
-                        {!open && 
-                        (<div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <IconButton
-                                    edge="start"
-                                    className={classes.menuButton}
-                                    color="inherit"
-                                    aria-label="open drawer"
-                                    onClick={() => console.log("hh")}
-                                >
-                                    <SearchIcon />
-                                </IconButton>
-                            </div>
-                            <InputBase
-                                placeholder="Search…"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </div>)}
-                        
+                        {!open &&
+                            (<div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <IconButton
+                                        edge="start"
+                                        className={classes.menuButton}
+                                        color="inherit"
+                                        aria-label="open drawer"
+                                        onClick={() => console.log("hh")}
+                                    >
+                                        <SearchIcon />
+                                    </IconButton>
+                                </div>
+                                <InputBase
+                                    placeholder="Search…"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                />
+                            </div>)}
+
                         <div className={classes.grow} />
-                        <div className={classes.sectionDesktop}>
-                            <IconButton aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="secondary">
-                                    <MailIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton aria-label="show 17 new notifications" color="inherit">
-                                <Badge badgeContent={17} color="secondary">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
-                        </div>
-                        <div className={classes.sectionMobile}>
-                            <IconButton
-                                aria-label="show more"
-                                aria-controls={mobileMenuId}
-                                aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
-                                color="inherit"
-                            >
-                                <MoreIcon />
-                            </IconButton>
-                        </div>
+
+                        {isLoggedIn && appBarRightSideDesktop}
+                        {isLoggedIn && appBarRightSideMobile}
+                        {!isLoggedIn && 
+                            <Button className={classes.loginButton}>LOGIN</Button>
+                        }
+
                     </Toolbar>
                 </AppBar>
+
                 {isLoggedIn && renderMobileMenu}
                 {isLoggedIn && renderMenu}
-                {!isLoggedIn && 
-                    <Button color='inherit' size='large'>LOGIN</Button>
-                }
 
                 <div className={classes.headerBottomMargin} />
-                <LeftNavBarDrawer dWidth = {drawerWidth} open={open} onClose={handleDrawerClose}/>
+                <LeftNavBarDrawer dWidth={drawerWidth} open={open} onClose={handleDrawerClose} />
             </div>
         </ThemeProvider>
     );
