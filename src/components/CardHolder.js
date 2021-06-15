@@ -49,7 +49,7 @@ export class CardHolder extends Component {
           spacing={1}
         >
           {this.state.list.map((f, index) => (
-            <Grid item md={3}>
+            <Grid item md={4}>
               <Feelings
                 feelings={f}
                 removeItem={this.remove.bind(this, index)}

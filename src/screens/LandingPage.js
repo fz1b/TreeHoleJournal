@@ -1,8 +1,6 @@
 import { Component } from "react";
 import CardHolder from "../components/CardHolder";
-import MyCalendar from "../components/MyCalendar";
 import Header from "../components/Header";
-import { ListGroup } from "react-bootstrap";
 import {Grid, Box} from "@material-ui/core";
 import InputForm from "../components/InputForm";
 
