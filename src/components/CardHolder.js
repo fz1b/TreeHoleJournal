@@ -2,7 +2,7 @@ import { Component } from "react";
 import Feelings from "../components/Feelings";
 import products from "../feelings";
 import DatabaseHandler from "../DatabaseHandler";
-import { Container, Col, Row } from "react-bootstrap";
+import Grid from "@material-ui/core/Grid";
 
 // Properties: database_flag
 // a container to hold journal cards
@@ -41,19 +41,22 @@ export class CardHolder extends Component {
   render() {
     return (
       <>
-        <Container>
-          <Row>
-            {this.state.list.map((f, index) => (
-                <Col key = {f._id} sm={12} md={6} lg={6}>
-                <Feelings
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+          spacing={1}
+        >
+          {this.state.list.map((f, index) => (
+            <Grid item md={3}>
+              <Feelings
                 feelings={f}
                 removeItem={this.remove.bind(this, index)}
               />
-                </Col>
-              
-            ))}
-          </Row>
-        </Container>
+            </Grid>
+          ))}
+        </Grid>
       </>
     );
   }

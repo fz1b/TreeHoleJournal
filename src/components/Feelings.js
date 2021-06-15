@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Modal from "./Modal";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import Box from '@material-ui/core/Box';
 
 
 export default function Feelings(props) {
