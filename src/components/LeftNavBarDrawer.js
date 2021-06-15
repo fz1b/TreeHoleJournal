@@ -48,7 +48,7 @@ export default function LeftNavBarDrawer(props) {
       color: theme.palette.primary.contrastText,
     },
     title: {
-      paddingRight:'8.5rem',
+      paddingRight:'7rem',
       color: theme.palette.primary.contrastText,
   },
   }));
