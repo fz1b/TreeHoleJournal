@@ -1,8 +1,7 @@
 import { Component } from "react";
 import CardHolder from "../components/CardHolder";
-import MyCalendar from "../components/MyCalendar";
 import Header from "../components/Header";
-import { Container, Row, Col, ListGroup } from "react-bootstrap";
+import {Grid, Box} from "@material-ui/core";
 import InputForm from "../components/InputForm";
 
 export class LandingPage extends Component {
@@ -10,23 +9,23 @@ export class LandingPage extends Component {
     return (
       <div className="LandingPage">
         <Header />
-        <Container>
-          <Row>
-            <Col md={3}>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <MyCalendar />
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <InputForm />
-                </ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col md={9}>
-              <CardHolder databaseFlag="" />
-            </Col>
-          </Row>
-        </Container>
+        <Grid container>
+          <Grid
+            container
+            direction="column"
+            alignItems="flex-start"
+            spacing={2}
+            md={3}
+          >
+
+            <Box m={7}>
+            <InputForm />
+            </Box>
+          </Grid>
+          <Grid md={9}>
+            <CardHolder databaseFlag="" />
+          </Grid>
+        </Grid>
       </div>
     );
   }

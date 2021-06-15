@@ -1,62 +1,103 @@
 import React, { useState } from "react";
-import "../stylesheets/inputForm.css";
+import { makeStyles } from "@material-ui/core/styles";
+import { MenuItem, Button, Grid, TextField } from "@material-ui/core/";
+
+import DatePicker from "./DatePicker";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiTextField-root": {
+      margin: theme.spacing(1),
+      width: "25ch",
+    },
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+}));
 
 export default function InputForm(prop) {
-  const [name, setName] = useState("");
-  const [weather, setLocation] = useState("");
+  const classes = useStyles();
+
+  const [title, setTitle] = useState("");
+  const [weather, setWeather] = useState("");
   const [description, setDescription] = useState("");
-  const [url, setURL] = useState("");
+  const [date, setDate] = useState("");
 
   const clearState = (e) => {
     e.preventDefault();
-    setName("");
-    setLocation("");
+    setTitle("");
+    setTitle("");
     setDescription("");
-    setURL("");
+    setDate("");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    prop.action(name, weather, url, description);
-    clearState(e)
-  };
+  const weathers = [
+    {
+      value: "Sunny",
+      label: "$",
+    },
+    {
+      value: "Cloudy",
+      label: "€",
+    },
+    {
+      value: "Rainy",
+      label: "฿",
+    },
+    {
+      value: "Snowy",
+      label: "¥",
+    },
+  ];
 
   return (
     <>
-    <div className = "title"> New entry</div>
-    <form className="ui form settings" style={{ width: 400 }}>
-      <div className="field">
-        <label>Name</label>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-        />
-      </div>
-      <div className="field">
-        <label>Weather</label>
-        <input
-          value={weather}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="Location"
-        />
-      </div>
-      <div className="field">
-        <label>Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Tell yourself about how you feel..."
-          rows="3"
-        ></textarea>
-      </div>
-      <button onClick={handleSubmit} type="submit" className="submit ui button">
-        Submit
-      </button>
-      <button onClick={clearState} className="ui button">
-        Reset
-      </button>
-    </form>
+      <form className={classes.root} noValidate autoComplete="off">
+        <Grid container>
+          <Grid item xs={6}>
+            <TextField
+              required
+              id="entry-title-required"
+              label="Required"
+              defaultValue="Hello World"
+              variant="outlined"
+              helperText="Please pick a title for your entry"
+            />
+            <TextField
+              id="standard-select-weather"
+              select
+              label="Select"
+              value={weather}
+              variant="outlined"
+              helperText="Please select the weather around you"
+            >
+              {weathers.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <DatePicker name="date" label="Date" value={date} />
+
+            <TextField
+              id="outlined-multiline-static"
+              label="Multiline"
+              multiline
+              rows={4}
+              variant="outlined"
+            />
+
+            <Button
+              onClick={clearState}
+              className={classes.margin}
+              variant="contained"
+            >
+              Clear
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
     </>
   );
 }
