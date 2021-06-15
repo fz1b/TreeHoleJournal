@@ -16,6 +16,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
+import { Button } from 'react-bootstrap';
 
 const drawerWidth = 240;
 
@@ -129,6 +130,7 @@ export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+    const isLoggedIn = false;
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -302,8 +304,11 @@ export default function PrimarySearchAppBar() {
                         </div>
                     </Toolbar>
                 </AppBar>
-                {renderMobileMenu}
-                {renderMenu}
+                {isLoggedIn && renderMobileMenu}
+                {isLoggedIn && renderMenu}
+                {!isLoggedIn && 
+                    <Button color='inherit' size='large'>LOGIN</Button>
+                }
 
                 <div className={classes.headerBottomMargin} />
                 <LeftNavBarDrawer dWidth = {drawerWidth} open={open} onClose={handleDrawerClose}/>
