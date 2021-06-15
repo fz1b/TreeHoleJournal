@@ -18,6 +18,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
 import Button from "@material-ui/core/Button";
 
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -137,6 +138,7 @@ export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+  
     // TODO: endpoint to connect to authentication
     const isLoggedIn = false;
 
