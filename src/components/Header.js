@@ -16,7 +16,6 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
-import { yellow } from '@material-ui/core/colors';
 
 const drawerWidth = 240;
 
