@@ -1,4 +1,5 @@
 import {LandingPage} from "./screens/LandingPage";
+import Login from "./screens/Login";
 import {
     BrowserRouter as Router,
     Switch,
@@ -11,6 +12,7 @@ function App() {
       <Router>
           <Switch>
               <Route exact path='/' component={LandingPage}/>
+              <Route exact path='/Login' component={Login}/>
           </Switch>
       </Router>
   );
