@@ -125,11 +125,11 @@ const useStyles = makeStyles((theme) => ({
 const theme = createMuiTheme({
     palette: {
         primary: {
-            light: '#b3d7e8',
-            main: '#3c7891',
-            dark: '#2a5365',
-            contrastText: '#fff',
-        }
+            light:'#95CED1',
+            main:'#50A9C1',
+            dark:'#3C7891',
+            contrastText: "#fff"
+        },
     },
 });
 
@@ -140,7 +140,7 @@ export default function PrimarySearchAppBar() {
     const [open, setOpen] = useState(false);
   
     // TODO: endpoint to connect to authentication
-    const isLoggedIn = false;
+    const isLoggedIn = true;
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -181,8 +181,8 @@ export default function PrimarySearchAppBar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleMenuClose}>My Profile</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
         </Menu>
     );
 
