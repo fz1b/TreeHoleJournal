@@ -1,5 +1,5 @@
-import React from 'react';
 import clsx from 'clsx';
+import { useState } from 'react';
 import { fade, makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -135,9 +135,9 @@ const theme = createMuiTheme({
 
 export default function PrimarySearchAppBar() {
     const classes = useStyles();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-    const [open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+    const [open, setOpen] = useState(false);
   
     // TODO: endpoint to connect to authentication
     const isLoggedIn = false;
