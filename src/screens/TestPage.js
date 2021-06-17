@@ -1,13 +1,13 @@
 import Button from '@material-ui/core/Button';
-import theme from '../theme.js'
+import customizedTheme from '../customizedTheme.js'
 import { ThemeProvider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import GlobalCss from '../GlobalCss'
 function TestPage(){
-    console.log(theme)
+    console.log(customizedTheme)
 return(
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={customizedTheme}>
         <Button variant="outlined" color='primary'>Login</Button>
         <Button variant="contained" color='primary'>Login</Button>
         <TextField id="outlined-basic"  variant="outlined" size="small" />
