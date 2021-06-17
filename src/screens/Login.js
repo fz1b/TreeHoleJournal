@@ -6,14 +6,15 @@ import {
 } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import login_image from '../login_image.png'
-import {useStyles, StyledTextField, themePalette} from '../stylesheets/LoginStyle'
+import {useStyles, StyledTextField} from '../stylesheets/LoginStyle'
+import theme from '../theme'
 
 
 export default function Login() {
     const classes = useStyles();
 
     return (
-        <ThemeProvider theme={themePalette}>
+        <ThemeProvider theme={theme}>
             <CssBaseline />
             <div className={classes.background}>
                 <div className={classes.main}>

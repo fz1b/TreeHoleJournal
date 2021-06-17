@@ -1,22 +1,8 @@
 import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
 import login_background from "../login_background.png";
 import {TextField, withStyles} from "@material-ui/core";
+import {default as colorTheme} from '../theme'
 
-const colorTheme = {
-    light: '#F7D799',
-    main: '#50A9C1',
-    dark: '#376071',
-}
-const themePalette = createMuiTheme({
-    palette: {
-        primary: {
-            light: colorTheme.light,
-            main: colorTheme.main,
-            dark: colorTheme.dark,
-            contrastText: '#fff',
-        }
-    },
-});
 const useStyles = makeStyles((theme) => ({
     background: {
         backgroundPosition: "center center",
@@ -61,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '20%',
     },
     input_label: {
-        color: colorTheme.dark,
+        color: colorTheme.palette.primary.dark,
     },
     form: {
         width: '100%',
@@ -81,28 +67,28 @@ const useStyles = makeStyles((theme) => ({
 const StyledTextField = withStyles({
     root: {
         '& label.Mui-focused': {
-            color: colorTheme.dark,
+            color: colorTheme.palette.primary.dark,
             borderWidth:'2px'
         },
         '& .MuiInput-underline:after': {
-            borderBottomColor: colorTheme.main,
+            borderBottomColor: colorTheme.palette.primary.main,
             borderWidth:'2px'
         },
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
-                borderColor: colorTheme.main,
+                borderColor: colorTheme.palette.primary.main,
                 borderWidth:'2px'
             },
             '&:hover fieldset': {
-                borderColor: colorTheme.dark,
+                borderColor: colorTheme.palette.primary.dark,
                 borderWidth:'2px'
             },
             '&.Mui-focused fieldset': {
-                borderColor: colorTheme.dark,
+                borderColor: colorTheme.palette.primary.dark,
                 borderWidth:'2px'
             },
         },
     },
 })(TextField);
 
-export {useStyles, StyledTextField, colorTheme, themePalette}
+export {useStyles, StyledTextField}
