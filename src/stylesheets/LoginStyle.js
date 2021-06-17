@@ -1,7 +1,7 @@
 import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
 import login_background from "../login_background.png";
 import {TextField, withStyles} from "@material-ui/core";
-import {default as colorTheme} from '../theme'
+import customizedTheme from '../customizedTheme'
 
 const useStyles = makeStyles((theme) => ({
     background: {
@@ -16,18 +16,31 @@ const useStyles = makeStyles((theme) => ({
     main: {
         overflow: 'hidden',
         borderRadius: 20,
-        marginTop: '5%',
         height:'75%',
         width: '60%',
+        marginTop: '5%',
         marginLeft: '20%',
         marginRight: '20%',
         backgroundColor:'#ffffff',
+        position: 'responsive',
+        [customizedTheme.breakpoints.down('lg')]: {
+            height:'80%',
+            width: '80%',
+            marginLeft: '10%',
+            marginRight: '10%',
+        },
+        [customizedTheme.breakpoints.only('xs')]: {
+            marginTop: '15%',
+        },
     },
     login_image: {
-        background: '#FCF7E7',
         width: '50%',
         height: '100%',
         float: 'left',
+        [customizedTheme.breakpoints.down('sm')]: {
+            width: '0%',
+            height: '0%'
+        },
     },
     login_form: {
         marginTop: '0%',
@@ -39,6 +52,12 @@ const useStyles = makeStyles((theme) => ({
         height: '100%',
         marginLeft: '5%',
         marginRight: '5%',
+        [customizedTheme.breakpoints.down('sm')]: {
+            width: '80%',
+            height: '80%',
+            marginLeft: '10%',
+            marginRight: '10%',
+        },
     },
     login_title: {
         fontFamily: 'Arial',
@@ -47,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '20%',
     },
     input_label: {
-        color: colorTheme.palette.primary.dark,
+        color: customizedTheme.palette.primary.dark,
     },
     form: {
         width: '100%',
@@ -64,27 +83,28 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// the coloring for the TextField border
 const StyledTextField = withStyles({
     root: {
         '& label.Mui-focused': {
-            color: colorTheme.palette.primary.dark,
+            color: customizedTheme.palette.primary.dark,
             borderWidth:'2px'
         },
         '& .MuiInput-underline:after': {
-            borderBottomColor: colorTheme.palette.primary.main,
+            borderBottomColor: customizedTheme.palette.primary.main,
             borderWidth:'2px'
         },
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
-                borderColor: colorTheme.palette.primary.main,
+                borderColor: customizedTheme.palette.primary.main,
                 borderWidth:'2px'
             },
             '&:hover fieldset': {
-                borderColor: colorTheme.palette.primary.dark,
+                borderColor: customizedTheme.palette.primary.dark,
                 borderWidth:'2px'
             },
             '&.Mui-focused fieldset': {
-                borderColor: colorTheme.palette.primary.dark,
+                borderColor: customizedTheme.palette.primary.dark,
                 borderWidth:'2px'
             },
         },

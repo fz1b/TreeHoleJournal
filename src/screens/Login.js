@@ -1,20 +1,17 @@
 import React from 'react';
 import {ThemeProvider} from '@material-ui/core/styles';
-import {
-    Container, CssBaseline,Typography,
-    TextField, Button, Link, Box, withStyles,
-} from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import login_image from '../login_image.png'
+import {CssBaseline,Typography, Button, Link, Box, Grid, TextField} from "@material-ui/core";
+import customizedTheme from '../customizedTheme'
 import {useStyles, StyledTextField} from '../stylesheets/LoginStyle'
-import theme from '../theme'
+import login_image from '../login_image.png'
+
 
 
 export default function Login() {
     const classes = useStyles();
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={customizedTheme}>
             <CssBaseline />
             <div className={classes.background}>
                 <div className={classes.main}>
