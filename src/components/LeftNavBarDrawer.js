@@ -17,17 +17,7 @@ import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
-
-const themeMain = createMuiTheme({
-  palette: {
-      primary: {
-          light:'#95CED1',
-          main:'#50A9C1',
-          dark:'#3C7891',
-          contrastText: "#fff"
-      },
-  },
-});
+import customizedTheme from '../customizedTheme';
 
 export default function LeftNavBarDrawer(props) {
   const drawerWidth = props.dWidth;
@@ -67,7 +57,7 @@ export default function LeftNavBarDrawer(props) {
   };
 
   return (
-    <ThemeProvider theme={themeMain}>
+    <ThemeProvider theme={customizedTheme}>
       <Drawer
         className={classes.drawer}
         variant="persistent"

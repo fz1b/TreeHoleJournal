@@ -17,6 +17,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
 import Button from "@material-ui/core/Button";
+import customizedTheme from '../customizedTheme';
 
 
 const drawerWidth = 240;
@@ -121,17 +122,6 @@ const useStyles = makeStyles((theme) => ({
     },
     headerBottomMargin: theme.mixins.toolbar,
 }));
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            light:'#95CED1',
-            main:'#50A9C1',
-            dark:'#3C7891',
-            contrastText: "#fff"
-        },
-    },
-});
 
 export default function PrimarySearchAppBar() {
     const classes = useStyles();
@@ -267,7 +257,7 @@ export default function PrimarySearchAppBar() {
     );
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={customizedTheme}>
             <div className={`${classes.grow} ${classes.root}`}>
                 <AppBar
                     position="fixed"
