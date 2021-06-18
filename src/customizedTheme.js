@@ -1,5 +1,5 @@
 import { createMuiTheme } from "@material-ui/core";
-const theme = createMuiTheme({
+const customizedTheme = createMuiTheme({
     palette: {
         primary:{
             light:'#95CED1',
@@ -22,4 +22,4 @@ const theme = createMuiTheme({
  // as an aside, highly recommend importing roboto font for Material UI projects! Looks really nice
  });
 
-export default theme
+export default customizedTheme
