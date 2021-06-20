@@ -1,6 +1,5 @@
-import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import login_background from "../login_background.png";
-import {TextField, withStyles} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 
 export const useStyles = makeStyles((theme) => ({
@@ -39,7 +38,7 @@ export const useStyles = makeStyles((theme) => ({
             height:'90%',
         }
     },
-    login_image: {
+    signUp_image: {
         width: '50%',
         height: '100%',
         float: 'left',
@@ -48,7 +47,7 @@ export const useStyles = makeStyles((theme) => ({
             height: '0%'
         },
     },
-    login_form: {
+    signUp_form: {
         marginTop: '0%',
         display: 'flex',
         flexDirection: 'column',
@@ -65,11 +64,11 @@ export const useStyles = makeStyles((theme) => ({
             marginRight: '10%',
         },
     },
-    login_title: {
+    signUp_title: {
         fontFamily: 'Arial',
         textAlign: 'left',
         marginTop: '5%',
-        marginBottom: '20%',
+        marginBottom: '10%',
     },
     input_label: {
         color: customizedTheme.palette.primary.dark,
@@ -81,8 +80,11 @@ export const useStyles = makeStyles((theme) => ({
     buttons: {
         margin: theme.spacing(10, 0, 2),
         textAlign: 'center',
+        "@media (max-height:600px)":{
+            margin: theme.spacing(5, 0, 2),
+        }
     },
-    login_button: {
+    signUp_button: {
         width: '80%',
         textTransform: "none",
         fontSize: '150%'
