@@ -1,14 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ThemeProvider} from '@material-ui/core/styles';
-import {CssBaseline,Typography, Button, Link, Box, Grid, TextField} from "@material-ui/core";
+import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
-import {useStyles, StyledTextField} from '../stylesheets/LoginStyle'
+import {useStyles} from '../stylesheets/LoginStyle'
+import {StyledTextField} from '../CustomizedComponents'
 import login_image from '../login_image.png'
 
 
 
 export default function Login() {
     const classes = useStyles();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = () => {
+        alert('Email: ' + email + '\n Password: ' + password);
+    }
 
     return (
         <ThemeProvider theme={customizedTheme}>
@@ -34,6 +41,7 @@ export default function Login() {
                                     name="email"
                                     autoComplete="email"
                                     autoFocus
+                                    onChange={(event => {setEmail(event.target.value)})}
                                 />
                                 <Typography className={classes.input_label} variant="body1">
                                     Password
@@ -48,6 +56,7 @@ export default function Login() {
                                     type="password"
                                     id="password"
                                     autoComplete="current-password"
+                                    onChange={(event => {setPassword(event.target.value)})}
                                 />
                                 <Box className={classes.buttons}>
                                     <Button
@@ -55,6 +64,7 @@ export default function Login() {
                                         variant="contained"
                                         color="primary"
                                         className={classes.login_button}
+                                        onClick={handleLogin}
                                     >
                                         Login
                                     </Button>

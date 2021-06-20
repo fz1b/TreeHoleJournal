@@ -3,7 +3,7 @@ import login_background from "../login_background.png";
 import {TextField, withStyles} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
     background: {
         backgroundPosition: "center center",
         backgroundSize: "cover",
@@ -82,33 +82,3 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '150%'
     },
 }));
-
-// the coloring for the TextField border
-const StyledTextField = withStyles({
-    root: {
-        '& label.Mui-focused': {
-            color: customizedTheme.palette.primary.dark,
-            borderWidth:'2px'
-        },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: customizedTheme.palette.primary.main,
-            borderWidth:'2px'
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                borderColor: customizedTheme.palette.primary.main,
-                borderWidth:'2px'
-            },
-            '&:hover fieldset': {
-                borderColor: customizedTheme.palette.primary.dark,
-                borderWidth:'2px'
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: customizedTheme.palette.primary.dark,
-                borderWidth:'2px'
-            },
-        },
-    },
-})(TextField);
-
-export {useStyles, StyledTextField}
