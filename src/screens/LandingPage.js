@@ -1,6 +1,6 @@
 import { Component } from "react";
-import customizedTheme from "../customizedTheme.js";
-import "./LandingPageStyles.css";
+import customizedTheme from '../customizedTheme.js'
+import "../stylesheets/LandingPageStyles.css";
 import CardHolder from "../components/CardHolder";
 import Header from "../components/Header";
 import { Grid, Box } from "@material-ui/core";
