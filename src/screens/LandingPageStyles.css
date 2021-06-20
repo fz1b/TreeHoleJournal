@@ -1,0 +1,16 @@
+#my_journals_bg{
+   background-image: url("../assets/myjournals_bg.svg"); 
+   background-color: aliceblue;
+   background-size: 600px;
+   background-repeat: no-repeat;
+   height: 60vh;
+   background-position: 30% -100%;
+   margin-bottom: 20px;
+}
+#compose{
+    display: flex;
+    justify-content: flex-end;
+}
+#compose_btn{
+    margin:30px;
+}
