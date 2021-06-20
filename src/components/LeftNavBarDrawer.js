@@ -10,19 +10,14 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
-const themeMain = createMuiTheme({
-  palette: {
-    primary: {
-      light: '#b3d7e8',
-      main: '#3c7891',
-      dark: '#2a5365',
-      contrastText: '#fff',
-    }
-  },
-});
+import ExploreIcon from '@material-ui/icons/Explore';
+import PersonIcon from '@material-ui/icons/Person';
+import PeopleIcon from '@material-ui/icons/People';
+import BookmarksIcon from '@material-ui/icons/Bookmarks';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import SettingsIcon from '@material-ui/icons/Settings';
+import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
+import customizedTheme from '../customizedTheme';
 
 export default function LeftNavBarDrawer(props) {
   const drawerWidth = props.dWidth;
@@ -34,7 +29,7 @@ export default function LeftNavBarDrawer(props) {
     },
     drawerPaper: {
       width: drawerWidth,
-      backgroundColor: '#3c7891',
+      backgroundColor: theme.palette.primary.main,
     },
     drawerHeader: {
       display: 'flex',
@@ -62,7 +57,7 @@ export default function LeftNavBarDrawer(props) {
   };
 
   return (
-    <ThemeProvider theme={themeMain}>
+    <ThemeProvider theme={customizedTheme}>
       <Drawer
         className={classes.drawer}
         variant="persistent"
@@ -82,21 +77,37 @@ export default function LeftNavBarDrawer(props) {
         </div>
         <Divider />
         <List className={classes.contrastColor}>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon className={classes.contrastColor}>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text}/>
-            </ListItem>
-          ))}
+          <ListItem button key="Explore">
+            <ListItemIcon className={classes.contrastColor}><ExploreIcon/></ListItemIcon>
+            <ListItemText primary="Explore"/>
+          </ListItem>
+          <ListItem button key="Follow">
+            <ListItemIcon className={classes.contrastColor}><CenterFocusStrongIcon/></ListItemIcon>
+            <ListItemText primary="Follow"/>
+          </ListItem>
+          <ListItem button key="Me">
+            <ListItemIcon className={classes.contrastColor}><PersonIcon/></ListItemIcon>
+            <ListItemText primary="Me"/>
+          </ListItem>
         </List>
         <Divider/>
         <List className={classes.contrastColor}>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon className={classes.contrastColor}>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text}/>
-            </ListItem>
-          ))}
+          <ListItem button key="Friends">
+              <ListItemIcon className={classes.contrastColor}><PeopleIcon/></ListItemIcon>
+              <ListItemText primary="Friends"/>
+          </ListItem>
+          <ListItem button key="Collections">
+            <ListItemIcon className={classes.contrastColor}><BookmarksIcon/></ListItemIcon>
+            <ListItemText primary="Collections"/>
+          </ListItem>
+          <ListItem button key="Likes">
+            <ListItemIcon className={classes.contrastColor}><FavoriteIcon/></ListItemIcon>
+            <ListItemText primary="Likes"/>
+          </ListItem>
+          <ListItem button key="Settings">
+            <ListItemIcon className={classes.contrastColor}><SettingsIcon/></ListItemIcon>
+            <ListItemText primary="Settings"/>
+          </ListItem>
         </List>
       </Drawer>
     </ThemeProvider>
