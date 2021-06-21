@@ -1,4 +1,4 @@
-import {LandingPage} from "./screens/LandingPage";
+import LandingPage from "./screens/LandingPage";
 import TestPage from './screens/TestPage'
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
