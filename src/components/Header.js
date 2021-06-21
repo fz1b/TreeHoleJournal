@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useState } from 'react';
-import { fade, makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,8 +17,6 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
 import Button from "@material-ui/core/Button";
-import customizedTheme from '../customizedTheme';
-
 
 const drawerWidth = 240;
 
@@ -257,73 +255,71 @@ export default function PrimarySearchAppBar() {
     );
 
     return (
-        <ThemeProvider theme={customizedTheme}>
-            <div className={`${classes.grow} ${classes.root}`}>
-                <AppBar
-                    position="fixed"
-                    className={clsx(classes.appBar, {
-                        [classes.appBarShift]: open,
-                    })}
-                >
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={clsx(classes.menuButton, open && classes.hide)}
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={handleDrawerOpen}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography className={classes.titleMd} variant="h4" noWrap>
-                            TreeHole
-                        </Typography>
-                        <Typography
-                            className={classes.titleSm}
-                            variant="h6" noWrap
-                            style={{ paddingLeft: '1.5rem' }}>
-                            My Journals
-                        </Typography>
-                        {!open &&
-                            (<div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <IconButton
-                                        edge="start"
-                                        className={classes.menuButton}
-                                        color="inherit"
-                                        aria-label="open drawer"
-                                        onClick={() => console.log("hh")}
-                                    >
-                                        <SearchIcon />
-                                    </IconButton>
-                                </div>
-                                <InputBase
-                                    placeholder="Search…"
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                />
-                            </div>)}
+        <div className={`${classes.grow} ${classes.root}`}>
+            <AppBar
+                position="fixed"
+                className={clsx(classes.appBar, {
+                    [classes.appBarShift]: open,
+                })}
+            >
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        className={clsx(classes.menuButton, open && classes.hide)}
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography className={classes.titleMd} variant="h4" noWrap>
+                        TreeHole
+                    </Typography>
+                    <Typography
+                        className={classes.titleSm}
+                        variant="h6" noWrap
+                        style={{ paddingLeft: '1.5rem' }}>
+                        My Journals
+                    </Typography>
+                    {!open &&
+                        (<div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <IconButton
+                                    edge="start"
+                                    className={classes.menuButton}
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    onClick={() => console.log("hh")}
+                                >
+                                    <SearchIcon />
+                                </IconButton>
+                            </div>
+                            <InputBase
+                                placeholder="Search…"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'search' }}
+                            />
+                        </div>)}
 
-                        <div className={classes.grow} />
+                    <div className={classes.grow} />
 
-                        {isLoggedIn && appBarRightSideDesktop}
-                        {isLoggedIn && appBarRightSideMobile}
-                        {!isLoggedIn && 
-                            <Button className={classes.loginButton}>LOGIN</Button>
-                        }
+                    {isLoggedIn && appBarRightSideDesktop}
+                    {isLoggedIn && appBarRightSideMobile}
+                    {!isLoggedIn && 
+                        <Button className={classes.loginButton}>LOGIN</Button>
+                    }
 
-                    </Toolbar>
-                </AppBar>
+                </Toolbar>
+            </AppBar>
 
-                {isLoggedIn && renderMobileMenu}
-                {isLoggedIn && renderMenu}
+            {isLoggedIn && renderMobileMenu}
+            {isLoggedIn && renderMenu}
 
-                <div className={classes.headerBottomMargin} />
-                <LeftNavBarDrawer dWidth={drawerWidth} open={open} onClose={handleDrawerClose} />
-            </div>
-        </ThemeProvider>
+            <div className={classes.headerBottomMargin} />
+            <LeftNavBarDrawer dWidth={drawerWidth} open={open} onClose={handleDrawerClose} />
+        </div>
     );
 }
