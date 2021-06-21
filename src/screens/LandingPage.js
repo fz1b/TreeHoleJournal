@@ -8,7 +8,8 @@ import InputForm from "../components/InputForm";
 import Button from '@material-ui/core/Button';
 import { ThemeProvider } from "@material-ui/core";
 import { MdAddCircleOutline} from "react-icons/md";
-import DatePicker from '../components/DatePicker'
+import DatePicker from '../components/DatePicker';
+import JournalModal from '../components/JournalModal'
 export class LandingPage extends Component {
   render() {
     return (
@@ -22,6 +23,7 @@ export class LandingPage extends Component {
         <DatePicker/>
         </ThemeProvider>
         </div>
+        <JournalModal/>
 
         
         <Grid container>
