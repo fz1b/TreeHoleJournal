@@ -3,8 +3,6 @@ import customizedTheme from '../customizedTheme.js'
 import "../stylesheets/LandingPageStyles.css";
 import CardHolder from "../components/CardHolder";
 import Header from "../components/Header";
-import { Grid, Box } from "@material-ui/core";
-import InputForm from "../components/InputForm";
 import Button from "@material-ui/core/Button";
 import { ThemeProvider } from "@material-ui/core";
 import { MdAddCircleOutline } from "react-icons/md";

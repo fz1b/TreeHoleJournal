@@ -33,7 +33,7 @@ export default function Feelings(props) {
           <Typography gutterBottom variant="h5" component="h2">
           {props.content.name}
           </Typography>
-          <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '20rem'}}> 
+          <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '18rem'}}> 
           <Typography variant="body2" color="textSecondary" component="p" noWrap>
           {props.content.description}
           </Typography>
