@@ -1,8 +1,8 @@
 import { Component } from "react";
-import Feelings from "../components/Feelings";
+import EntryCards from "./EntryCards";
 import products from "../feelings";
 import DatabaseHandler from "../DatabaseHandler";
-import Grid from "@material-ui/core/Grid";
+import {Grid, Box}  from '@material-ui/core/';
 
 // Properties: database_flag
 // a container to hold journal cards
@@ -41,22 +41,24 @@ export class CardHolder extends Component {
   render() {
     return (
       <>
+      <Box m={5} mt={0}>
         <Grid
           container
           direction="row"
-          justify="flex-start"
-          alignItems="flex-start"
-          spacing={1}
+          justify="center"
+          alignItems="center"
+          spacing={3}
         >
           {this.state.list.map((f, index) => (
-            <Grid item md={4}>
-              <Feelings
-                feelings={f}
+            <Grid item xs={12} sm = {6} md={4} lg = {3}>
+              <EntryCards
+                content={f}
                 removeItem={this.remove.bind(this, index)}
               />
             </Grid>
           ))}
         </Grid>
+        </Box>
       </>
     );
   }

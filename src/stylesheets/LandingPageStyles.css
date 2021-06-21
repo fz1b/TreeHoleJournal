@@ -3,13 +3,12 @@
    background-color: aliceblue;
    background-size: 600px;
    background-repeat: no-repeat;
-   height: 60vh;
-   background-position: 30% -100%;
-   margin-bottom: 20px;
+   height: 30vh;
+   background-position: 30% -30%;
 }
 #compose{
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-around;
 }
 #compose_btn{
     margin:30px;
