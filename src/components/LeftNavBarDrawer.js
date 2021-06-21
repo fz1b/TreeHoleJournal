@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, useTheme, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
@@ -17,7 +17,6 @@ import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
-import customizedTheme from '../customizedTheme';
 
 export default function LeftNavBarDrawer(props) {
   const drawerWidth = props.dWidth;
@@ -57,59 +56,57 @@ export default function LeftNavBarDrawer(props) {
   };
 
   return (
-    <ThemeProvider theme={customizedTheme}>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={props.open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <Typography variant="h6" noWrap className={classes.title}>
-            Menu
-          </Typography>
-          <IconButton onClick={handleDrawerClose} className={classes.contrastColor}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-        <List className={classes.contrastColor}>
-          <ListItem button key="Explore">
-            <ListItemIcon className={classes.contrastColor}><ExploreIcon/></ListItemIcon>
-            <ListItemText primary="Explore"/>
-          </ListItem>
-          <ListItem button key="Follow">
-            <ListItemIcon className={classes.contrastColor}><CenterFocusStrongIcon/></ListItemIcon>
-            <ListItemText primary="Follow"/>
-          </ListItem>
-          <ListItem button key="Me">
-            <ListItemIcon className={classes.contrastColor}><PersonIcon/></ListItemIcon>
-            <ListItemText primary="Me"/>
-          </ListItem>
-        </List>
-        <Divider/>
-        <List className={classes.contrastColor}>
-          <ListItem button key="Friends">
-              <ListItemIcon className={classes.contrastColor}><PeopleIcon/></ListItemIcon>
-              <ListItemText primary="Friends"/>
-          </ListItem>
-          <ListItem button key="Collections">
-            <ListItemIcon className={classes.contrastColor}><BookmarksIcon/></ListItemIcon>
-            <ListItemText primary="Collections"/>
-          </ListItem>
-          <ListItem button key="Likes">
-            <ListItemIcon className={classes.contrastColor}><FavoriteIcon/></ListItemIcon>
-            <ListItemText primary="Likes"/>
-          </ListItem>
-          <ListItem button key="Settings">
-            <ListItemIcon className={classes.contrastColor}><SettingsIcon/></ListItemIcon>
-            <ListItemText primary="Settings"/>
-          </ListItem>
-        </List>
-      </Drawer>
-    </ThemeProvider>
+    <Drawer
+      className={classes.drawer}
+      variant="persistent"
+      anchor="left"
+      open={props.open}
+      classes={{
+        paper: classes.drawerPaper,
+      }}
+    >
+      <div className={classes.drawerHeader}>
+        <Typography variant="h6" noWrap className={classes.title}>
+          Menu
+        </Typography>
+        <IconButton onClick={handleDrawerClose} className={classes.contrastColor}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </IconButton>
+      </div>
+      <Divider />
+      <List className={classes.contrastColor}>
+        <ListItem button key="Explore">
+          <ListItemIcon className={classes.contrastColor}><ExploreIcon/></ListItemIcon>
+          <ListItemText primary="Explore"/>
+        </ListItem>
+        <ListItem button key="Follow">
+          <ListItemIcon className={classes.contrastColor}><CenterFocusStrongIcon/></ListItemIcon>
+          <ListItemText primary="Follow"/>
+        </ListItem>
+        <ListItem button key="Me">
+          <ListItemIcon className={classes.contrastColor}><PersonIcon/></ListItemIcon>
+          <ListItemText primary="Me"/>
+        </ListItem>
+      </List>
+      <Divider/>
+      <List className={classes.contrastColor}>
+        <ListItem button key="Friends">
+            <ListItemIcon className={classes.contrastColor}><PeopleIcon/></ListItemIcon>
+            <ListItemText primary="Friends"/>
+        </ListItem>
+        <ListItem button key="Collections">
+          <ListItemIcon className={classes.contrastColor}><BookmarksIcon/></ListItemIcon>
+          <ListItemText primary="Collections"/>
+        </ListItem>
+        <ListItem button key="Likes">
+          <ListItemIcon className={classes.contrastColor}><FavoriteIcon/></ListItemIcon>
+          <ListItemText primary="Likes"/>
+        </ListItem>
+        <ListItem button key="Settings">
+          <ListItemIcon className={classes.contrastColor}><SettingsIcon/></ListItemIcon>
+          <ListItemText primary="Settings"/>
+        </ListItem>
+      </List>
+    </Drawer>
   );
 }
