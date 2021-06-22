@@ -3,10 +3,20 @@ import customizedTheme from '../customizedTheme.js'
 import { ThemeProvider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss'
+import JournalModal from '../components/JournalModal'
+const mockJournal = {
+    uniqueID: '111',
+    title: 'The First Journal',
+    date: '2021.06.03',
+    coverImage: 'https://perfectdailygrind.com/wp-content/uploads/2019/02/coffee-bar.jpg',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    privacy_setting:'private'
+}
 function TestPage(){
     console.log(customizedTheme)
 return(
     <ThemeProvider theme={customizedTheme}>
+        <JournalModal journal={mockJournal}/>
         <Button variant="outlined" color='primary'>Login</Button>
         <Button variant="contained" color='primary'>Login</Button>
         <TextField id="outlined-basic"  variant="outlined" size="small" />
