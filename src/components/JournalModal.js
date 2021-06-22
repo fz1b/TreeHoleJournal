@@ -25,6 +25,7 @@ const BootstrapInput = withStyles((theme) => ({
       },
     },
     input: {
+    width:60,
       borderRadius: 4,
       position: 'relative',
       backgroundColor: theme.palette.background.paper,
@@ -147,7 +148,7 @@ export default function CustomizedDialogs({journal}) {
           input={<BootstrapInput />}
         >
           <MenuItem value='private'>private</MenuItem>
-          <MenuItem value='public'>public</MenuItem>
+          <MenuItem value='public'>public </MenuItem>
         </Select>
    
           <Button autoFocus color="primary" startIcon={<FiEdit/>}>
