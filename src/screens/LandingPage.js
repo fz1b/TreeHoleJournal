@@ -1,51 +1,52 @@
-import { Component } from "react";
 import customizedTheme from '../customizedTheme.js'
-import "./LandingPageStyles.css";
 import CardHolder from "../components/CardHolder";
 import Header from "../components/Header";
-import {Grid, Box} from "@material-ui/core";
-import InputForm from "../components/InputForm";
-import Button from '@material-ui/core/Button';
-import { ThemeProvider } from "@material-ui/core";
-import { MdAddCircleOutline} from "react-icons/md";
-import DatePicker from '../components/DatePicker';
-import JournalModal from '../components/JournalModal'
-export class LandingPage extends Component {
-  render() {
-    return (
+import Button from "@material-ui/core/Button";
+import { makeStyles, ThemeProvider } from "@material-ui/core";
+import { MdAddCircleOutline } from "react-icons/md";
+import DatePicker from "../components/DatePicker";
+import journalImg from "../assets/myjournals_bg.svg"
+
+const useStyles = makeStyles((theme) => ({
+  my_journals_bg: {
+    backgroundImage: `url(${journalImg})`,
+    backgroundColor: 'aliceblue',
+    backgroundSize: '600px',
+    backgroundRepeat: 'no-repeat',
+    height: '30vh',
+    backgroundPosition: '30% -30%',
+  },
+  compose: {
+    display: 'flex',
+    justifyContent: 'space-around',
+  },
+  compose_btn: {
+    margin: '30px',
+  }
+}));
+
+export default function LandingPage() {
+
+  const classes = useStyles();
+
+  return (
+    <ThemeProvider theme={customizedTheme}>
       <div className="LandingPage">
         <Header />
-        <div id='my_journals_bg'></div>
-        <div id='compose'>
-
-        <ThemeProvider theme={customizedTheme}>
-        <Button id='compose_btn' variant="contained" color='primary' startIcon={<MdAddCircleOutline/>}>Compose</Button>
-        <DatePicker/>
-        </ThemeProvider>
-        </div>
-        <JournalModal/>
-
-        
-        <Grid container>
-          <Grid
-            container
-            direction="column"
-            alignItems="flex-start"
-            spacing={2}
-            md={3}
+        <div className={classes.my_journals_bg}></div>
+        <div className={classes.compose}>
+          <Button
+            className={classes.compose_btn}
+            variant="contained"
+            color="primary"
+            startIcon={<MdAddCircleOutline />}
           >
-
-            <Box m={7}>
-            {/* <InputForm /> */}
-            </Box>
-          </Grid>
-          <Grid md={9}>
-            <CardHolder databaseFlag="" />
-          </Grid>
-        </Grid>
+            Compose
+          </Button>
+          <DatePicker />
+        </div>
+        <CardHolder databaseFlag="" />
       </div>
-    );
-  }
+    </ThemeProvider>
+  );
 }
-
-export default LandingPage;
