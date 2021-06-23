@@ -19,9 +19,14 @@ const useStyles = makeStyles((theme) => ({
   compose: {
     display: 'flex',
     justifyContent: 'space-around',
+    [theme.breakpoints.down('xs')]: {
+      flexWrap: 'wrap',
+      marginBottom: '1.5rem'
+    },
   },
   compose_btn: {
     margin: '30px',
+    paddingInline: '1rem',
   }
 }));
 

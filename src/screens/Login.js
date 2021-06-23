@@ -8,14 +8,17 @@ import login_image from '../assets/login_image.png'
 import axios from 'axios';
 import authAPIKeyContext from '../authAPI/authAPIKey-context';
 import AuthContext from '../authAPI/auth-context';
-
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import { useHistory } from 'react-router';
 
 export default function Login() {
     const classes = useStyles();
+    const history = useHistory();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errMessage, setErrMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const hasError = !!errMessage;
 
     const authAPIKey = useContext(authAPIKeyContext);
     const auth = useContext(AuthContext);
@@ -39,18 +42,29 @@ export default function Login() {
                 }
             );
             // successful landing
-            setErrMessage('');
+            hideErrorMessage();
             console.log(response);
             auth.loginHandler(response.data.idToken);
+            setIsLoading(false);
+            // redirect user to me page, cannot use back button to go back.
+            history.replace('/me');
+
         } catch (err){
             if(err.response.data.error.message) {
-                setErrMessage(err.response.data.error.message);
+                displayErrorMessage(err.response.data.error.message);
             } else {
-                setErrMessage("Unable to login. Please try again.")
+                displayErrorMessage("Unable to login. Please try again.")
             }
-            
         }
         setIsLoading(false);
+    }
+
+    const displayErrorMessage = (errorMessage) => {
+        setErrMessage(errorMessage);
+    }
+
+    const hideErrorMessage = () => {
+        setErrMessage('');
     }
 
     return (
@@ -60,66 +74,77 @@ export default function Login() {
                 <div className={classes.main}>
                     <img src={login_image} className={classes.login_image} alt=''/>
                     <div className={classes.login_form}>
-                            <Typography className={classes.login_title} variant="h3" color='primary'>
+                        <Typography className={classes.login_title} variant="h3" color='primary'>
                                 Login
+                        </Typography>
+
+                        <Typography className={classes.login_error} variant="body1" color='error'>
+                            {hasError &&
+                            <>
+                                <ErrorOutlineIcon color='error'/>
+                                {errMessage}
+                            </>
+                            }
+                        </Typography>
+
+                        <form className={classes.form} noValidate>
+                            <Typography className={classes.input_label} variant="body1">
+                                Email
                             </Typography>
-                            <form className={classes.form} noValidate>
-                                <Typography className={classes.input_label} variant="body1">
-                                    Email
-                                </Typography>
-                                <StyledTextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
-                                    autoFocus
-                                    onChange={(event => {setEmail(event.target.value)})}
-                                />
-                                <Typography className={classes.input_label} variant="body1">
-                                    Password
-                                </Typography>
-                                <StyledTextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                    onChange={(event => {setPassword(event.target.value)})}
-                                />
-                                <Box className={classes.buttons}>
-                                    <Button
-                                        type="button"
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.login_button}
-                                        onClick={handleLogin}
-                                    >
-                                        {!isLoading && 'Login'}
-                                        {isLoading && 'Please Wait...'}
-                                    </Button>
-                                </Box>
-                                <Grid container>
-                                    <Grid item xs>
-                                        <Link href="#" variant="body2" >
-                                            Forgot password?
-                                        </Link>
-                                    </Grid>
-                                    <Grid item>
-                                        <Link href="/signup" variant="body2" >
-                                            {"Don't have an account? Sign Up"}
-                                        </Link>
-                                    </Grid>
+                            <StyledTextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                                onChange={(event => {setEmail(event.target.value)})}
+                            />
+                            <Typography className={classes.input_label} variant="body1">
+                                Password
+                            </Typography>
+                            <StyledTextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                onChange={(event => {setPassword(event.target.value)})}
+                            />
+                            <Box className={classes.buttons}>
+                                <Button
+                                    type="button"
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.login_button}
+                                    onClick={handleLogin}
+                                    disabled={isLoading}
+                                >
+                                    {!isLoading && 'Login'}
+                                    {isLoading && 'Please Wait...'}
+                                </Button>
+                            </Box>
+                            <Grid container>
+                                <Grid item xs>
+                                    <Link href="#" variant="body2" >
+                                        Forgot password?
+                                    </Link>
                                 </Grid>
-                            </form>
-                        </div>
+                                <Grid item>
+                                    <Link href="/signup" variant="body2" >
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </div>
                 </div>
             </div>
         </ThemeProvider>

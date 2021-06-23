@@ -18,6 +18,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
 import Button from "@material-ui/core/Button";
 import AuthContext from '../authAPI/auth-context';
+import { useHistory } from 'react-router';
 
 const drawerWidth = 240;
 
@@ -124,6 +125,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar(props) {
     const classes = useStyles();
+    const history = useHistory();
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
@@ -161,10 +163,14 @@ export default function PrimarySearchAppBar(props) {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const handleLogin = () => {
+        history.push('/login');
+    };
     const handleLogout = () => {
         handleMenuClose();
         auth.logoutHandler();
-    }
+        history.replace('/');
+    };
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -316,11 +322,10 @@ export default function PrimarySearchAppBar(props) {
                     {isLoggedIn && appBarRightSideDesktop}
                     {isLoggedIn && appBarRightSideMobile}
                     {!isLoggedIn && 
-                        <Button className={classes.loginButton}>
+                        <Button className={classes.loginButton} onClick={handleLogin}>
                             LOGIN
                         </Button>
                     }
-
                 </Toolbar>
             </AppBar>
 
