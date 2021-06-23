@@ -4,8 +4,8 @@ import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/SignUpStyle'
 import {StyledTextField} from '../CustomizedComponents'
-import sign_up_image from '../sign_up_image.png'
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+import sign_up_image from '../assets/sign_up_image.png'
 
 const ERROR_MESSAGE = {
     USERNAME_EXISTS: ' The username already exists. Please try another one.',

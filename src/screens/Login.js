@@ -4,7 +4,7 @@ import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/LoginStyle'
 import {StyledTextField} from '../CustomizedComponents'
-import login_image from '../login_image.png'
+import login_image from '../assets/login_image.png'
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 const ERROR_MESSAGE = {

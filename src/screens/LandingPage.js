@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: '600px',
     backgroundRepeat: 'no-repeat',
     height: '30vh',
-    backgroundPosition: '30% -30%',
+    backgroundPosition: '40% 0%',
   },
   compose: {
     display: 'flex',
