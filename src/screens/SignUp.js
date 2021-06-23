@@ -4,7 +4,7 @@ import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/SignUpStyle'
 import {StyledTextField} from '../CustomizedComponents'
-import sign_up_image from '../sign_up_image.png'
+import sign_up_image from '../assets/sign_up_image.png'
 
 
 
