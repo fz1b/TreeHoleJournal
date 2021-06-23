@@ -6,7 +6,7 @@ import journalImg from "../assets/myjournals_bg.svg"
 
 
 const useStyles = makeStyles((theme) => ({
-  my_journals_bg: {
+  saloon_bg: {
     backgroundImage: `url(${journalImg})`,
     backgroundColor: 'aliceblue',
     backgroundSize: '600px',
@@ -14,10 +14,6 @@ const useStyles = makeStyles((theme) => ({
     height: '30vh',
     backgroundPosition: '40% 0%',
     marginBottom: '5vh',
-  },
-  compose: {
-    display: 'flex',
-    justifyContent: 'space-around',
   },
 }));
 
@@ -29,7 +25,7 @@ export default function Saloon() {
     <ThemeProvider theme={customizedTheme}>
       <div className="Saloon">
         <Header />
-        <div className={classes.my_journals_bg}/>
+        <div className={classes.saloon_bg}/>
         <CardHolder databaseFlag="" />
       </div>
     </ThemeProvider>
