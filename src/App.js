@@ -7,12 +7,14 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
+import Saloon from "./screens/Saloon";
 
 function App() {
   return (
       <Router>
           <Switch>
               <Route exact path='/' component={LandingPage}/>
+              <Route exact path='/saloon' component={Saloon}/>
               <Route exact path='/login' component={Login}/>
               <Route exact path='/signUp' component={SignUp}/>
               <Route exact path='/test' component={TestPage}/>
