@@ -6,7 +6,7 @@ import journalImg from "../assets/myjournals_bg.svg"
 
 
 const useStyles = makeStyles((theme) => ({
-  saloon_bg: {
+  explore_bg: {
     backgroundImage: `url(${journalImg})`,
     backgroundColor: 'aliceblue',
     backgroundSize: '600px',
@@ -17,15 +17,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Saloon() {
+export default function Explore() {
 
   const classes = useStyles();
 
   return (
     <ThemeProvider theme={customizedTheme}>
-      <div className="Saloon">
+      <div className="explore">
         <Header />
-        <div className={classes.saloon_bg}/>
+        <div className={classes.explore_bg}/>
         <CardHolder databaseFlag="" />
       </div>
     </ThemeProvider>
