@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {ThemeProvider} from '@material-ui/core/styles';
-import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core";
+import {CssBaseline,Typography, Button, Link, Box} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/SignUpStyle'
 import {StyledTextField} from '../CustomizedComponents'
 import sign_up_image from '../assets/sign_up_image.png'
+import authAPIKeyContext from '../authAPI/authAPIKey-context';
+import AuthContext from '../authAPI/auth-context';
+import axios from 'axios';
 
 
 
@@ -13,9 +16,44 @@ export default function Login() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errMessage, setErrMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = () => {
-        alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
+    const authAPIKey = useContext(authAPIKeyContext);
+    const auth = useContext(AuthContext);
+
+    const handleSignup = async () => {
+        // alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
+        // Username is used in our backend only. Has nothing to do with firebase authentication.
+        const reqBody = JSON.stringify({
+            email: email,
+            password: password,
+            returnSecureToken: true
+        });
+        setIsLoading(true);
+        try {
+            const response = await axios.post(
+                'https://identitytoolkit.googleapis.com/v1/accounts:signUp',
+                reqBody,
+                {
+                    params: {key: authAPIKey.key},
+                    headers: {'Content-Type': 'application/json'}
+                }
+            );
+            // successful landing
+            setErrMessage('');
+            console.log(response);
+            auth.loginHandler(response.data.idToken);
+        } catch (err){
+            if(err.response.data.error.message) {
+                setErrMessage(err.response.data.error.message);
+            } else {
+                setErrMessage("Unable to sign up. Please try again.")
+            }
+            
+        }
+        setIsLoading(false);
+
     }
 
     return (
@@ -84,12 +122,17 @@ export default function Login() {
                                         variant="contained"
                                         color="primary"
                                         className={classes.signUp_button}
-                                        onClick={handleLogin}
+                                        onClick={handleSignup}
+                                        disabled={isLoading}
                                     >
-                                        Sign Up
+                                        {!isLoading && 'Sign Up'}
+                                        {isLoading && 'Please Wait...'}
                                     </Button>
                                 </Box>
                             </form>
+                            <Link href="/login" variant="body2" style={{textAlign: 'center'}}>
+                                {"Already have an account? Log In"}
+                            </Link>
                         </div>
                 </div>
             </div>

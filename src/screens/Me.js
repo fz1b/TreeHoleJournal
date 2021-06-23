@@ -25,14 +25,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function LandingPage() {
+export default function Me() {
 
   const classes = useStyles();
 
   return (
     <ThemeProvider theme={customizedTheme}>
       <div className="LandingPage">
-        <Header />
+        <Header pageName = "My Journals"/>
         <div className={classes.my_journals_bg}></div>
         <div className={classes.compose}>
           <Button

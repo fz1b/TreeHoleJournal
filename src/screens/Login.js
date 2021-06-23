@@ -1,20 +1,56 @@
-import React, {useState} from 'react';
+import React, { useContext, useState} from 'react';
 import {ThemeProvider} from '@material-ui/core/styles';
 import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/LoginStyle'
 import {StyledTextField} from '../CustomizedComponents'
 import login_image from '../assets/login_image.png'
-
+import axios from 'axios';
+import authAPIKeyContext from '../authAPI/authAPIKey-context';
+import AuthContext from '../authAPI/auth-context';
 
 
 export default function Login() {
     const classes = useStyles();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errMessage, setErrMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = () => {
-        alert('Email: ' + email + '\n Password: ' + password);
+    const authAPIKey = useContext(authAPIKeyContext);
+    const auth = useContext(AuthContext);
+
+    const handleLogin = async () => {
+        // alert('Email: ' + email + '\n Password: ' + password);
+        // Username is used in our backend only. Has nothing to do with firebase authentication.
+        const reqBody = JSON.stringify({
+            email: email,
+            password: password,
+            returnSecureToken: true
+        });
+        setIsLoading(true);
+        try {
+            const response = await axios.post(
+                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
+                reqBody,
+                {
+                    params: {key: authAPIKey.key},
+                    headers: {'Content-Type': 'application/json'}
+                }
+            );
+            // successful landing
+            setErrMessage('');
+            console.log(response);
+            auth.loginHandler(response.data.idToken);
+        } catch (err){
+            if(err.response.data.error.message) {
+                setErrMessage(err.response.data.error.message);
+            } else {
+                setErrMessage("Unable to login. Please try again.")
+            }
+            
+        }
+        setIsLoading(false);
     }
 
     return (
@@ -66,7 +102,8 @@ export default function Login() {
                                         className={classes.login_button}
                                         onClick={handleLogin}
                                     >
-                                        Login
+                                        {!isLoading && 'Login'}
+                                        {isLoading && 'Please Wait...'}
                                     </Button>
                                 </Box>
                                 <Grid container>
@@ -76,7 +113,7 @@ export default function Login() {
                                         </Link>
                                     </Grid>
                                     <Grid item>
-                                        <Link href="#" variant="body2" >
+                                        <Link href="/signup" variant="body2" >
                                             {"Don't have an account? Sign Up"}
                                         </Link>
                                     </Grid>

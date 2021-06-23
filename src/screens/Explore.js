@@ -24,7 +24,7 @@ export default function Explore() {
   return (
     <ThemeProvider theme={customizedTheme}>
       <div className="explore">
-        <Header />
+        <Header pageName=""/>
         <div className={classes.explore_bg}/>
         <CardHolder databaseFlag="" />
       </div>
