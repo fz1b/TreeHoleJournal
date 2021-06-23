@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {ThemeProvider} from '@material-ui/core/styles';
-import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core";
+import {CssBaseline,Typography, Button, Box} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/SignUpStyle'
 import {StyledTextField} from '../CustomizedComponents'
@@ -23,7 +23,7 @@ export default function Login() {
     const [message, setMessage] = useState('');
 
     const handleSignUp = () => {
-        // alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
+        alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
         displayErrorMessage(ERROR_MESSAGE.TIMEOUT)
     }
 
