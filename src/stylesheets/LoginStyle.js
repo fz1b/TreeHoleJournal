@@ -1,6 +1,5 @@
-import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import login_background from "../assets/login_background.png";
-import {TextField, withStyles} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 
 export const useStyles = makeStyles((theme) => ({
@@ -69,7 +68,20 @@ export const useStyles = makeStyles((theme) => ({
         fontFamily: 'Arial',
         textAlign: 'left',
         marginTop: '5%',
-        marginBottom: '20%',
+        marginBottom: '10%',
+        [customizedTheme.breakpoints.down('lg')]: {
+            marginBottom: '5%'
+        },
+    },
+    login_error: {
+        verticalAlign: 'middle',
+        display: 'inline-flex',
+        minHeight: '5%',
+        maxHeight: '5%',
+        marginBottom: '5%',
+        [customizedTheme.breakpoints.down('xs')]: {
+            marginBottom: '30%',
+        },
     },
     input_label: {
         color: customizedTheme.palette.primary.dark,
@@ -81,6 +93,9 @@ export const useStyles = makeStyles((theme) => ({
     buttons: {
         margin: theme.spacing(10, 0, 2),
         textAlign: 'center',
+        [customizedTheme.breakpoints.down('xs')]: {
+            marginTop: '8%',
+        },
     },
     login_button: {
         width: '80%',
