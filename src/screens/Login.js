@@ -23,7 +23,7 @@ export default function Login() {
 
 
     const handleLogin = () => {
-        // alert('Email: ' + email + '\n Password: ' + password);
+        alert('Email: ' + email + '\n Password: ' + password);
         displayErrorMessage(ERROR_MESSAGE.TIMEOUT)
     }
 

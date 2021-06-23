@@ -68,7 +68,17 @@ export const useStyles = makeStyles((theme) => ({
         fontFamily: 'Arial',
         textAlign: 'left',
         marginTop: '5%',
-        marginBottom: '10%',
+        marginBottom: '5%',
+    },
+    signUp_error: {
+        verticalAlign: 'middle',
+        display: 'inline-flex',
+        minHeight: '5%',
+        maxHeight: '5%',
+        marginBottom: '0%',
+        [customizedTheme.breakpoints.down('xs')]: {
+            marginBottom: '20%',
+        },
     },
     input_label: {
         color: customizedTheme.palette.primary.dark,
@@ -76,12 +86,18 @@ export const useStyles = makeStyles((theme) => ({
     form: {
         width: '100%',
         marginTop: '5%',
+        [customizedTheme.breakpoints.down('xs')]: {
+            marginTop: '0%',
+        },
     },
     buttons: {
         margin: theme.spacing(10, 0, 2),
         textAlign: 'center',
+        [customizedTheme.breakpoints.down('xs')]: {
+            marginTop: '8%',
+        },
         "@media (max-height:600px)":{
-            margin: theme.spacing(5, 0, 2),
+            margin: theme.spacing(1, 0, 2),
         }
     },
     signUp_button: {

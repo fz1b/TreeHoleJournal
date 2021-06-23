@@ -10,7 +10,7 @@ import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 const ERROR_MESSAGE = {
     USERNAME_EXISTS: ' The username already exists. Please try another one.',
     EMAIL_EXISTS: ' The email has already registered an account',
-    TIMEOUT: ' Login timed out. Please check your network connection.',
+    TIMEOUT: ' Sign up timed out. Please check your network connection.',
 }
 
 
@@ -43,7 +43,7 @@ export default function Login() {
                             Sign Up
                         </Typography>
 
-                        <Typography className={classes.login_error} variant="body1" color='error'>
+                        <Typography className={classes.signUp_error} variant="body1" color='error'>
                             {error &&
                             <>
                                 <ErrorOutlineIcon color='error'/>
