@@ -1,5 +1,5 @@
 import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
-import login_background from "../login_background.png";
+import login_background from "../assets/login_background.png";
 import {TextField, withStyles} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 
