@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,6 +17,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
 import Button from "@material-ui/core/Button";
+import AuthContext from '../authAPI/auth-context';
+import { useHistory } from 'react-router';
 
 const drawerWidth = 240;
 
@@ -121,14 +123,17 @@ const useStyles = makeStyles((theme) => ({
     headerBottomMargin: theme.mixins.toolbar,
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(props) {
     const classes = useStyles();
+    const history = useHistory();
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
-  
-    // TODO: endpoint to connect to authentication
-    const isLoggedIn = true;
+
+    const auth = useContext(AuthContext);
+    const isLoggedIn = auth.isLoggedIn;
+
+    const pageName = props.pageName;
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -158,6 +163,15 @@ export default function PrimarySearchAppBar() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const handleLogin = () => {
+        history.push('/login');
+    };
+    const handleLogout = () => {
+        handleMenuClose();
+        auth.logoutHandler();
+        history.replace('/');
+    };
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -170,7 +184,7 @@ export default function PrimarySearchAppBar() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>My Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
     );
 
@@ -279,7 +293,7 @@ export default function PrimarySearchAppBar() {
                         className={classes.titleSm}
                         variant="h6" noWrap
                         style={{ paddingLeft: '1.5rem' }}>
-                        My Journals
+                        {pageName}
                     </Typography>
                     {!open &&
                         (<div className={classes.search}>
@@ -289,7 +303,6 @@ export default function PrimarySearchAppBar() {
                                     className={classes.menuButton}
                                     color="inherit"
                                     aria-label="open drawer"
-                                    onClick={() => console.log("hh")}
                                 >
                                     <SearchIcon />
                                 </IconButton>
@@ -309,9 +322,10 @@ export default function PrimarySearchAppBar() {
                     {isLoggedIn && appBarRightSideDesktop}
                     {isLoggedIn && appBarRightSideMobile}
                     {!isLoggedIn && 
-                        <Button className={classes.loginButton}>LOGIN</Button>
+                        <Button className={classes.loginButton} onClick={handleLogin}>
+                            LOGIN
+                        </Button>
                     }
-
                 </Toolbar>
             </AppBar>
 
