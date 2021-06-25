@@ -71,7 +71,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 
-export default function CustomizedDialogs({journal, editing}) {
+export default function CustomizedDialogs({journal, editing, handleClose}) {
 
     const Image = styled.img`
     width: 100%;
@@ -109,14 +109,8 @@ position: absolute;
   const handleVisibilityChange = (event) => {
     setVisibility(event.target.value);
   };
-  console.log(isEditing);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+
  const handleEdit = () =>{
      setIsEditing(true);
  }
@@ -128,6 +122,7 @@ position: absolute;
  }
  const handleSave = () =>{
      setIsEditing(false)
+     handleClose()
  }
  const handleImgDelete = () =>{
      console.log("delete");
@@ -136,7 +131,7 @@ position: absolute;
 
   return (
     <div>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} maxWidth='sm'>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={true} maxWidth='sm'>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
         {!isEditing &&title}
         {isEditing && <TitleInput id="outlined-basic" label="Title" variant="outlined" size="small" value={title} onChange={handleTitleChange}/>}
