@@ -12,12 +12,21 @@ export class DatabaseHandler {
         // TODO: pull from the real database instead
         return [
             {
+                uniqueID: '000',
+                title: 'My Journal',
+                date: '2021.06.03',
+                coverImage: 'https://perfectdailygrind.com/wp-content/uploads/2019/02/coffee-bar.jpg',
+                content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                privacy_setting:'private'
+            },
+            {
                 uniqueID: '111',
-                Title: 'The First Journal',
-                Date: '2021.06.03',
+                title: 'The First Journal',
+                date: '2021.06.03',
                 EditDate: '',
-                CoverImage: 'https://media.sproutsocial.com/uploads/2018/04/Facebook-Cover-Photo-Size.png',
-                Content: 'This is the first Journal with an image',
+                coverImage: 'https://media.sproutsocial.com/uploads/2018/04/Facebook-Cover-Photo-Size.png',
+                content: 'This is the first Journal with an image',
+                privacy_setting:'private'
             },
             {
                 uniqueID: '222',

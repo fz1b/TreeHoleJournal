@@ -6,7 +6,8 @@ import { makeStyles, ThemeProvider } from "@material-ui/core";
 import { MdAddCircleOutline } from "react-icons/md";
 import DatePicker from "../components/DatePicker";
 import journalImg from "../assets/myjournals_bg.svg"
-
+import {useState} from 'react';
+import JounalModal from "../components/JournalModal"
 const useStyles = makeStyles((theme) => ({
   my_journals_bg: {
     backgroundImage: `url(${journalImg})`,
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: '600px',
     backgroundRepeat: 'no-repeat',
     height: '30vh',
-    backgroundPosition: '40% 0%',
+    backgroundPosition: '30% -30%',
   },
   compose: {
     display: 'flex',
@@ -24,11 +25,23 @@ const useStyles = makeStyles((theme) => ({
     margin: '30px',
   }
 }));
+const date = new Date()
+const newJournal = {
+  uniqueID: '',
+  title: '',
+  date: date.toDateString(),
+  coverImage: '',
+  content: '',
+  privacy_setting:'private'
+}
 
 export default function LandingPage() {
 
   const classes = useStyles();
-
+  const [showModal, setShowModal] = useState(false);
+  const handleCompose = () => {
+    setShowModal(true);
+  }
   return (
     <ThemeProvider theme={customizedTheme}>
       <div className="LandingPage">
@@ -40,11 +53,13 @@ export default function LandingPage() {
             variant="contained"
             color="primary"
             startIcon={<MdAddCircleOutline />}
+            onClick={handleCompose}
           >
             Compose
           </Button>
           <DatePicker />
         </div>
+        {showModal && <JounalModal journal={newJournal} editing={true}></JounalModal>}
         <CardHolder databaseFlag="" />
       </div>
     </ThemeProvider>

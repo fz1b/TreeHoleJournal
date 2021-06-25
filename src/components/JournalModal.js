@@ -1,4 +1,5 @@
 import React from 'react';
+import {useState, useEffect} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,45 +16,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import InputBase from '@material-ui/core/InputBase';
-import { Translate } from '@material-ui/icons';
-const BootstrapInput = withStyles((theme) => ({
-    root: {
-      'label + &': {
-        marginTop: theme.spacing(3),
-      },
-    },
-    input: {
-    width:60,
-      borderRadius: 4,
-      position: 'relative',
-      backgroundColor: theme.palette.background.paper,
-      border: '1px solid #ced4da',
-      fontSize: 16,
-      padding: '10px 26px 10px 12px',
-      transition: theme.transitions.create(['border-color', 'box-shadow']),
-      // Use the system font instead of the default Roboto font.
-      fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
-      '&:focus': {
-        borderRadius: 4,
-        borderColor: '#80bdff',
-        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        marginTop:'0'
-      },
-    },
-  }))(InputBase);
+import TextField from '@material-ui/core/TextField';
+import {StyledTextField,BootstrapInput} from '../CustomizedComponents';
+
+import imgPlaceholder from "../assets/photo_placeholder.svg"
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -86,7 +52,17 @@ const DialogContent = withStyles((theme) => ({
     padding: theme.spacing(2),
   },
 }))(MuiDialogContent);
-
+const DeleteImage = withStyles((theme) => ({
+    root: {
+        transform: 'translate(0, -8vh)',
+        background: 'white',
+    },
+  }))(IconButton);
+const TitleInput = withStyles((theme)=>({
+    root: {
+        width:'90%'
+      },
+}))(TextField);
 const DialogActions = withStyles((theme) => ({
   root: {
     margin: 0,
@@ -95,23 +71,45 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 
-
-export default function CustomizedDialogs({journal}) {
+export default function CustomizedDialogs({journal, editing}) {
 
     const Image = styled.img`
     width: 100%;
     border-radius: 10px;
   `;
   const Date = styled.span`
-  margin-right: 40%;
+  margin-right: 30%;
   color:grey;
 `;
-  
-  const [open, setOpen] = React.useState(false);
-  const [visibility, setVisibility] = React.useState('private');
-  const handleChange = (event) => {
+
+const ImgPlaceholder = styled.div`
+background-image: url(${imgPlaceholder});
+background-color: aliceblue;
+background-repeat: no-repeat;
+background-size: 60%;
+height: 50vh;
+width: 564px;
+background-position: 60%;
+border-radius: 10px;
+border-style: dashed;
+border-color: lightgrey
+`;
+const UploadInstruction = styled.span`
+position: absolute;
+    transform: translate(65%, 20px);
+    font-weight: bold;
+`;
+
+  const [isEditing, setIsEditing] = useState(editing);
+  const [open, setOpen] = useState(true);
+  const [visibility, setVisibility] = useState('private');
+  const [content,setContent] = useState(journal.content);
+  const [title, setTitle] = useState(journal.title);
+  const [coverImg, setCoverImg] = useState(journal.coverImage);
+  const handleVisibilityChange = (event) => {
     setVisibility(event.target.value);
   };
+  console.log(isEditing);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -119,21 +117,39 @@ export default function CustomizedDialogs({journal}) {
   const handleClose = () => {
     setOpen(false);
   };
- 
+ const handleEdit = () =>{
+     setIsEditing(true);
+ }
+ const handleTitleChange = (e)=>{
+     setTitle(e.target.value);
+ }
+ const handleContentChange = (e) => {
+     setContent(e.target.value);
+ }
+ const handleSave = () =>{
+     setIsEditing(false)
+ }
+ const handleImgDelete = () =>{
+     console.log("delete");
+     setCoverImg('');
+ }
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} maxWidth='sm'>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-        {journal.title}
+        {!isEditing &&title}
+        {isEditing && <TitleInput id="outlined-basic" label="Title" variant="outlined" size="small" value={title} onChange={handleTitleChange}/>}
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-              <Image src={journal.coverImage} alt=''/>
-            {journal.content}
+              {isEditing && !coverImg&& <UploadInstruction>Drag and drop or click to upload</UploadInstruction>}
+              {!coverImg&&<><ImgPlaceholder/> </>}
+        
+              <Image src={coverImg} alt=''/>
+             {isEditing && coverImg &&<span onClick={handleImgDelete}> <DeleteImage aria-label="delete" ><FaRegTrashAlt/></DeleteImage></span> }
+            {!isEditing&&content}
+             {isEditing &&<TextField fullWidth id="outlined-basic"  variant="outlined" multiline="true" rows='10' value={content} onChange={handleContentChange} />}
           </Typography>
 
         </DialogContent>
@@ -144,17 +160,18 @@ export default function CustomizedDialogs({journal}) {
           labelId="demo-customized-select-label"
           id="demo-customized-select"
           value={visibility}
-          onChange={handleChange}
+          onChange={handleVisibilityChange}
           input={<BootstrapInput />}
         >
           <MenuItem value='private'>private</MenuItem>
           <MenuItem value='public'>public </MenuItem>
         </Select>
-   
-          <Button autoFocus color="primary" startIcon={<FiEdit/>}>
+        <Button autoFocus  color="primary" startIcon={<FaRegTrashAlt/>}>
           </Button>
-          <Button autoFocus  color="primary" startIcon={<FaRegTrashAlt/>}>
-          </Button>
+          {!isEditing && <Button autoFocus color="primary" startIcon={<FiEdit/>} onClick={handleEdit}>
+          </Button>}
+          {isEditing && <Button variant="contained" color='primary' onClick={handleSave}>Save</Button> }
+        
         </DialogActions>
       </Dialog>
     </div>
