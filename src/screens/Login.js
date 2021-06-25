@@ -1,39 +1,70 @@
-import React, {useState} from 'react';
+import React, { useContext, useState} from 'react';
 import {ThemeProvider} from '@material-ui/core/styles';
 import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/LoginStyle'
 import {StyledTextField} from '../CustomizedComponents'
 import login_image from '../assets/login_image.png'
+import axios from 'axios';
+import authAPIKeyContext from '../authAPI/authAPIKey-context';
+import AuthContext from '../authAPI/auth-context';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-
-const ERROR_MESSAGE = {
-    CREDENTIAL: ' Your credentials are incorrect or have expired. Please try again or reset your password.',
-    TIMEOUT: ' Login timed out. Please check your network connection.',
-    EXPIRED: ' Your session has expired due to inactivity. You have been logged out.'
-}
+import { useHistory } from 'react-router';
 
 export default function Login() {
     const classes = useStyles();
+    const history = useHistory();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState('');
+    const [errMessage, setErrMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const hasError = !!errMessage;
 
+    const authAPIKey = useContext(authAPIKeyContext);
+    const auth = useContext(AuthContext);
 
+    const handleLogin = async () => {
+        // alert('Email: ' + email + '\n Password: ' + password);
+        // Username is used in our backend only. Has nothing to do with firebase authentication.
+        const reqBody = JSON.stringify({
+            email: email,
+            password: password,
+            returnSecureToken: true
+        });
+        setIsLoading(true);
+        try {
+            const response = await axios.post(
+                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
+                reqBody,
+                {
+                    params: {key: authAPIKey.key},
+                    headers: {'Content-Type': 'application/json'}
+                }
+            );
+            // successful landing
+            hideErrorMessage();
+            console.log(response);
+            auth.loginHandler(response.data.idToken);
+            setIsLoading(false);
+            // redirect user to me page, cannot use back button to go back.
+            history.replace('/me');
 
-    const handleLogin = () => {
-        alert('Email: ' + email + '\n Password: ' + password);
-        displayErrorMessage(ERROR_MESSAGE.TIMEOUT)
+        } catch (err){
+            if(err.response.data.error.message) {
+                displayErrorMessage(err.response.data.error.message);
+            } else {
+                displayErrorMessage("Unable to login. Please try again.")
+            }
+        }
+        setIsLoading(false);
     }
 
     const displayErrorMessage = (errorMessage) => {
-        setMessage(errorMessage);
-        setError(true);
+        setErrMessage(errorMessage);
     }
 
     const hideErrorMessage = () => {
-        setError(false);
+        setErrMessage('');
     }
 
     return (
@@ -48,10 +79,10 @@ export default function Login() {
                         </Typography>
 
                         <Typography className={classes.login_error} variant="body1" color='error'>
-                            {error &&
+                            {hasError &&
                             <>
                                 <ErrorOutlineIcon color='error'/>
-                                {message}
+                                {errMessage}
                             </>
                             }
                         </Typography>
@@ -94,8 +125,10 @@ export default function Login() {
                                     color="primary"
                                     className={classes.login_button}
                                     onClick={handleLogin}
+                                    disabled={isLoading}
                                 >
-                                    Login
+                                    {!isLoading && 'Login'}
+                                    {isLoading && 'Please Wait...'}
                                 </Button>
                             </Box>
                             <Grid container>
@@ -105,7 +138,7 @@ export default function Login() {
                                     </Link>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="#" variant="body2" >
+                                    <Link href="/signup" variant="body2" >
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>

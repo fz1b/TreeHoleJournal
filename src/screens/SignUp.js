@@ -1,35 +1,70 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {ThemeProvider} from '@material-ui/core/styles';
-import {CssBaseline,Typography, Button, Box} from "@material-ui/core";
+import {CssBaseline,Typography, Button, Link, Box} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/SignUpStyle'
 import {StyledTextField} from '../CustomizedComponents'
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import sign_up_image from '../assets/sign_up_image.png'
-
-const ERROR_MESSAGE = {
-    USERNAME_EXISTS: ' The username already exists. Please try another one.',
-    EMAIL_EXISTS: ' The email has already registered an account',
-    TIMEOUT: ' Sign up timed out. Please check your network connection.',
-}
-
+import authAPIKeyContext from '../authAPI/authAPIKey-context';
+import AuthContext from '../authAPI/auth-context';
+import axios from 'axios';
+import { useHistory } from 'react-router';
 
 export default function Login() {
     const classes = useStyles();
+    const history = useHistory();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(false);
-    const [message, setMessage] = useState('');
+    const [errMessage, setErrMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const hasError = !! errMessage;
 
-    const handleSignUp = () => {
-        alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
-        displayErrorMessage(ERROR_MESSAGE.TIMEOUT)
+    const authAPIKey = useContext(authAPIKeyContext);
+    const auth = useContext(AuthContext);
+
+    const handleSignup = async () => {
+        // alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
+        // Username is used in our backend only. Has nothing to do with firebase authentication.
+        const reqBody = JSON.stringify({
+            email: email,
+            password: password,
+            returnSecureToken: true
+        });
+        setIsLoading(true);
+        try {
+            const response = await axios.post(
+                'https://identitytoolkit.googleapis.com/v1/accounts:signUp',
+                reqBody,
+                {
+                    params: {key: authAPIKey.key},
+                    headers: {'Content-Type': 'application/json'}
+                }
+            );
+            // successful landing
+            hideErrorMessage();
+            console.log(response);
+            auth.loginHandler(response.data.idToken);
+            setIsLoading(false);
+            // redirect user to me page, cannot use back button to go back.
+            history.replace('/me');
+        } catch (err){
+            if(err.response.data.error.message) {
+                displayErrorMessage(err.response.data.error.message);
+            } else {
+                displayErrorMessage("Unable to sign up. Please try again.")
+            }
+            
+        }
+        setIsLoading(false);
     }
 
     const displayErrorMessage = (errorMessage) => {
-        setMessage(errorMessage);
-        setError(true);
+        setErrMessage(errorMessage);
+    }
+    const hideErrorMessage = () => {
+        setErrMessage('');
     }
 
     return (
@@ -44,10 +79,10 @@ export default function Login() {
                         </Typography>
 
                         <Typography className={classes.signUp_error} variant="body1" color='error'>
-                            {error &&
+                            {hasError &&
                             <>
                                 <ErrorOutlineIcon color='error'/>
-                                {message}
+                                {errMessage}
                             </>
                             }
                         </Typography>
@@ -100,20 +135,24 @@ export default function Login() {
                                 autoComplete="current-password"
                                 onChange={(event => {setPassword(event.target.value)})}
                             />
-
-                            <Box className={classes.buttons}>
-                                <Button
-                                    type="button"
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.signUp_button}
-                                    onClick={handleSignUp}
-                                >
-                                    Sign Up
-                                </Button>
-                            </Box>
-                        </form>
-                    </div>
+                                <Box className={classes.buttons}>
+                                    <Button
+                                        type="button"
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.signUp_button}
+                                        onClick={handleSignup}
+                                        disabled={isLoading}
+                                    >
+                                        {!isLoading && 'Sign Up'}
+                                        {isLoading && 'Please Wait...'}
+                                    </Button>
+                                </Box>
+                            </form>
+                            <Link href="/login" variant="body2" style={{textAlign: 'center'}}>
+                                {"Already have an account? Log In"}
+                            </Link>
+                        </div>
                 </div>
             </div>
         </ThemeProvider>
