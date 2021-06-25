@@ -20,6 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import {StyledTextField,BootstrapInput} from '../CustomizedComponents';
 
 import imgPlaceholder from "../assets/photo_placeholder.svg"
+import { TramRounded } from '@material-ui/icons';
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -69,17 +70,13 @@ const DialogActions = withStyles((theme) => ({
     padding: theme.spacing(1),
   },
 }))(MuiDialogActions);
-
-
-export default function CustomizedDialogs({journal, editing, handleClose}) {
-
-    const Image = styled.img`
-    width: 100%;
-    border-radius: 10px;
-  `;
-  const Date = styled.span`
-  margin-right: 30%;
-  color:grey;
+const Image = styled.img`
+width: 100%;
+border-radius: 10px;
+`;
+const Date = styled.span`
+margin-right: 30%;
+color:grey;
 `;
 
 const ImgPlaceholder = styled.div`
@@ -96,12 +93,13 @@ border-color: lightgrey
 `;
 const UploadInstruction = styled.span`
 position: absolute;
-    transform: translate(65%, 20px);
-    font-weight: bold;
+transform: translate(65%, 20px);
+font-weight: bold;
 `;
 
+export default function CustomizedDialogs({journal, editing, handleClose}) {
+
   const [isEditing, setIsEditing] = useState(editing);
-  const [open, setOpen] = useState(true);
   const [visibility, setVisibility] = useState('private');
   const [content,setContent] = useState(journal.content);
   const [title, setTitle] = useState(journal.title);
@@ -137,14 +135,14 @@ position: absolute;
         {isEditing && <TitleInput id="outlined-basic" label="Title" variant="outlined" size="small" value={title} onChange={handleTitleChange}/>}
         </DialogTitle>
         <DialogContent dividers>
-          <Typography gutterBottom>
+          <Typography component={'span'} gutterBottom>
               {isEditing && !coverImg&& <UploadInstruction>Drag and drop or click to upload</UploadInstruction>}
               {!coverImg&&<><ImgPlaceholder/> </>}
         
               <Image src={coverImg} alt=''/>
              {isEditing && coverImg &&<span onClick={handleImgDelete}> <DeleteImage aria-label="delete" ><FaRegTrashAlt/></DeleteImage></span> }
             {!isEditing&&content}
-             {isEditing &&<TextField fullWidth id="outlined-basic"  variant="outlined" multiline="true" rows='10' value={content} onChange={handleContentChange} />}
+             {isEditing &&<TextField fullWidth id="outlined-basic"  variant="outlined" multiline rows='10' value={content} onChange={handleContentChange} />}
           </Typography>
 
         </DialogContent>
