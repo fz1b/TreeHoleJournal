@@ -62,7 +62,7 @@ export default function Login() {
     const displayErrorMessage = (errorMessage) => {
         switch (errorMessage) {
             case 'INVALID_EMAIL':
-                setErrMessage('Email format is invalid.');
+                setErrMessage('The email address is invalid.');
                 break;
             case 'EMAIL_NOT_FOUND':
             case 'INVALID_PASSWORD':
