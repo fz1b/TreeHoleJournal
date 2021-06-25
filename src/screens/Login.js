@@ -53,14 +53,25 @@ export default function Login() {
             if(err.response.data.error.message) {
                 displayErrorMessage(err.response.data.error.message);
             } else {
-                displayErrorMessage("Unable to login. Please try again.")
+                displayErrorMessage(' Login timed out. Please check your network connection.')
             }
         }
         setIsLoading(false);
     }
 
     const displayErrorMessage = (errorMessage) => {
-        setErrMessage(errorMessage);
+        switch (errorMessage) {
+            case 'INVALID_EMAIL':
+                setErrMessage('Email format is invalid.');
+                break;
+            case 'EMAIL_NOT_FOUND':
+            case 'INVALID_PASSWORD':
+                setErrMessage(' Your credentials are incorrect or have expired. Please try again or reset your password.');
+                break;
+            default:
+                setErrMessage(errorMessage);
+                break;
+        }
     }
 
     const hideErrorMessage = () => {

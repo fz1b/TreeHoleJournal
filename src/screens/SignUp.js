@@ -61,7 +61,20 @@ export default function Login() {
     }
 
     const displayErrorMessage = (errorMessage) => {
-        setErrMessage(errorMessage);
+        switch (errorMessage) {
+            case 'INVALID_EMAIL':
+                setErrMessage('The email address is invalid.');
+                break;
+            case 'EMAIL_EXISTS':
+                setErrMessage('An account with this email already exists. You might want to login.');
+                break;
+            case 'WEAK_PASSWORD : Password should be at least 6 characters':
+                setErrMessage('Password should be at least 6 characters');
+                break;
+            default:
+                setErrMessage(errorMessage);
+                break;
+        }
     }
     const hideErrorMessage = () => {
         setErrMessage('');
