@@ -50,6 +50,10 @@ export default function Me() {
   const handleModalClose = ()=>{
     setShowModal(false);
   }
+
+  const handleSave = ()=>{
+    setShowModal(false);
+  }
   return (
     <ThemeProvider theme={customizedTheme}>
       <div className="LandingPage">
@@ -67,8 +71,8 @@ export default function Me() {
           </Button>
           <DatePicker />
         </div>
-        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}></JounalModal>}
-        <CardHolder databaseFlag="" />
+        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> handleSave={handleSave}</JounalModal>}
+        <CardHolder visibility={false} />
       </div>
     </ThemeProvider>
   );

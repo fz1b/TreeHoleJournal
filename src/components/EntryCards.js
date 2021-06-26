@@ -1,53 +1,96 @@
 import React, { useState } from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from "./Modal";
-import Button from "@material-ui/core/Button";
-import {Card,CardActions, CardActionArea, CardContent, CardMedia, Typography } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
+import JournalModal from './JournalModal';
+import {
+  Card,
+  CardActions,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardHeader,
+  Avatar,
+  IconButton,
+} from "@material-ui/core";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import ShareIcon from "@material-ui/icons/Share";
+import EditIcon from "@material-ui/icons/Edit";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
-  coverImage: {
-    borderRadius:"4px 4px 0 0"
-  }
+  avatar: {
+    backgroundColor: red[500],
+  },
 });
 
 export default function Feelings(props) {
   const classes = useStyles();
 
-  const [show, setShow] = useState(false);
+  const [showModal, setshowModal] = useState(false);
+  const [isPublic, setVisibility] = useState(props.isPublic);
 
-  const showDetails = () => {
-    setShow(!show);
+  const toggleModal = () => {
+    setshowModal(!showModal);
   };
+  
 
   return (
-    <Card>
+    <>
+    <Card >
+      {isPublic && <CardHeader
+        avatar={
+          <Avatar aria-label="recipe" className={classes.avatar}>
+            {props.content.avatar}
+          </Avatar>
+        }
+        title={props.content.author}
+        subheader={props.content.date}
+      />}
       <CardActionArea>
         <CardMedia
           component="img"
-          alt="props.content.name"
+          alt="props.content.title"
           height="200"
           image={props.content.image}
-          className= {classes.coverImage}
+          className={classes.coverImage}
         />
-        <CardContent>
+        <CardContent onClick={toggleModal}>
           <Typography gutterBottom variant="h5" component="h2">
-          {props.content.name}
+            {props.content.title}
           </Typography>
-          <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '18rem'}}> 
-          <Typography variant="body2" color="textSecondary" component="p" noWrap>
-          {props.content.description}
-          </Typography>
+          <div
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              width: "18rem",
+            }}
+          >
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              component="p"
+              noWrap
+            >
+              {props.content.content}
+            </Typography>
           </div>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="secondary">
-          Learn More
-        </Button>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="edit">
+        {!isPublic && <EditIcon/>}
+        </IconButton>
+        <IconButton aria-label="share">
+          {isPublic && <ShareIcon />}
+        </IconButton>
       </CardActions>
     </Card>
+
+    {showModal && <JournalModal journal={props.content} editing={false} handleClose={toggleModal}/>}
+    </>
   );
 }
