@@ -41,12 +41,12 @@ Add registered professional therapist access.
 - Find a journal written on a specific date from the calendar
 - Tag posts & filter public posts by tags
 - Control privacy settings
-- Direct messages
+- like/ vote/ dislike
 
 ### 2-3 stretch requirements (plan to complete at least 1!)
 
 - Enable private chat between users
-- like/ vote/ dislike
+- Direct messages
 - Report abuse
 - Change font, background
 - Add music/video support
