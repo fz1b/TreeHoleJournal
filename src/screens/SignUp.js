@@ -3,7 +3,7 @@ import {ThemeProvider} from '@material-ui/core/styles';
 import {CssBaseline,Typography, Button, Link, Box} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/SignUpStyle'
-import {StyledTextField} from '../CustomizedComponents'
+import {StyledTextField} from '../components/CustomizedComponents'
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import sign_up_image from '../assets/sign_up_image.png'
 import authAPIKeyContext from '../authAPI/authAPIKey-context';

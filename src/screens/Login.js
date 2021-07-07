@@ -3,7 +3,7 @@ import {ThemeProvider} from '@material-ui/core/styles';
 import {CssBaseline,Typography, Button, Link, Box, Grid} from "@material-ui/core";
 import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/LoginStyle'
-import {StyledTextField} from '../CustomizedComponents'
+import {StyledTextField} from '../components/CustomizedComponents'
 import login_image from '../assets/login_image.png'
 import axios from 'axios';
 import authAPIKeyContext from '../authAPI/authAPIKey-context';

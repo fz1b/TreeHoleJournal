@@ -1,7 +1,7 @@
 import { Component } from "react";
 import EntryCards from "./EntryCards";
 import products from "../feelings";
-import DatabaseHandler from "../DatabaseHandler";
+import DatabaseHandler from "../Backend/DatabaseHandler";
 import {Grid, Box}  from '@material-ui/core/';
 
 // Properties: database_flag

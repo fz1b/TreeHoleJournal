@@ -1,5 +1,5 @@
 import {TextField, withStyles} from "@material-ui/core";
-import customizedTheme from "./customizedTheme";
+import customizedTheme from "../customizedTheme";
 import InputBase from '@material-ui/core/InputBase';
 // the coloring for the TextField border
 export const StyledTextField = withStyles({
