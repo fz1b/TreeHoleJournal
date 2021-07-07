@@ -15,7 +15,7 @@ import styled from "styled-components";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import {  BootstrapInput } from "../CustomizedComponents";
+import {  BootstrapInput } from "./CustomizedComponents";
 import imgPlaceholder from "../assets/photo_placeholder.svg";
 import {FaHeart, FaRegHeart} from "react-icons/fa";
 import {BsFillChatSquareDotsFill} from "react-icons/bs";
