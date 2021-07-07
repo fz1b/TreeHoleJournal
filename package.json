@@ -32,7 +32,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node ./src/Backend/Server.js"
+    "server": "node src/backend/Server.js"
   },
   "proxy": "http://localhost:5000/",
   "eslintConfig": {
