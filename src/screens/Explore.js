@@ -2,12 +2,12 @@ import customizedTheme from '../customizedTheme.js'
 import CardHolder from "../components/CardHolder";
 import Header from "../components/Header";
 import { makeStyles, ThemeProvider } from "@material-ui/core";
-import journalImg from "../assets/myjournals_bg.svg"
+import bgImg from "../assets/explore_bg.svg";
 
 
 const useStyles = makeStyles((theme) => ({
   explore_bg: {
-    backgroundImage: `url(${journalImg})`,
+    backgroundImage: `url(${bgImg})`,
     backgroundColor: 'aliceblue',
     backgroundSize: '600px',
     backgroundRepeat: 'no-repeat',
