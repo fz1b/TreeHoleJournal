@@ -4,7 +4,8 @@ import { ThemeProvider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss';
 import JournalModal from '../components/JournalModal';
-import {useState} from 'react'
+import {useState} from 'react';
+
 const mockJournal = {
     uniqueID: '111',
     title: 'The First Journal',
@@ -24,7 +25,7 @@ function TestPage(){
     }
 return(
     <ThemeProvider theme={customizedTheme}>
-        {showModal&&<JournalModal journal={mockJournal} editing={false} handleClose={handleModalClose}/>}
+        {showModal&&<JournalModal journal={mockJournal} editing={false} handleClose={handleModalClose} authorMode={true}/>}
         <Button variant="outlined" color='primary' onClick={handleShowModal}>View Modal</Button>
         <Button variant="contained" color='primary'>Login</Button>
         <TextField id="outlined-basic"  variant="outlined" size="small" />

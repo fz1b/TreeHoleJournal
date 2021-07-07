@@ -15,10 +15,11 @@ import styled from "styled-components";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import { StyledTextField, BootstrapInput } from "../CustomizedComponents";
-
+import {  BootstrapInput } from "../CustomizedComponents";
 import imgPlaceholder from "../assets/photo_placeholder.svg";
-import { TramRounded } from "@material-ui/icons";
+import {FaHeart, FaRegHeart} from "react-icons/fa";
+import {BsFillChatSquareDotsFill} from "react-icons/bs";
+import { IconContext } from "react-icons";
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -77,8 +78,8 @@ const Image = styled.img`
   border-radius: 10px;
 `;
 const Date = styled.span`
-  margin-right: 34%;
-  color: grey;
+position: absolute;
+right: 80%;
 `;
 
 const ImgPlaceholder = styled.div`
@@ -104,12 +105,14 @@ export default function CustomizedDialogs({
   editing,
   handleClose,
   saveContent,
+  authorMode,
 }) {
   const [isEditing, setIsEditing] = useState(editing);
   const [visibility, setVisibility] = useState("private");
   const [content, setContent] = useState(journal.content);
   const [title, setTitle] = useState(journal.title);
   const [coverImg, setCoverImg] = useState(journal.image);
+  const [liked, setLiked] = useState(false);
   const handleVisibilityChange = (event) => {
     setVisibility(event.target.value);
   };
@@ -125,9 +128,6 @@ export default function CustomizedDialogs({
   };
   const handleSave = () => {
     setIsEditing(false);
-    console.log(title)
-    console.log(journal.date)
-    console.log(visibility)
     saveContent(title,journal.date,visibility)
     handleClose();
   };
@@ -135,6 +135,9 @@ export default function CustomizedDialogs({
     console.log("delete");
     setCoverImg("");
   };
+  const handleLike =()=>{
+    setLiked(state=>!state)
+  }
 
   return (
     <div>
@@ -196,6 +199,8 @@ export default function CustomizedDialogs({
         </DialogContent>
         <DialogActions>
           <Date>{journal.date}</Date>
+          {authorMode&&
+          <>
           <Select
             labelId="demo-customized-select-label"
             id="demo-customized-select"
@@ -224,6 +229,26 @@ export default function CustomizedDialogs({
               Save
             </Button>
           )}
+          </>}
+          {!authorMode&& <>
+          <span onClick={handleLike}>
+         {!liked&&
+         <IconButton>
+              <FaRegHeart/>
+            </IconButton>} 
+            {liked&&
+            <IconContext.Provider value={{ color: "#b95050" }}>
+                 <IconButton >
+              <FaHeart/>
+            </IconButton>
+          </IconContext.Provider>
+            }
+          </span>
+            
+            <IconButton>
+              <BsFillChatSquareDotsFill/>
+            </IconButton>
+          </>}
         </DialogActions>
       </Dialog>
     </div>
