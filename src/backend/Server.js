@@ -12,5 +12,4 @@ let server = app.listen(PORT, function () {
 
 // get all photos
 app.get('/', (req, res) => {
-
 })

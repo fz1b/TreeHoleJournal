@@ -3,11 +3,12 @@ const mongoose = require('mongoose');
 const JournalSchema = mongoose.Schema({
         _id: mongoose.SchemaTypes.ObjectId,
         title: String,
-        author: mongoose.SchemaTypes.ObjectId,
-        date: Date,
+        author_id: String,
+        date: String,
         image: String,
         weather: String,
-        content: String
+        content: String,
+        private: Boolean
     },
     {
         collection: 'journals'
