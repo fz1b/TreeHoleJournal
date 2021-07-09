@@ -18,12 +18,9 @@ import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
-import AuthContext from '../authAPI/auth-context';
 
 export default function LeftNavBarDrawer(props) {
   const drawerWidth = props.dWidth;
-  const auth = useContext(AuthContext);
-  const isLoggedIn = auth.isLoggedIn;
   const history = props.histories;
 
   const useStyles = makeStyles((theme) => ({
@@ -60,16 +57,8 @@ export default function LeftNavBarDrawer(props) {
     props.onClose();
   };
 
-  const handleRedirectGeneral = (path) => {
+  const handleRedirect = (path) => {
     history.push(path);
-  };
-
-  const handleRedirectAuth = (path) => {
-    if (isLoggedIn) {
-      history.push(path);
-    } else {
-      history.push('/login');
-    }
   };
 
   return (
@@ -92,7 +81,7 @@ export default function LeftNavBarDrawer(props) {
       </div>
       <Divider />
       <List className={classes.contrastColor}>
-        <ListItem button onClick={() => handleRedirectGeneral('/')} key="Explore">
+        <ListItem button onClick={() => handleRedirect('/')} key="Explore">
           <ListItemIcon className={classes.contrastColor}><ExploreIcon/></ListItemIcon>
           <ListItemText primary="Explore"/>
         </ListItem>
@@ -100,7 +89,7 @@ export default function LeftNavBarDrawer(props) {
           <ListItemIcon className={classes.contrastColor}><CenterFocusStrongIcon/></ListItemIcon>
           <ListItemText primary="Follow"/>
         </ListItem>
-        <ListItem button onClick={() => handleRedirectAuth('/me')} key="Me">
+        <ListItem button onClick={() => handleRedirect('/me')} key="Me">
           <ListItemIcon className={classes.contrastColor}><PersonIcon/></ListItemIcon>
           <ListItemText primary="Me"/>
         </ListItem>
