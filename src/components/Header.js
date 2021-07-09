@@ -333,7 +333,7 @@ export default function PrimarySearchAppBar(props) {
             {isLoggedIn && renderMenu}
 
             <div className={classes.headerBottomMargin} />
-            <LeftNavBarDrawer dWidth={drawerWidth} open={open} onClose={handleDrawerClose} />
+            <LeftNavBarDrawer dWidth={drawerWidth} open={open} onClose={handleDrawerClose} histories={history}/>
         </div>
     );
 }
