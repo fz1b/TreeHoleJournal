@@ -20,6 +20,7 @@ import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 
 export default function LeftNavBarDrawer(props) {
   const drawerWidth = props.dWidth;
+  const history = props.histories;
 
   const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -55,6 +56,10 @@ export default function LeftNavBarDrawer(props) {
     props.onClose();
   };
 
+  const handleRedirect = (path) => {
+    history.push(path);
+  };
+
   return (
     <Drawer
       className={classes.drawer}
@@ -75,7 +80,7 @@ export default function LeftNavBarDrawer(props) {
       </div>
       <Divider />
       <List className={classes.contrastColor}>
-        <ListItem button key="Explore">
+        <ListItem button onClick={() => handleRedirect('/')} key="Explore">
           <ListItemIcon className={classes.contrastColor}><ExploreIcon/></ListItemIcon>
           <ListItemText primary="Explore"/>
         </ListItem>
@@ -83,7 +88,7 @@ export default function LeftNavBarDrawer(props) {
           <ListItemIcon className={classes.contrastColor}><CenterFocusStrongIcon/></ListItemIcon>
           <ListItemText primary="Follow"/>
         </ListItem>
-        <ListItem button key="Me">
+        <ListItem button onClick={() => handleRedirect('/me')} key="Me">
           <ListItemIcon className={classes.contrastColor}><PersonIcon/></ListItemIcon>
           <ListItemText primary="Me"/>
         </ListItem>
