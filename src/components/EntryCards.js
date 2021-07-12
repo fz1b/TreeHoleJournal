@@ -37,7 +37,7 @@ export default function Feelings(props) {
 
   return (
     <>
-    <Card >
+    <Card onClick={toggleModal}>
       {isPublic && <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
@@ -55,7 +55,7 @@ export default function Feelings(props) {
           image={props.content.image}
           className={classes.coverImage}
         />
-        <CardContent onClick={toggleModal}>
+        <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {props.content.title}
           </Typography>
@@ -81,15 +81,9 @@ export default function Feelings(props) {
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="edit">
         {!isPublic && <EditIcon/>}
-        </IconButton>
-        <IconButton aria-label="share">
-          {isPublic && <ShareIcon />}
-        </IconButton>
       </CardActions>
     </Card>
-
     {showModal && <JournalModal journal={props.content} editing={false} handleClose={toggleModal}/>}
     </>
   );
