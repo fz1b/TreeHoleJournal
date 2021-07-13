@@ -50,6 +50,7 @@ export default function Login() {
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
         } catch (err){
+            console.log(err.response);
             if(err.response.data.error.message) {
                 displayErrorMessage(err.response.data.error.message);
             } else {

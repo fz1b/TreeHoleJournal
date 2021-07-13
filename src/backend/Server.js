@@ -9,6 +9,8 @@ mongoose.set('useFindAndModify', false);
 const DB_NAME = 'TreeHole';
 const mongoURL = 'mongodb+srv://CallbackKarma:treehole2021@cluster0.uyjr5.mongodb.net/'+DB_NAME+'?retryWrites=true&w=majority';
 
+const userServices = require('./services/UserServices');
+
 let server = app.listen(PORT, function () {
     let host = server.address().address;
     let port = server.address().port;
@@ -24,3 +26,5 @@ let server = app.listen(PORT, function () {
 app.get('/', (req, res) => {
 
 })
+
+app.post('/user/signup', userServices.signUpService)
