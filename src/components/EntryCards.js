@@ -47,7 +47,7 @@ export default function Feelings(props) {
         title={props.content.author}
         subheader={props.content.date}
       />}
-      <CardActionArea>
+      <CardActionArea style={{display: 'block'}}>
         <CardMedia
           component="img"
           alt="props.content.title"
