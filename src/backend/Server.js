@@ -54,7 +54,7 @@ app.get('/me/:user_id', (req, res) => {
 })
 
 // create a new journal
-// req-body: user id, journal JSON obj
+// req-body: user id, journal fields except comments
 // response: the added journal
 app.post('/me/:user_id', (req, res)=>{
     const journal = new Journal({
@@ -65,7 +65,8 @@ app.post('/me/:user_id', (req, res)=>{
         image: req.body.image,
         weather: req.body.weather,
         content: req.body.content,
-        privacy: req.body.privacy
+        privacy: req.body.privacy,
+        comments: []
     })
 
     journal.save().then(result=>{
@@ -89,17 +90,18 @@ app.delete('/me/:user_id/:journal_id', (req,res)=>{
 })
 
 // edit a journal
-// req-body: user_id, journal id, journal JSON obj
+// req-body: user_id, journal id, journal fields except comments
 // response: the journal JSON after edition
 app.put('/me/:user_id/:journal_id', (req, res)=>{
     Journal.findByIdAndUpdate(req.params.journal_id, {
-        title: req.body.title,
-        author_id: req.params.user_id,
-        date: req.body.date,
-        image: req.body.image,
-        weather: req.body.weather,
-        content: req.body.content,
-        privacy: req.body.privacy
+        $set: {
+            title: req.body.title,
+            date: req.body.date,
+            image: req.body.image,
+            weather: req.body.weather,
+            content: req.body.content,
+            privacy: req.body.privacy
+        }
     },{new: true})
         .then(result=>{
             res.status(200).json(result);
@@ -110,18 +112,84 @@ app.put('/me/:user_id/:journal_id', (req, res)=>{
 })
 
 // change the privacy setting of a journal
-// req-body: user_id, journal id, new privacy setting
+// req-body: new privacy setting
 // response: the journal JSON after edition
 app.put('/me/:user_id/:journal_id/privacy', (req, res)=>{
-    Journal.findByIdAndUpdate(req.params.journal_id, {
-        $set: {
-            privacy: req.body.privacy
-        }
-    }, {new: true})
+    Journal.findByIdAndUpdate(req.params.journal_id,
+        {
+            $set: {
+                privacy: req.body.privacy
+            }
+        }, {new: true})
         .then(result=>{
             res.status(200).json(result);
         }).catch(err => {
             console.error(err);
             res.status(500).json(err);
         })
+})
+
+// create a comment and add it to a journal
+// req-body: comment fields
+// response: the journal JSON with comments added
+app.post('/explore/:journal_id/comments/:commenter_id', (req, res)=>{
+    const comment = {
+        _id: new mongoose.Types.ObjectId(),
+        author_id: req.params.commenter_id,
+        date: req.body.date,
+        content: req.body.content,
+        anonymous: req.body.anonymous,
+        edited: false
+    }
+
+    Journal.findByIdAndUpdate(req.params.journal_id,
+        {
+            $push: {
+                comments: comment
+            }
+        }, {new: true})
+        .then(result=>{
+            res.status(200).json(result);
+        }).catch(err => {
+        console.error(err);
+        res.status(500).json(err);
+    })
+})
+
+// edit a comment, set the 'edited' field to true
+// req-body: new comment content, anonymous
+// response: the journal JSON with comments edited
+app.put('/explore/:journal_id/comments/:comment_id', (req, res)=>{
+    Journal.findOneAndUpdate({'comments._id': req.params.comment_id},
+        {
+            $set: {
+                'comments.$.content': req.body.content,
+                'comments.$.anonymous': req.body.anonymous,
+                'comments.$.edited': true
+            }
+        }, {new: true})
+        .then(result=>{
+            res.status(200).json(result);
+        }).catch(err => {
+        console.error(err);
+        res.status(500).json(err);
+    })
+})
+
+// delete a comment
+// req-body: null
+// response: the journal JSON with comments deleted
+app.delete('/explore/:journal_id/comments/:comment_id', (req,res)=>{
+    Journal.findOneAndUpdate({'comments._id': req.params.comment_id},
+        {
+            $pull: {
+                comments: {_id: req.params.comment_id}
+            }
+        }, {new: true})
+        .then(result=>{
+            res.status(200).json(result);
+        }).catch(err => {
+        console.error(err);
+        res.status(500).json(err);
+    })
 })

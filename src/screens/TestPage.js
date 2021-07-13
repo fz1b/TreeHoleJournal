@@ -6,8 +6,8 @@ import GlobalCss from '../GlobalCss';
 import JournalModal from '../components/JournalModal';
 import {useState} from 'react';
 import {
-    changePrivacySetting,
-    createJournal,
+    changePrivacySetting, createComment,
+    createJournal, deleteComment, editComment,
     editJournal,
     getExploreJournals,
     getUserJournals
@@ -31,11 +31,9 @@ function TestPage(){
         setShowModal(false)
     }
     const handleRequest = ()=>{
-        changePrivacySetting('DguhgKwEsFcnWfGM6Av8faDiVpw1',
-            '60ebcceb76ac463ed317f37b',
-            "ANONYMOUS"
-        )
-            .then(res => alert(JSON.stringify(res)));
+        // deleteComment('60ebcceb76ac463ed317f37b','60ed04d104d5b51ca05160fe')
+        //     .then(res => alert(JSON.stringify(res)));
+        alert('HOW DARE YOU TOUGH MY BUTTON?');
     }
 
 return(
