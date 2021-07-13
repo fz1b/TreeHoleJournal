@@ -5,6 +5,13 @@ import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss';
 import JournalModal from '../components/JournalModal';
 import {useState} from 'react';
+import {
+    changePrivacySetting, createComment,
+    createJournal, deleteComment, editComment,
+    editJournal,
+    getExploreJournals,
+    getUserJournals
+} from "../backend/services/JournalServices";
 
 const mockJournal = {
     uniqueID: '111',
@@ -23,6 +30,12 @@ function TestPage(){
     const handleModalClose = ()=>{
         setShowModal(false)
     }
+    const handleRequest = ()=>{
+        // deleteComment('60ebcceb76ac463ed317f37b','60ed04d104d5b51ca05160fe')
+        //     .then(res => alert(JSON.stringify(res)));
+        alert('HOW DARE YOU TOUCH MY BUTTON?');
+    }
+
 return(
     <ThemeProvider theme={customizedTheme}>
         {showModal&&<JournalModal journal={mockJournal} editing={false} handleClose={handleModalClose} authorMode={true}/>}
@@ -30,6 +43,7 @@ return(
         <Button variant="contained" color='primary'>Login</Button>
         <TextField id="outlined-basic"  variant="outlined" size="small" />
         <TextField id="outlined-basic"  variant="outlined" multiline="true" rows='10' />
+        <Button variant="outlined" color='primary' onClick={handleRequest}>Request</Button>
         <GlobalCss/>
         <Button classes={{ label: 'bigBtn' }}>Hello</Button>
 

@@ -1,15 +1,15 @@
 import { Component } from "react";
 import EntryCards from "./EntryCards";
-import products from "../feelings";
+import journals from "../journals";
 import {Grid, Box}  from '@material-ui/core/';
 
-// Properties: database_flag
+
 // a container to hold journal cards
 export class CardHolder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: products,
+      list: journals,
     };
   }
 
@@ -24,10 +24,10 @@ export class CardHolder extends Component {
           alignItems="center"
           spacing={3}
         >
-          {this.state.list.map((f, index) => (
+          {this.state.list.map((j, index) => (
             <Grid item xs={12} sm = {6} md={4} lg = {3}>
               <EntryCards
-                content={f}
+                content={j}
                 isPublic = {this.props.isPublic}
               />
             </Grid>

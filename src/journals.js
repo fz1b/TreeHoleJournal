@@ -1,4 +1,4 @@
-const products = [
+const journals = [
   {
     title: "Sunset Painting",
     author: "Jerome L.",
@@ -68,4 +68,4 @@ const products = [
     content:"Sea otters are so lovely and smart~"
   }
 ];
-export default products;
+export default journals;
