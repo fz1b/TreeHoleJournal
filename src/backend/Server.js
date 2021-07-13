@@ -100,10 +100,28 @@ app.put('/me/:user_id/:journal_id', (req, res)=>{
         weather: req.body.weather,
         content: req.body.content,
         privacy: req.body.privacy
-    }).then(result=>{
-        Journal.findById(req.params.journal_id).then(response=>res.status(200).json(response));
-    }).catch(err => {
-        console.error(err);
-        res.status(500).json(err);
-    })
+    },{new: true})
+        .then(result=>{
+            res.status(200).json(result);
+        }).catch(err => {
+            console.error(err);
+            res.status(500).json(err);
+        })
+})
+
+// change the privacy setting of a journal
+// req-body: user_id, journal id, new privacy setting
+// response: the journal JSON after edition
+app.put('/me/:user_id/:journal_id/privacy', (req, res)=>{
+    Journal.findByIdAndUpdate(req.params.journal_id, {
+        $set: {
+            privacy: req.body.privacy
+        }
+    }, {new: true})
+        .then(result=>{
+            res.status(200).json(result);
+        }).catch(err => {
+            console.error(err);
+            res.status(500).json(err);
+        })
 })

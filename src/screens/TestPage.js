@@ -5,7 +5,13 @@ import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss';
 import JournalModal from '../components/JournalModal';
 import {useState} from 'react';
-import {createJournal, editJournal, getExploreJournals, getUserJournals} from "../backend/services/JournalServices";
+import {
+    changePrivacySetting,
+    createJournal,
+    editJournal,
+    getExploreJournals,
+    getUserJournals
+} from "../backend/services/JournalServices";
 
 const mockJournal = {
     uniqueID: '111',
@@ -25,15 +31,10 @@ function TestPage(){
         setShowModal(false)
     }
     const handleRequest = ()=>{
-        editJournal('DguhgKwEsFcnWfGM6Av8faDiVpw1',
-            '60ebbf01f207e26798908534',
-            "test test test",
-            "July 12th, 2021",
-            "https://blooloop.com/wp-content/uploads/2021/04/vancouver-aquarium-herschend-768x480.jpeg",
-            "sunny",
-            "Sea otters are so lovely and smart~",
-            "PUBLIC"
-            )
+        changePrivacySetting('DguhgKwEsFcnWfGM6Av8faDiVpw1',
+            '60ebcceb76ac463ed317f37b',
+            "ANONYMOUS"
+        )
             .then(res => alert(JSON.stringify(res)));
     }
 

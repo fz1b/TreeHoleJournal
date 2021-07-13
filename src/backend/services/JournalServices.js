@@ -2,7 +2,7 @@
 const axios = require('axios').default;
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
-// req-body: null
+// input: void
 // response: list of journals JSON obj
 export function getExploreJournals() {
     return axios.get('/explore')
@@ -20,7 +20,7 @@ export function getExploreJournals() {
 }
 
 // get all journals from a specific user
-// req-body: user id
+// input: user id
 // response: list of journals JSON obj
 export function getUserJournals(user_id) {
     return axios.get('/me/'+user_id)
@@ -38,7 +38,7 @@ export function getUserJournals(user_id) {
 }
 
 // create a new journal
-// req-body: user id, journal JSON obj
+// input: user id, journal fields
 // response: the added journal
 export function createJournal(user_id, title, date, image, weather, content, privacy) {
     return axios.post('/me/'+user_id, {
@@ -61,7 +61,7 @@ export function createJournal(user_id, title, date, image, weather, content, pri
 }
 
 // delete a journal
-// req-body: journal id,
+// input: user_id, journal id,
 // response: null
 export function deleteJournal(user_id, journal_id) {
     return axios.delete('/me/'+user_id+'/'+journal_id)
@@ -77,7 +77,7 @@ export function deleteJournal(user_id, journal_id) {
 }
 
 // edit a journal
-// req-body: user_id, journal id, journal JSON obj
+// input: user_id, journal id, journal fields
 // response: the journal JSON after edition
 export function editJournal(user_id, journal_id, title, date, image, weather, content, privacy) {
     return axios.put('/me/'+user_id+'/'+journal_id, {
@@ -97,4 +97,20 @@ export function editJournal(user_id, journal_id, title, date, image, weather, co
         console.error(err);
         return err;
     })
+}
+
+// change the privacy setting of a journal
+// input: user_id, journal id, new privacy setting
+// response: the journal JSON after edition
+export function changePrivacySetting(user_id, journal_id, privacy) {
+    return axios.put('/me/'+user_id+'/'+journal_id+'/privacy', {privacy: privacy})
+        .then(res=>{
+            if (res.status !== 200){
+                console.error(res.data);
+            }
+            return res.data;
+        }).catch(err => {
+            console.error(err);
+            return err;
+        })
 }
