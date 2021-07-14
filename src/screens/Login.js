@@ -6,7 +6,6 @@ import {useStyles} from '../stylesheets/LoginStyle'
 import {StyledTextField} from '../components/CustomizedComponents'
 import login_image from '../assets/login_image.png'
 import axios from 'axios';
-import authAPIKeyContext from '../authAPI/authAPIKey-context';
 import AuthContext from '../authAPI/auth-context';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { useHistory } from 'react-router';
@@ -19,44 +18,40 @@ export default function Login() {
     const [errMessage, setErrMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const hasError = !!errMessage;
-
-    const authAPIKey = useContext(authAPIKeyContext);
     const auth = useContext(AuthContext);
 
     const handleLogin = async () => {
-        // alert('Email: ' + email + '\n Password: ' + password);
-        // Username is used in our backend only. Has nothing to do with firebase authentication.
         const reqBody = JSON.stringify({
             email: email,
             password: password,
-            returnSecureToken: true
         });
+        if(email==='' || password==='') {
+            displayErrorMessage("All three fields cannot be empty. Please try again.");
+            return;
+        }
         setIsLoading(true);
         try {
             const response = await axios.post(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
+                'http://localhost:5000/users/login',
                 reqBody,
                 {
-                    params: {key: authAPIKey.key},
                     headers: {'Content-Type': 'application/json'}
                 }
             );
             // successful landing
             hideErrorMessage();
-            console.log(response);
-            auth.loginHandler(response.data.idToken);
-            setIsLoading(false);
+            auth.loginHandler({token: response.data.idToken, userid: response.data.userData._id});
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
 
         } catch (err){
-            if(err.response.data.error.message) {
-                displayErrorMessage(err.response.data.error.message);
+            if(err.response.data.message) {
+                displayErrorMessage(err.response.data.message);
             } else {
-                displayErrorMessage(' Login timed out. Please check your network connection.')
+                displayErrorMessage('Unable to login. Please try again later.');
             }
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }
 
     const displayErrorMessage = (errorMessage) => {

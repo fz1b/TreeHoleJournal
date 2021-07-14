@@ -6,12 +6,11 @@ import {useStyles} from '../stylesheets/SignUpStyle'
 import {StyledTextField} from '../components/CustomizedComponents'
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import sign_up_image from '../assets/sign_up_image.png'
-import authAPIKeyContext from '../authAPI/authAPIKey-context';
 import AuthContext from '../authAPI/auth-context';
 import axios from 'axios';
 import { useHistory } from 'react-router';
 
-export default function Login() {
+export default function SignUp() {
     const classes = useStyles();
     const history = useHistory();
     const [username, setUsername] = useState('');
@@ -20,44 +19,40 @@ export default function Login() {
     const [errMessage, setErrMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const hasError = !! errMessage;
-
-    const authAPIKey = useContext(authAPIKeyContext);
     const auth = useContext(AuthContext);
 
     const handleSignup = async () => {
-        // alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
-        // Username is used in our backend only. Has nothing to do with firebase authentication.
         const reqBody = JSON.stringify({
+            name: username,
             email: email,
             password: password,
-            returnSecureToken: true
         });
+        if(username==='' || email==='' || password==='') {
+            displayErrorMessage("All three fields cannot be empty. Please try again.");
+            return;
+        } 
         setIsLoading(true);
         try {
             const response = await axios.post(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signUp',
+                'http://localhost:5000/users/signup',
                 reqBody,
                 {
-                    params: {key: authAPIKey.key},
                     headers: {'Content-Type': 'application/json'}
                 }
             );
             // successful landing
             hideErrorMessage();
-            console.log(response);
-            auth.loginHandler(response.data.idToken);
-            setIsLoading(false);
+            auth.loginHandler({token: response.data.idToken, userid: response.data.userData._id});
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
-        } catch (err){
-            if(err.response.data.error.message) {
-                displayErrorMessage(err.response.data.error.message);
+        } catch (err){    
+            if(err.response.data.message) {
+                displayErrorMessage(err.response.data.message);
             } else {
                 displayErrorMessage("Unable to sign up. Please try again.")
             }
-            
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }
 
     const displayErrorMessage = (errorMessage) => {
@@ -70,6 +65,9 @@ export default function Login() {
                 break;
             case 'WEAK_PASSWORD : Password should be at least 6 characters':
                 setErrMessage('Password should be at least 6 characters');
+                break;
+            case 'Sign Up successful Database error':
+                setErrMessage('Sign up is successful. However due to server issues please try to login at a later time.')
                 break;
             default:
                 setErrMessage(errorMessage);
