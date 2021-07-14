@@ -40,7 +40,6 @@ export default function Login() {
             );
             // successful landing
             hideErrorMessage();
-            console.log(response.data);
             auth.loginHandler({token: response.data.idToken, userid: response.data.userData._id});
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
