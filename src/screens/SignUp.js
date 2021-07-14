@@ -22,8 +22,6 @@ export default function SignUp() {
     const auth = useContext(AuthContext);
 
     const handleSignup = async () => {
-        // alert('Username: ' + username + '\nEmail: ' + email + '\nPassword: ' + password);
-        // Username is used in our backend only. Has nothing to do with firebase authentication.
         const reqBody = JSON.stringify({
             name: username,
             email: email,
@@ -45,7 +43,6 @@ export default function SignUp() {
             // successful landing
             hideErrorMessage();
             auth.loginHandler({token: response.data.idToken, userid: response.data.userData._id});
-            setIsLoading(false);
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
         } catch (err){    
@@ -54,8 +51,8 @@ export default function SignUp() {
             } else {
                 displayErrorMessage("Unable to sign up. Please try again.")
             }
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }
 
     const displayErrorMessage = (errorMessage) => {
