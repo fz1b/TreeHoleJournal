@@ -16,7 +16,8 @@ let server = app.listen(PORT, function () {
     let port = server.address().port;
     mongoose.connect(mongoURL, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true
     })
         .then(res=>console.log("server started on port: %s", port))
         .catch(err=>{console.log(err)});
@@ -27,4 +28,6 @@ app.get('/', (req, res) => {
 
 })
 
-app.post('/user/signup', userServices.signUpService)
+// User Services
+app.post('/users/signup', userServices.signUpService);
+app.post('/users/login', userServices.loginService);
