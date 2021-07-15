@@ -1,4 +1,4 @@
-// services for journals
+// controller for journals
 const axios = require('axios').default;
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
