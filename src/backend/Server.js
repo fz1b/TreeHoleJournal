@@ -29,13 +29,15 @@ let server = app.listen(PORT, function () {
 app.post('/users/signup', userController.signUp);
 app.post('/users/login', userController.login);
 
-// Journal
+// Journals -- Explore
 app.get('/explore', journalController.getExploreJournals)
+app.post('/explore/:journal_id/comments/:commenter_id', journalController.createComment);
+app.put('/explore/:journal_id/comments/:comment_id', journalController.editComment);
+app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
+
+// Journals -- Me
 app.get('/me/:user_id', journalController.getUserJournals);
 app.post('/me/:user_id', journalController.createNewJournal);
 app.delete('/me/:user_id/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);
 app.put('/me/:user_id/:journal_id/privacy', journalController.editJournalPrivacySetting);
-app.post('/explore/:journal_id/comments/:commenter_id', journalController.createComment);
-app.put('/explore/:journal_id/comments/:comment_id', journalController.editComment);
-app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
