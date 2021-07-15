@@ -1,3 +1,5 @@
+// controller for Journal
+
 const mongoose = require("mongoose");
 const {Journal, PRIVACY} = require("../models/JournalSchema");
 
