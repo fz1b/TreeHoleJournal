@@ -1,4 +1,4 @@
-// services for user
+// controller for user
 const axios = require('axios');
 const mongoose = require('mongoose');
 const User = require('../models/UserSchema');
@@ -37,7 +37,7 @@ const firebaseAPIKey = 'AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs';
 //         "__v": 0
 //     }
 // }
-const signUpService = async (req, res) => {
+const signUp = async (req, res) => {
 
     const { email, password, name } = req.body;
 
@@ -126,7 +126,7 @@ const signUpService = async (req, res) => {
 //         "__v": 0
 //     }
 // }
-const loginService = async (req, res) => {
+const login = async (req, res) => {
 
     const { email, password } = req.body;
 
@@ -190,5 +190,5 @@ const loginService = async (req, res) => {
     return res.status(200).json(response);
 }
 
-exports.signUpService = signUpService;
-exports.loginService = loginService;
+exports.signUp = signUp;
+exports.login = login;

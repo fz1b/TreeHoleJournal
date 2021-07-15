@@ -11,7 +11,7 @@ import {
     editJournal,
     getExploreJournals,
     getUserJournals
-} from "../backend/services/JournalServices";
+} from "../services/JournalServices";
 
 const mockJournal = {
     uniqueID: '111',
