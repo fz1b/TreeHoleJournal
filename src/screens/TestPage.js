@@ -11,7 +11,7 @@ import {
     editJournal,
     getExploreJournals,
     getUserJournals
-} from "../backend/services/JournalServices";
+} from "../services/JournalServices";
 
 const mockJournal = {
     uniqueID: '111',
@@ -38,7 +38,7 @@ function TestPage(){
 
 return(
     <ThemeProvider theme={customizedTheme}>
-        {showModal&&<JournalModal journal={mockJournal} editing={false} handleClose={handleModalClose} authorMode={true}/>}
+        {showModal&&<JournalModal journal={mockJournal} editing={false} handleClose={handleModalClose} authorMode={false}/>}
         <Button variant="outlined" color='primary' onClick={handleShowModal}>View Modal</Button>
         <Button variant="contained" color='primary'>Login</Button>
         <TextField id="outlined-basic"  variant="outlined" size="small" />
