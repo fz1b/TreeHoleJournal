@@ -1,4 +1,5 @@
 import React from "react";
+import CommentArea from "./CommentArea.js"
 import { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -113,6 +114,7 @@ export default function CustomizedDialogs({
   const [title, setTitle] = useState(journal.title);
   const [coverImg, setCoverImg] = useState(journal.image);
   const [liked, setLiked] = useState(false);
+  const [showComments,setShowComments] = useState(false);
   const handleVisibilityChange = (event) => {
     setVisibility(event.target.value);
   };
@@ -137,6 +139,10 @@ export default function CustomizedDialogs({
   };
   const handleLike =()=>{
     setLiked(state=>!state)
+  }
+  const handleShowComments = ()=>{
+    console.log('clicked');
+    setShowComments(state=>!state);
   }
 
   return (
@@ -244,12 +250,14 @@ export default function CustomizedDialogs({
           </IconContext.Provider>
             }
           </span>
-            
-            <IconButton>
+          <span onClick={handleShowComments}>
+          <IconButton>
               <BsFillChatSquareDotsFill/>
             </IconButton>
+          </span>
           </>}
         </DialogActions>
+          {showComments&&<CommentArea/>}  
       </Dialog>
     </div>
   );
