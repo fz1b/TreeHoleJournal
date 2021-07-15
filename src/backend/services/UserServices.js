@@ -90,7 +90,12 @@ const signUpService = async (req, res) => {
         idToken: firebaseResponse.data.idToken,
         refreshToken: firebaseResponse.data.refreshToken,
         expiresIn: firebaseResponse.data.expiresIn,
-        userData: newUser
+        userData: {
+            name: newUser.name,
+            email: newUser.email,
+            likes: newUser.likes,
+            collections: newUser.collections
+        }
     };
     return res.status(200).json(response);
 }
@@ -185,7 +190,12 @@ const loginService = async (req, res) => {
         idToken: firebaseResponse.data.idToken,
         refreshToken: firebaseResponse.data.refreshToken,
         expiresIn: firebaseResponse.data.expiresIn,
-        userData: foundUser
+        userData: {
+            name: foundUser.name,
+            email: foundUser.email,
+            likes: foundUser.likes,
+            collections: foundUser.collections
+        }
     };
     return res.status(200).json(response);
 }
