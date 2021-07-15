@@ -200,5 +200,89 @@ const loginService = async (req, res) => {
     return res.status(200).json(response);
 }
 
+
+const getUserInfoHelper = async (req, res, isSecure) => {
+    const idtoken = req.body.idToken;
+    let firebaseResponse = {};
+
+    if (!idtoken) {
+        return res.status(400).json({status:400, message:"Invalid request body"});
+    }
+
+    // Step One: call Firebase
+    try {
+        firebaseResponse = await axios.post(
+            'https://identitytoolkit.googleapis.com/v1/accounts:lookup',
+            {
+                idToken: idtoken
+            },
+            {
+                params: { key: firebaseAPIKey },
+                headers: { 'Content-Type': 'application/json' }
+            }
+        );
+    } catch (firebaseErr) {
+        if (firebaseErr.response.data.error.message) {
+            response = {
+                status: 400,
+                message: firebaseErr.response.data.error.message
+            };
+            return res.status(400).json(response);
+        }
+        return res.status(500).json({ status: 500, message: "Firebase Server Error" });
+    }
+
+    // Step Two: Get User Info from our database 
+    const userid = firebaseResponse.data.users[0].localId;
+    let userData;
+
+    try {
+        if (isSecure) {
+            userData = await User.findById(userid);
+        } else {
+            userData = await User.findById(userid, '-_id');
+        }
+    } catch (err) {
+        return res.status(500).json({status: 500, message: "Database Error"});
+    }
+
+    return res.status(200).json({status: 200, userData: userData});
+
+}
+
+// Request Body Format
+// {
+//  "idToken": "firebase idToken took from authContext.token",
+// }
+// Response Format
+// {
+//     "status": 200,
+//     "userData": {
+//         "likes": [],
+//         "collections": [],
+//         "name": "test",
+//         "email": "test@test.com",
+//         "__v": 0,
+//         "_id": "wHoVreiPACc0BjVYyHPEBooQejD3", -- if secure route is used, id will be returned
+//     }
+// }
+// {
+//     status: 400/500
+//     message: [
+//                 'INVALID_ID_TOKEN' -- The user's credential is no longer valid. The user must sign in again,
+//                 'USER_NOT_FOUND' -- There is no user record corresponding to this identifier. The user may have been deleted,
+//                 'Firebase Server Error',
+//                 'Database Error'
+//              ]
+// }
+const getUserInfo = async (req, res) => {
+    return await getUserInfoHelper(req, res, false);
+}
+const getUserInfoSecure = async (req, res) => {
+    return await getUserInfoHelper(req, res, true);
+}
+
 exports.signUpService = signUpService;
 exports.loginService = loginService;
+exports.getUserInfo = getUserInfo;
+exports.getUserInfoSecure = getUserInfoSecure;

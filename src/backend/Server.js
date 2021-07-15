@@ -27,8 +27,15 @@ let server = app.listen(PORT, function () {
 })
 
 // User Services
+// signup service
 app.post('/users/signup', userServices.signUpService);
+// login service
 app.post('/users/login', userServices.loginService);
+// get user info (for FE use, hide userid)
+app.get('/users/info', userServices.getUserInfo);
+// get user info secure (for BE use, provide userid)
+app.get('/users/info/secure', userServices.getUserInfoSecure);
+
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // req-body: null
