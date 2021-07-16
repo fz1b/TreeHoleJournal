@@ -149,7 +149,7 @@ export default function CustomizedDialogs({
                     </>}
                     <>
                         <span onClick={handleLike}>
-                        {!liked &&
+                            {!liked &&
                             <IconButton>
                                 <FaRegHeart/>
                             </IconButton>}

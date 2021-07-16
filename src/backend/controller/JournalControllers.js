@@ -79,7 +79,8 @@ const deleteJournal = async (req, res)=>{
 // response: the Journal JSON after edition
 const editJournal = async (req, res)=>{
     Journal.findByIdAndUpdate(req.params.journal_id, {
-        $set: req.body.journal
+        $set: req.body
+
     },{new: true})
         .then(result=>{
             res.status(200).json(result);

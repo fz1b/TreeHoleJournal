@@ -18,13 +18,12 @@ export function CardHolder(props){
 
 
   const updateJournal = (journal_id, newJournal) => {
-      let index = journals.findIndex((elem)=>{
-          elem.journal_id=journal_id
+      let index = journals.findIndex((journal)=>{
+          return journal._id===journal_id;
       });
-
       let newJournals = [...journals];
       newJournals[index] = newJournal;
-      setJournals(newJournal);
+      setJournals(newJournals);
   }
 
   return (

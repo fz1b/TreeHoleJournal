@@ -77,12 +77,11 @@ export function deleteJournal(user_id, journal_id) {
 }
 
 // edit a journal
-// input: user_id, journal id, journal JSON object with edited fields
+// input: user_id, journal id, journal fields
 // response: the journal JSON after edition
 export function editJournal(user_id, journal_id, title, date, image, weather, content, privacy) {
     return axios.put('/me/'+user_id+'/'+journal_id, {
         title: title,
-        author_id: user_id,
         date: date,
         image: image,
         weather: weather,

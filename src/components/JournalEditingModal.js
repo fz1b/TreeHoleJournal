@@ -221,7 +221,8 @@ export default function CustomizedDialogs({
                                 </IconButton>
                             </span>
                             <Button variant="contained" color="primary"
-                                    onClick={alert('AAAAA')}>
+                                    onClick={()=>
+                                        handleSave(title, journal.date, coverImg, journal.weather, content, privacy)}>
                                 Save
                             </Button>
                         </>}

@@ -33,8 +33,9 @@ function TestPage(){
         setShowModal(false)
     }
     const handleRequest = ()=>{
-        getExploreJournals()
-            .then(res => alert(JSON.stringify(res)));
+        // editJournal('3545345354', '60ebcceb76ac463ed317f37b', 'Test Test', '', 'https://blooloop.com/wp-content/uploads/2021/04/vancouver-aquarium-herschend-768x480.jpeg',
+        //     'sunny', '354354534354545345', 'ANONYMOUS')
+        //     .then(res => alert(JSON.stringify(res)));
         // alert('HOW DARE YOU TOUCH MY BUTTON?');
     }
 

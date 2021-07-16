@@ -6,17 +6,18 @@ function JournalModal(props){
     const [editing,setEditing] = useState(false);
 
     const handleSave = (title, date, image, weather, content, privacy) =>{
-        // editJournal(props.journal.author_id, props.journal.journal_id,
-        //     title,
-        //     date,
-        //     image,
-        //     weather,
-        //     content,
-        //     privacy
-        // ).then( res =>{
-        //     props.updateJournal(props.journal.journal_id, res);
-        // });
-
+        editJournal(props.journal.author_id, props.journal._id,
+            title,
+            date,
+            image,
+            weather,
+            content,
+            privacy
+        ).then( res =>{
+            props.updateJournal(props.journal._id, res);
+        }).catch(err => {
+            console.log(err);
+        });
         setEditing(false);
     }
     const handleEdit = ()=>{
