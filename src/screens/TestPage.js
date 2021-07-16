@@ -3,7 +3,9 @@ import customizedTheme from '../customizedTheme.js'
 import { ThemeProvider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss';
-import JournalModal from '../components/JournalModal';
+import JournalViewingModal from '../components/JournalViewingModal';
+import JournalEditingModal from '../components/JournalEditingModal';
+import JournalModal from '../components/JournalModal'
 import {useState} from 'react';
 import {
     changePrivacySetting, createComment,
@@ -38,7 +40,7 @@ function TestPage(){
 
 return(
     <ThemeProvider theme={customizedTheme}>
-        {showModal&&<JournalModal journal={mockJournal} editing={false} handleClose={handleModalClose} authorMode={false}/>}
+        {showModal&&<JournalModal journal={mockJournal} handleClose={handleModalClose} authorMode={true}/>}
         <Button variant="outlined" color='primary' onClick={handleShowModal}>View Modal</Button>
         <Button variant="contained" color='primary'>Login</Button>
         <TextField id="outlined-basic"  variant="outlined" size="small" />
