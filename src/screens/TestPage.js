@@ -33,9 +33,9 @@ function TestPage(){
         setShowModal(false)
     }
     const handleRequest = ()=>{
-        // deleteComment('60ebcceb76ac463ed317f37b','60ed04d104d5b51ca05160fe')
-        //     .then(res => alert(JSON.stringify(res)));
-        alert('HOW DARE YOU TOUCH MY BUTTON?');
+        getExploreJournals()
+            .then(res => alert(JSON.stringify(res)));
+        // alert('HOW DARE YOU TOUCH MY BUTTON?');
     }
 
 return(

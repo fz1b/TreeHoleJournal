@@ -7,9 +7,9 @@ const axios = require('axios').default;
 export function getExploreJournals() {
     return axios.get('/explore')
         .then(res => {
-            // console.log(journals);
+            // console.log(res.data);
             if (res.status !== 200){
-                console.error(res.data);
+                console.error(res.data.json);
             }
             return res.data;
         })
@@ -77,7 +77,7 @@ export function deleteJournal(user_id, journal_id) {
 }
 
 // edit a journal
-// input: user_id, journal id, journal fields except comments
+// input: user_id, journal id, journal JSON object with edited fields
 // response: the journal JSON after edition
 export function editJournal(user_id, journal_id, title, date, image, weather, content, privacy) {
     return axios.put('/me/'+user_id+'/'+journal_id, {
