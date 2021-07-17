@@ -201,12 +201,12 @@ const login = async (req, res) => {
 }
 
 const getUserInfoHelper = async (req, res, isSecure) => {
-    const idtoken = req.param.idToken;
+    const idtoken = req.query.idToken;
     let firebaseResponse = {};
 
-    // if (!idtoken) {
-    //     return res.status(400).json({status:400, message:"Invalid request body"});
-    // }
+    if (!idtoken) {
+        return res.status(400).json({status:400, message:"Invalid request body"});
+    }
 
     // Step One: call Firebase
     try {

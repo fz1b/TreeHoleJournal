@@ -20,6 +20,8 @@ import Button from "@material-ui/core/Button";
 import AuthContext from '../authAPI/auth-context';
 import { useHistory } from 'react-router';
 
+import AccountInfo from './AccountInfo'
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -129,6 +131,7 @@ export default function PrimarySearchAppBar(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
+    const [isAccountInfoDisplayed, setIsAccountInfoDisplayed] = useState(false)
 
     const auth = useContext(AuthContext);
     const isLoggedIn = auth.isLoggedIn;
@@ -172,6 +175,11 @@ export default function PrimarySearchAppBar(props) {
         history.replace('/');
     };
 
+    const handleAccountInfo = () => {
+        setIsAccountInfoDisplayed(!isAccountInfoDisplayed)
+        handleMenuClose();
+    }
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -183,7 +191,7 @@ export default function PrimarySearchAppBar(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>My Profile</MenuItem>
+            <MenuItem onClick={handleAccountInfo}>My Profile</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
     );
@@ -334,6 +342,7 @@ export default function PrimarySearchAppBar(props) {
 
             <div className={classes.headerBottomMargin} />
             <LeftNavBarDrawer dWidth={drawerWidth} open={open} onClose={handleDrawerClose} histories={history}/>
+            {isAccountInfoDisplayed && <AccountInfo open={isAccountInfoDisplayed} handleInfoClose={setIsAccountInfoDisplayed} />}
         </div>
     );
 }

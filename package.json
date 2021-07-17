@@ -11,6 +11,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "concurrently": "^6.2.0",
     "cors": "^2.8.5",
     "date-fns": "^2.0.0-beta.5",
     "express": "^4.17.1",
@@ -19,6 +20,7 @@
     "mongodb": "^3.6.10",
     "mongoose": "^5.13.2",
     "mongoose-unique-validator": "^2.0.3",
+    "nodemon": "^2.0.12",
     "npm": "^7.17.0",
     "react": "^17.0.2",
     "react-calendar": "^3.4.0",
@@ -31,11 +33,11 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"react-scripts start\" \"nodemon ./src/Backend/Server.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node ./src/Backend/Server.js"
+    "server": "nodemon ./src/Backend/Server.js"
   },
   "proxy": "http://localhost:5000/",
   "eslintConfig": {
