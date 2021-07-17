@@ -26,7 +26,7 @@ export default function Explore() {
       <div className="explore">
         <Header pageName=""/>
         <div className={classes.explore_bg}/>
-        <CardHolder databaseFlag="" isPublic={true} />
+        <CardHolder isPublic={true} />
       </div>
     </ThemeProvider>
   );

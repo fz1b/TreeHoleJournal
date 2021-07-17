@@ -34,6 +34,5 @@ const JournalSchema = mongoose.Schema(
     }
 )
 
-// module.exports = mongoose.model('Journal', JournalSchema)
 exports.PRIVACY = PRIVACY;
 exports.Journal = mongoose.model('Journal', JournalSchema);

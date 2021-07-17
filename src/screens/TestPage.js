@@ -3,17 +3,8 @@ import customizedTheme from '../customizedTheme.js'
 import { ThemeProvider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss';
-import JournalViewingModal from '../components/JournalViewingModal';
-import JournalEditingModal from '../components/JournalEditingModal';
 import JournalModal from '../components/JournalModal'
 import {useState} from 'react';
-import {
-    changePrivacySetting, createComment,
-    createJournal, deleteComment, editComment,
-    editJournal,
-    getExploreJournals,
-    getUserJournals
-} from "../services/JournalServices";
 
 const mockJournal = {
     uniqueID: '111',
@@ -33,9 +24,10 @@ function TestPage(){
         setShowModal(false)
     }
     const handleRequest = ()=>{
-        // deleteComment('60ebcceb76ac463ed317f37b','60ed04d104d5b51ca05160fe')
+        // editJournal('3545345354', '60ebcceb76ac463ed317f37b', 'Test Test', '', 'https://blooloop.com/wp-content/uploads/2021/04/vancouver-aquarium-herschend-768x480.jpeg',
+        //     'sunny', '354354534354545345', 'ANONYMOUS')
         //     .then(res => alert(JSON.stringify(res)));
-        alert('HOW DARE YOU TOUCH MY BUTTON?');
+        // alert('HOW DARE YOU TOUCH MY BUTTON?');
     }
 
 return(
