@@ -1,6 +1,5 @@
-import {Component, useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import EntryCards from "./EntryCards";
-import journals from "../journals";
 import {Grid, Box}  from '@material-ui/core/';
 import {getExploreJournals} from "../services/JournalServices";
 
@@ -36,8 +35,8 @@ export function CardHolder(props){
               alignItems="center"
               spacing={3}
           >
-            {journals.map((journal, index) => (
-                <Grid item xs={12} sm = {6} md={4} lg = {3}>
+            {journals.map((journal) => (
+                <Grid key={journal._id} item xs={12} sm = {6} md={4} lg = {3}>
                   <EntryCards
                       content={journal}
                       isPublic = {props.isPublic}

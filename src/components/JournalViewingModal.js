@@ -1,7 +1,6 @@
 import React from "react";
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import {withStyles} from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
@@ -10,7 +9,6 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import {FiEdit} from "react-icons/fi";
-import {FaRegTrashAlt} from "react-icons/fa";
 import styled from "styled-components";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";

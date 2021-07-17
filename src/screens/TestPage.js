@@ -3,17 +3,8 @@ import customizedTheme from '../customizedTheme.js'
 import { ThemeProvider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss';
-import JournalViewingModal from '../components/JournalViewingModal';
-import JournalEditingModal from '../components/JournalEditingModal';
 import JournalModal from '../components/JournalModal'
 import {useState} from 'react';
-import {
-    changePrivacySetting, createComment,
-    createJournal, deleteComment, editComment,
-    editJournal,
-    getExploreJournals,
-    getUserJournals
-} from "../services/JournalServices";
 
 const mockJournal = {
     uniqueID: '111',
