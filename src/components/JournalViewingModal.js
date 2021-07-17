@@ -91,7 +91,7 @@ export default function CustomizedDialogs({
                                               authorMode,
                                               updateJournal
                                           }) {
-    const [visibility, setVisibility] = useState("private");
+    const [visibility, setVisibility] = useState(journal.privacy);
     const [liked, setLiked] = useState(false);
     const [showComments, setShowComments] = useState(false)
 
