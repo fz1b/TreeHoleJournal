@@ -25,7 +25,7 @@ let server = app.listen(PORT, function () {
         .catch(err=>{console.error(err);});
 })
 
-// User Endponits
+// User Endpoints
 // signup endpoint
 app.post('/users/signup', userController.signUp);
 // login endpoint
@@ -34,6 +34,8 @@ app.post('/users/login', userController.login);
 app.get('/users/info/:idToken', userController.getUserInfo);
 // get user info secure (for BE use, provide userid)
 app.get('/users/info/secure/:idToken', userController.getUserInfoSecure);
+// get user info by user id (for BE use)
+app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
 
 // Journal Endpoints

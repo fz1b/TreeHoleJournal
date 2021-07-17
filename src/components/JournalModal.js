@@ -1,27 +1,30 @@
 import {useState} from 'react';
 import JournalEditingModal from './JournalEditingModal';
 import JournalViewingModal from './JournalViewingModal';
-function JournalModal({journal,handleClose, authorMode}){
-  const [editing,setEditing] = useState(false);
-  const handleSave = () =>{
-    setEditing(false);
-  }
-  const handleEdit = ()=>{
-    setEditing(true);
-  }
-  return(
-    <>
-    {editing && <JournalEditingModal 
-                journal={journal} 
-                handleSave={handleSave}
-                handleClose={handleClose}
-                authorMode={authorMode}/>}
-    {!editing&&<JournalViewingModal
-              journal={journal} 
-              handleEdit={handleEdit}
-              handleClose={handleClose}
-              authorMode={authorMode}/>}
-    </>
-  )
+import {editJournal} from "../services/JournalServices";
+function JournalModal(props){
+    const [editing,setEditing] = useState(false);
+    const handleEdit = (edit)=>{
+        setEditing(edit);
+    }
+
+    return(
+        <>
+            {editing && <JournalEditingModal
+                journal={props.journal}
+                handleClose={props.handleClose}
+                handleEdit={handleEdit}
+                authorMode={props.authorMode}
+                updateJournal={props.updateJournal}
+            />}
+            {!editing&&<JournalViewingModal
+                journal={props.journal}
+                handleEdit={handleEdit}
+                handleClose={props.handleClose}
+                authorMode={props.authorMode}
+                updateJournal={props.updateJournal}
+            />}
+        </>
+    )
 }
 export default JournalModal

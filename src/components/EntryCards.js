@@ -44,7 +44,7 @@ export default function Feelings(props) {
             {props.content.avatar}
           </Avatar>
         }
-        title={props.content.author}
+        title={props.content.author} // TODO: retrieve author info with author_id
         subheader={props.content.date}
       />}
       <CardActionArea style={{display: 'block'}}>
@@ -90,7 +90,9 @@ export default function Feelings(props) {
       </CardActions>
     </Card>
 
-    {showModal && <JournalModal journal={props.content} editing={false} handleClose={toggleModal}/>}
+    {showModal &&
+    <JournalModal journal={props.content} editing={false} handleClose={toggleModal}
+                  authorMode={true} updateJournal = {props.updateJournal}/>}
     </>
   );
 }

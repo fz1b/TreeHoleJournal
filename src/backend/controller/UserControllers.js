@@ -281,7 +281,22 @@ const getUserInfoSecure = async (req, res) => {
     return await getUserInfoHelper(req, res, true);
 }
 
+// get user info by user_id, for BE only
+// req-param: user_id
+// req-body: null
+// response: the User JSON
+const getUserInfoById = async (req, res) => {
+    let userData;
+    try {
+        userData = await User.findById(req.params.user_id);
+    } catch (err) {
+        return res.status(500).json({status: 500, message: "Database Error"});
+    }
+    return res.status(200).json({status: 200, data: userData});
+}
+
 exports.getUserInfo = getUserInfo;
 exports.getUserInfoSecure = getUserInfoSecure;
 exports.signUp = signUp;
 exports.login = login;
+exports.getUserInfoById = getUserInfoById;
