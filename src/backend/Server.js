@@ -25,7 +25,7 @@ let server = app.listen(PORT, function () {
         .catch(err=>{console.error(err);});
 })
 
-// User Endponits
+// User Endpoints
 // signup endpoint
 app.post('/users/signup', userController.signUp);
 // login endpoint

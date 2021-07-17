@@ -173,7 +173,7 @@ export default function CustomizedDialogs({
                         </span>
                     </>
                 </DialogActions>
-                {showComments && <CommentArea/>}
+                {showComments && <CommentArea comments={journal.comments}/>}
             </Dialog>
         </div>
     );

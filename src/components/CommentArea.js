@@ -4,20 +4,18 @@ import Avatar from '@material-ui/core/Avatar';
 import TextField from "@material-ui/core/TextField";
 import Box from '@material-ui/core/Box';
 import Button from "@material-ui/core/Button";
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FiMoreVertical} from "react-icons/fi";
 import IconButton from "@material-ui/core/IconButton";
 import styled from "styled-components";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-const mockComments=[
-    {initial:'C',name:'Catherine',date:'July 1, 2021', content:'Nice place', edit:false, id:'1'},
-    {initial:'B', name:'Brandon', date:'July 2, 2021', content:'test comment',edit:false, id:'2'},
-    {initial:'N', name:'Nancy',date:'July 3, 2021', content: 'my own comment',edit:true,id:'3'}
-]
-function CommentArea(){
+import axios from "axios";
+
+function CommentArea(props){
     const [comment, setComment] = useState('');
-    const [comments, setComments] = useState(mockComments);
+    const [comments, setComments] = useState(props.comments);
+    const [commenters, setCommenters] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const Date = styled.span`
     font-size: 0.8rem;
@@ -27,6 +25,7 @@ function CommentArea(){
     font-size: 0.9rem;
     font-weight: bolder;
     `;
+
     const handleCommentEdit = (event) => {
         setAnchorEl(event.currentTarget);
       };
@@ -45,6 +44,34 @@ function CommentArea(){
         setComments(comments.filter((c)=>c.id!==e.target.id));
         setAnchorEl(null);
     }
+
+    // TODO: used backend endpoints for now, need to be refactored
+    useEffect(()=>{
+        comments.forEach((c)=>{
+            axios.get('/users/info/secure', c.author_id)
+                .then(res => {
+                    // console.log(res);
+                    if (res.status !== 200){
+                        console.error(res.data);
+                        commenters.push({});
+                    } else {
+                        let user = res.data;
+                        let newCommenters = [...commenters]
+                        newCommenters.push({
+                            _id: user._id,
+                            initial: user.name.charAt(0),
+                            name: user.name,
+                            content: user.content,
+                            date: user.date,
+                        });
+                        setCommenters(newCommenters);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        });
+    })
 return(
     <>
     <Box maxHeight='120px' style={{overflow: 'scroll'}}>
@@ -78,7 +105,7 @@ return(
                         open={Boolean(anchorEl)}
                         onClose={handleCommentEditClose}                      
                     >
-                        <MenuItem id={c.id} onClick={handleDeleteComment}>Delete</MenuItem>
+                        <MenuItem id={c._id} onClick={handleDeleteComment}>Delete</MenuItem>
                     </Menu>
                 </Box>
             ))}
