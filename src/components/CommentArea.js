@@ -54,7 +54,7 @@ function CommentArea(props){
         <>
         <Box maxHeight='120px' style={{overflow: 'scroll'}}>
         <MuiDialogContent  dividers>
-            <Typography>
+            <Typography component={'span'}>
                 {comments.map((c)=>(
                     <Comment
                         key={c._id}
@@ -70,7 +70,7 @@ function CommentArea(props){
         </Box>
 
         <MuiDialogContent  dividers>
-        <Typography>
+        <Typography component={'span'}>
             <Box display='flex'>
                 <Avatar>ME</Avatar>
                 <Box mx={3} width={'70%'}>
