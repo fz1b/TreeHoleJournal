@@ -1,18 +1,28 @@
 import {useState, useEffect} from "react";
 import EntryCards from "./EntryCards";
 import {Grid, Box}  from '@material-ui/core/';
-import {getExploreJournals} from "../services/JournalServices";
+import {getExploreJournals, getUserJournals} from "../services/JournalServices";
 
 export function CardHolder(props){
   const [journals, setJournals] = useState([]);
 
   useEffect( ()=> {
-      getExploreJournals().then( res =>{
-          setJournals(res);
-      }).catch( err => {
-          setJournals([]);
-          console.error(err);
-      })
+      if(props.isPublic){
+          getExploreJournals().then( res =>{
+              setJournals(res);
+          }).catch( err => {
+              setJournals([]);
+              console.error(err);
+          })
+      } else {
+          getUserJournals('wHoVreiPACc0BjVYyHPEBooQejD3').then( res =>{
+              setJournals(res);
+          }).catch( err => {
+              setJournals([]);
+              console.error(err);
+          })
+      }
+
   },[]);
 
 
