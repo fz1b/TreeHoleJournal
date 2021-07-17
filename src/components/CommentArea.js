@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import {useState} from 'react';
 import styled from "styled-components";
 import Comment from "./Comment";
+import {createComment} from "../services/JournalServices";
 
 function CommentArea(props){
     const [comment, setComment] = useState('');
@@ -31,9 +32,18 @@ function CommentArea(props){
         setComment(e.target.value)
     }
     const handlePost = () =>{
-        const newComment = {initial:'N',name:'Nancy',date:'July 4, 2021',content:comment,edit:true,id:'4'}
-        setComments(prevComments=>[...prevComments,newComment]);
-        setComment('');
+        // TODO: use real user token
+        createComment(props.journalID,
+            'wHoVreiPACc0BjVYyHPEBooQejD3',
+            'July 17, 2021',
+            comment,
+            false
+        ).then(res => {
+            setComments(res.comments)
+            props.updateJournal(props.journalID, res);
+        }).catch(err=>{
+            console.log(err);
+        })
     }
     const handleDeleteComment = (e) =>{
         setComments(comments.filter((c)=>c.id!==e.target.id));
@@ -46,8 +56,14 @@ function CommentArea(props){
         <MuiDialogContent  dividers>
             <Typography>
                 {comments.map((c)=>(
-                    <Comment key={c._id} comment={c} anchorEl={anchorEl}
-                             handleCommentEdit={handleCommentEdit} handleDeleteComment={handleDeleteComment}/>
+                    <Comment
+                        key={c._id}
+                        comment={c}
+                        anchorEl={anchorEl}
+                        handleCommentEditClose={handleCommentEditClose}
+                        handleCommentEdit={handleCommentEdit}
+                        handleDeleteComment={handleDeleteComment}
+                    />
                 ))}
             </Typography>
         </MuiDialogContent>
@@ -56,7 +72,7 @@ function CommentArea(props){
         <MuiDialogContent  dividers>
         <Typography>
             <Box display='flex'>
-                <Avatar>N</Avatar>
+                <Avatar>ME</Avatar>
                 <Box mx={3} width={'70%'}>
                 <TextField
                     size="small"

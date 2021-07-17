@@ -4,38 +4,26 @@ import JournalViewingModal from './JournalViewingModal';
 import {editJournal} from "../services/JournalServices";
 function JournalModal(props){
     const [editing,setEditing] = useState(false);
-
-    const handleSave = (title, date, image, weather, content, privacy) =>{
-        editJournal(props.journal.author_id, props.journal._id,
-            title,
-            date,
-            image,
-            weather,
-            content,
-            privacy
-        ).then( res =>{
-            props.updateJournal(props.journal._id, res);
-        }).catch(err => {
-            console.log(err);
-        });
-        setEditing(false);
-    }
-    const handleEdit = ()=>{
-        setEditing(true);
+    const handleEdit = (edit)=>{
+        setEditing(edit);
     }
 
     return(
         <>
             {editing && <JournalEditingModal
                 journal={props.journal}
-                handleSave={handleSave}
                 handleClose={props.handleClose}
-                authorMode={props.authorMode}/>}
+                handleEdit={handleEdit}
+                authorMode={props.authorMode}
+                updateJournal={props.updateJournal}
+            />}
             {!editing&&<JournalViewingModal
                 journal={props.journal}
                 handleEdit={handleEdit}
                 handleClose={props.handleClose}
-                authorMode={props.authorMode}/>}
+                authorMode={props.authorMode}
+                updateJournal={props.updateJournal}
+            />}
         </>
     )
 }

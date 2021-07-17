@@ -89,6 +89,7 @@ export default function CustomizedDialogs({
                                               handleEdit,
                                               handleClose,
                                               authorMode,
+                                              updateJournal
                                           }) {
     const [visibility, setVisibility] = useState("private");
     const [liked, setLiked] = useState(false);
@@ -139,9 +140,9 @@ export default function CustomizedDialogs({
                             onChange={handleVisibilityChange}
                             input={<BootstrapInput/>}
                         >
-                            <MenuItem value="public">public</MenuItem>
-                            <MenuItem value="anonymous">anonymous</MenuItem>
-                            <MenuItem value="private">private</MenuItem>
+                            <MenuItem value="PUBLIC">public</MenuItem>
+                            <MenuItem value="ANONYMOUS">anonymous</MenuItem>
+                            <MenuItem value="PRIVATE">private</MenuItem>
                         </Select>
 
                     </>}
@@ -164,14 +165,16 @@ export default function CustomizedDialogs({
                                 <BsFillChatSquareDotsFill/>
                             </IconButton>
                         </span>
-                        <span onClick={handleEdit}>
+                        <span onClick={()=>handleEdit(true)}>
                             <IconButton>
                                 <FiEdit/>
                             </IconButton>
                         </span>
                     </>
                 </DialogActions>
-                {showComments && <CommentArea comments={journal.comments}/>}
+                {showComments && <CommentArea journalID={journal._id}
+                                              comments={journal.comments}
+                                              updateJournal={updateJournal}/>}
             </Dialog>
         </div>
     );

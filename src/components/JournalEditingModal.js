@@ -20,6 +20,7 @@ import imgPlaceholder from "../assets/photo_placeholder.svg";
 import {FaHeart, FaRegHeart} from "react-icons/fa";
 import {BsFillChatSquareDotsFill} from "react-icons/bs";
 import {IconContext} from "react-icons";
+import {editJournal} from "../services/JournalServices";
 
 const styles = (theme) => ({
     root: {
@@ -103,9 +104,10 @@ const UploadInstruction = styled.span`
 
 export default function CustomizedDialogs({
                                               journal,
-                                              handleSave,
                                               handleClose,
                                               authorMode,
+                                              updateJournal,
+                                              handleEdit
                                           }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
@@ -127,6 +129,21 @@ export default function CustomizedDialogs({
     };
     const handleLike = () => {
         setLiked(state => !state)
+    }
+    const handleSave = (title, date, image, weather, content, privacy) =>{
+        editJournal(journal.author_id, journal._id,
+            title,
+            date,
+            image,
+            weather,
+            content,
+            privacy
+        ).then( res =>{
+            updateJournal(journal._id, res);
+        }).catch(err => {
+            console.log(err);
+        });
+        handleEdit(false);
     }
 
     return (
@@ -191,9 +208,9 @@ export default function CustomizedDialogs({
                             onChange={handlePrivacyChange}
                             input={<BootstrapInput/>}
                         >
-                            <MenuItem value="public">public</MenuItem>
-                            <MenuItem value="anonymous">anonymous</MenuItem>
-                            <MenuItem value="private">private</MenuItem>
+                            <MenuItem value="PUBLIC">public</MenuItem>
+                            <MenuItem value="ANONYMOUS">anonymous</MenuItem>
+                            <MenuItem value="PRIVATE">private</MenuItem>
                         </Select>
 
                     </>}
