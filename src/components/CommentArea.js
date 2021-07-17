@@ -48,7 +48,7 @@ function CommentArea(props){
     // TODO: used backend endpoints for now, need to be refactored
     useEffect(()=>{
         comments.forEach((c)=>{
-            axios.get('/users/info/secure', c.author_id)
+            axios.get('/users/info/id/'+c.author_id)
                 .then(res => {
                     // console.log(res);
                     if (res.status !== 200){
