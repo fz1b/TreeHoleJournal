@@ -201,7 +201,7 @@ const login = async (req, res) => {
 }
 
 const getUserInfoHelper = async (req, res, isSecure) => {
-    const idtoken = req.query.idToken;
+    const idtoken = req.params.idToken;
     let firebaseResponse = {};
 
     if (!idtoken) {
