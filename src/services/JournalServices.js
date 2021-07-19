@@ -117,19 +117,22 @@ export function changePrivacySetting(user_id, journal_id, privacy) {
 // create a comment and add it to a journal
 // input: journal id, commenter_id, comment fields
 // response: the journal JSON with comments added
-export function createComment(journal_id, commenter_id, date, content, anonymous) {
-    return axios.post('/explore/'+journal_id+'/comments/'+commenter_id, {
+export function createComment(journal_id, commenter_token, date, content, anonymous) {
+    return axios.post('/comments/'+journal_id+'/'+commenter_token, {
         date: date,
         content: content,
         anonymous: anonymous
     }).then(res=>{
         if (res.status !== 200){
             console.error(res.data);
+            alert('Failed to render the new comment, please refresh the page.')
+            return {};
         }
         return res.data;
     }).catch(err => {
         console.error(err);
-        return err;
+        alert('Failed to comment the journal, please try again later.')
+        return {};
     })
 }
 

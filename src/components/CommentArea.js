@@ -4,23 +4,16 @@ import Avatar from '@material-ui/core/Avatar';
 import TextField from "@material-ui/core/TextField";
 import Box from '@material-ui/core/Box';
 import Button from "@material-ui/core/Button";
-import {useState} from 'react';
-import styled from "styled-components";
+import {useContext, useState} from 'react';
 import Comment from "./Comment";
 import {createComment} from "../services/JournalServices";
+import AuthContext from "../authAPI/auth-context";
 
 function CommentArea(props){
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState(props.comments);
     const [anchorEl, setAnchorEl] = useState(null);
-    const Date = styled.span`
-    font-size: 0.8rem;
-    color: grey;
-    `;
-    const Name= styled.span`
-    font-size: 0.9rem;
-    font-weight: bolder;
-    `;
+    const auth = useContext(AuthContext);
 
     const handleCommentEdit = (event) => {
         setAnchorEl(event.currentTarget);
@@ -32,16 +25,17 @@ function CommentArea(props){
         setComment(e.target.value)
     }
     const handlePost = () =>{
-        // TODO: use real user token
         createComment(props.journalID,
-            'wHoVreiPACc0BjVYyHPEBooQejD3',
+            auth.token,
             'July 17, 2021',
             comment,
             false
         ).then(res => {
             setComments(res.comments)
+            // update the list of journals so that the new comment renders when users close and open the modal again
             props.updateJournal(props.journalID, res);
         }).catch(err=>{
+            alert('Failed to comment the journal, please try again later.')
             console.log(err);
         })
     }

@@ -33,7 +33,6 @@ app.post('/users/login', userController.login);
 // get user info (for FE use, hide userid)
 app.get('/users/info/:idToken?', userController.getUserInfo);
 // get user info secure (for BE use, provide userid)
-
 app.get('/users/info/secure/:idToken?', userController.getUserInfoSecure);
 app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
@@ -42,7 +41,7 @@ app.get('/users/info/id/:user_id', userController.getUserInfoById);
 // Journal Endpoints
 // Journals -- Explore
 app.get('/explore', journalController.getExploreJournals)
-app.post('/explore/:journal_id/comments/:commenter_id', journalController.createComment);
+app.post('/comments/:journal_id/:commenter_token', journalController.createComment);
 app.put('/explore/:journal_id/comments/:comment_id', journalController.editComment);
 app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
 

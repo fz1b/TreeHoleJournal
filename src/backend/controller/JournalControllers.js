@@ -1,6 +1,7 @@
 // controller for Journal
 
 const mongoose = require("mongoose");
+const axios = require('axios');
 const {Journal, PRIVACY} = require("../models/JournalSchema");
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
@@ -110,31 +111,49 @@ const editJournalPrivacySetting = async (req, res)=>{
 }
 
 // create a comment and add it to a journal
-// req-param: user_id, journal_id
+// req-param: commenter_token, journal_id
 // req-body: comment fields
 // response: the journal JSON with comments added
 const createComment = async (req, res)=>{
-    const comment = {
-        _id: new mongoose.Types.ObjectId(),
-        author_id: req.params.commenter_id,
-        date: req.body.date,
-        content: req.body.content,
-        anonymous: req.body.anonymous,
-        edited: false
-    }
-
-    Journal.findByIdAndUpdate(req.params.journal_id,
-        {
-            $push: {
-                comments: comment
+    try {
+        axios.get('http://localhost:5000/users/info/secure',
+            {
+            params: {
+                idToken: req.params.commenter_token
             }
-        }, {new: true})
-        .then(result=>{
-            res.status(200).json(result);
-        }).catch(err => {
-        console.error(err);
-        res.status(500).json(err);
-    })
+        }).then(response =>{
+            if (response.status !== 200) {
+                console.log(response.data.message);
+                return res.status(500).json(response.data.message);
+            }
+            let commenter_id = response.data.userData._id;
+            const comment = {
+                _id: new mongoose.Types.ObjectId(),
+                author_id: commenter_id,
+                date: req.body.date,
+                content: req.body.content,
+                anonymous: req.body.anonymous,
+                edited: false
+            }
+
+            Journal.findByIdAndUpdate(req.params.journal_id,
+                {
+                    $push: {
+                        comments: comment
+                    }
+                }, {new: true})
+                .then(newJournals=>{
+                    return res.status(200).json(newJournals);
+                })
+                .catch(err => {
+                    console.error(err);
+                    return res.status(500).json(err);
+                })
+        })
+    } catch (e) {
+        console.log(e.data.message);
+        return res.status(500).json(e.data.message);
+    }
 }
 
 // edit a comment, set the 'edited' field to true

@@ -226,13 +226,13 @@ export default function CustomizedDialogs({
                                 </IconButton>
                             </IconContext.Provider>}
                         </span>
-                        <IconButton colorPrimary>
+                        <IconButton>
                             <BsFillChatSquareDotsFill/>
                         </IconButton>
                         {authorMode &&
                         <>
                             <span>
-                                <IconButton colorPrimary>
+                                <IconButton>
                                      <FaRegTrashAlt/>
                                 </IconButton>
                             </span>
