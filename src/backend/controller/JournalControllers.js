@@ -116,12 +116,7 @@ const editJournalPrivacySetting = async (req, res)=>{
 // response: the journal JSON with comments added
 const createComment = async (req, res)=>{
     try {
-        axios.get('http://localhost:5000/users/info/secure',
-            {
-            params: {
-                idToken: req.params.commenter_token
-            }
-        }).then(response =>{
+        axios.get('http://localhost:5000/users/info/secure/'+req.params.commenter_token).then(response =>{
             if (response.status !== 200) {
                 console.log(response.data.message);
                 return res.status(500).json(response.data.message);
@@ -146,12 +141,10 @@ const createComment = async (req, res)=>{
                     return res.status(200).json(newJournals);
                 })
                 .catch(err => {
-                    console.error(err);
                     return res.status(500).json(err);
                 })
         })
     } catch (e) {
-        console.log(e.data.message);
         return res.status(500).json(e.data.message);
     }
 }

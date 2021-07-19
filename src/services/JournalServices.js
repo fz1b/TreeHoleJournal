@@ -125,13 +125,11 @@ export function createComment(journal_id, commenter_token, date, content, anonym
     }).then(res=>{
         if (res.status !== 200){
             console.error(res.data);
-            alert('Failed to render the new comment, please refresh the page.')
             return {};
         }
         return res.data;
     }).catch(err => {
         console.error(err);
-        alert('Failed to comment the journal, please try again later.')
         return {};
     })
 }
