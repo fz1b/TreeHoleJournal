@@ -10,11 +10,24 @@ import {
 } from "react-router-dom";
 import Explore from "./screens/Explore";
 import AuthContext from './authAPI/auth-context';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { useIdleTimer } from 'react-idle-timer'
 
 function App() {
   const auth = useContext(AuthContext);
   const isLoggedIn = auth.isLoggedIn;
+  const timeout = 7200000; // 2hrs for timeout
+
+  const handleOnIdle = event => {
+    if (isLoggedIn) {
+      auth.logoutHandler();
+    }
+  }
+
+  useIdleTimer({
+    timeout,
+    onIdle: handleOnIdle
+  });
 
   return (
     <Router>
