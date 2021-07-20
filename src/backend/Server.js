@@ -31,10 +31,10 @@ app.post('/users/signup', userController.signUp);
 // login endpoint
 app.post('/users/login', userController.login);
 // get user info (for FE use, hide userid)
-app.get('/users/info/:idToken?', userController.getUserInfo);
+app.get('/users/info/:idToken', userController.getUserInfo);
 // get user info secure (for BE use, provide userid)
-
-app.get('/users/info/secure/:idToken?', userController.getUserInfoSecure);
+app.get('/users/info/secure/:idToken', userController.getUserInfoSecure);
+// TEMP Endpoint
 app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
 
