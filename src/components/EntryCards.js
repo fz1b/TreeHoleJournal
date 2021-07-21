@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import JournalModal from './JournalModal';
 import {
@@ -16,6 +16,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import EditIcon from "@material-ui/icons/Edit";
 import { red } from "@material-ui/core/colors";
+import {getJournalAuthor} from "../services/JournalServices";
 
 const useStyles = makeStyles({
   avatar: {
@@ -23,16 +24,22 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Feelings(props) {
+export default function EntryCards(props) {
   const classes = useStyles();
 
   const [showModal, setshowModal] = useState(false);
   const [isPublic, setVisibility] = useState(props.isPublic);
+  const [authorName, setAuthorName] = useState('');
 
   const toggleModal = () => {
     setshowModal(!showModal);
   };
-  
+
+  getJournalAuthor(props.content._id).then(res => {
+    setAuthorName(res.name);
+  }).catch(err => {
+    // do nothing and use empty author
+  })
 
   return (
     <>
@@ -43,7 +50,7 @@ export default function Feelings(props) {
             {props.content.avatar}
           </Avatar>
         }
-        title={props.content.author} // TODO: retrieve author info with author_id
+        title={authorName}
         subheader={props.content.date}
       />}
       <CardActionArea style={{display: 'block'}}>

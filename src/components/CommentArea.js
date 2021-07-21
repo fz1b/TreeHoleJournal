@@ -53,6 +53,7 @@ function CommentArea(props){
                     <Comment
                         key={c._id}
                         comment={c}
+                        journalID={props.journalID}
                         anchorEl={anchorEl}
                         handleCommentEditClose={handleCommentEditClose}
                         handleCommentEdit={handleCommentEdit}
