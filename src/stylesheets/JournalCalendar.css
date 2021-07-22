@@ -2,6 +2,8 @@
     box-shadow: 1px 2px 1px -1px rgb(0 0 0 / 25%), 1px 1px 1px 0px rgb(0 0 0 / 20%), 0px 1px 3px 2px rgb(0 0 0 / 12%);
     border: none;
     border-radius: 2%;
+    height: 350px;
+    padding: 10px;
 }
 .react-calendar button{
     width: 36px;
@@ -10,6 +12,12 @@
 
 .react-calendar__month-view__days__day--weekend {
     color: black;
+}
+.journal{
+    border: 1px solid lightgrey;
+}
+.react-calendar__navigation button{
+    border:0;
 }
 .react-calendar__tile--active {
     background: #50a9c1;
@@ -26,6 +34,7 @@
     background: #50a9c1;
 }
 .react-calendar__tile:disabled{
-    background-color:none;
+    background-color:white;
     color:grey;
+    border:none;
 }
