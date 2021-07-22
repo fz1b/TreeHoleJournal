@@ -54,6 +54,7 @@ export default function Me() {
   const handleSave = ()=>{
     setShowModal(false);
   }
+  console.log("showcalendar")
   return (
     <ThemeProvider theme={customizedTheme}>
       <div className="LandingPage">
@@ -69,10 +70,10 @@ export default function Me() {
           >
             Compose
           </Button>
-          <DatePicker />
+          
         </div>
         {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> handleSave={handleSave}</JounalModal>}
-        <CardHolder visibility={false} isPublic={false}/>
+        <CardHolder visibility={false} isPublic={false} showCalendar={true}/>
       </div>
     </ThemeProvider>
   );
