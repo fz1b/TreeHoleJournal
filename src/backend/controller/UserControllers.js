@@ -288,7 +288,7 @@ const getUserInfoSecure = async (req, res) => {
 const getUserInfoById = async (req, res) => {
     let userData;
     try {
-        userData = await User.findById(req.params.user_id);
+        userData = await User.findById(req.params.user_id, '-_id');
     } catch (err) {
         return res.status(500).json({status: 500, message: "Database Error"});
     }

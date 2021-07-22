@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import JournalEditingModal from './JournalEditingModal';
 import JournalViewingModal from './JournalViewingModal';
-import {editJournal} from "../services/JournalServices";
+
 function JournalModal(props){
     const [editing,setEditing] = useState(false);
     const handleEdit = (edit)=>{

@@ -34,20 +34,27 @@ app.post('/users/login', userController.login);
 app.get('/users/info/:idToken', userController.getUserInfo);
 // get user info secure (for BE use, provide userid)
 app.get('/users/info/secure/:idToken', userController.getUserInfoSecure);
-// TEMP Endpoint
+// get user info by user_if (for BE use, hide user_id)
 app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
 
 
 // Journal Endpoints
-// Journals -- Explore
-app.get('/explore', journalController.getExploreJournals)
-app.post('/explore/:journal_id/comments/:commenter_id', journalController.createComment);
+// get public and anonymous journals for Explore page
+app.get('/explore', journalController.getExploreJournals);
+// get the journal's author info
+app.get('/journals/author/:journal_id', journalController.getJournalAuthor);
+// get the comment's author info
+app.get('/comments/:journal_id/:comment_id', journalController.getCommentAuthor);
+// create a new comment
+app.post('/comments/:journal_id/:commenter_token', journalController.createComment);
+// edit an existing comment
 app.put('/explore/:journal_id/comments/:comment_id', journalController.editComment);
+// delete a comment
 app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
 
 // Journals -- Me
-app.get('/me/:user_id', journalController.getUserJournals);
+app.get('/me/:idToken', journalController.getUserJournals);
 app.post('/me/:user_id', journalController.createNewJournal);
 app.delete('/me/:user_id/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);

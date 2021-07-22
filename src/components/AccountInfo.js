@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {withStyles, makeStyles, useTheme} from '@material-ui/core/styles';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from "axios";
 import AuthContext from "../authAPI/auth-context";
-import {Grid, Avatar, Typography,IconButton, Button, Dialog, DialogContentText, Box} from "@material-ui/core";
+import {Grid, Avatar, Typography,IconButton, Button, Dialog, DialogContentText} from "@material-ui/core";
 
 const styles = (theme) => ({
     root: {
