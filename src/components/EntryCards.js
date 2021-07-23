@@ -98,7 +98,7 @@ export default function EntryCards(props) {
 
     {showModal &&
     <JournalModal journal={props.content} editing={false} handleClose={toggleModal}
-                  authorMode={true} updateJournal = {props.updateJournal}/>}
+                  authorMode={isPublic} updateJournal = {props.updateJournal}/>}
     </>
   );
 }
