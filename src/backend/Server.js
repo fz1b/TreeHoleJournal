@@ -42,6 +42,8 @@ app.get('/users/info/id/:user_id', userController.getUserInfoById);
 // Journal Endpoints
 // get public and anonymous journals for Explore page
 app.get('/explore', journalController.getExploreJournals);
+// get public and anonymous journals filtered by search criteria
+app.get('/explore/search/:criteria', journalController.searchExploreJournals);
 // get the journal's author info
 app.get('/journals/author/:journal_id', journalController.getJournalAuthor);
 // get the comment's author info
@@ -54,7 +56,10 @@ app.put('/explore/:journal_id/comments/:comment_id', journalController.editComme
 app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
 
 // Journals -- Me
+// get journals written by the given user
 app.get('/me/:idToken', journalController.getUserJournals);
+// get journals written by the given user that contain the string in title or content
+app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
 app.post('/me/:user_id', journalController.createNewJournal);
 app.delete('/me/:user_id/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);
