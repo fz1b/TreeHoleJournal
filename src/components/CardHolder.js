@@ -3,13 +3,13 @@ import EntryCards from "./EntryCards";
 import {Grid, Box}  from '@material-ui/core/';
 import {getExploreJournals, getUserJournals} from "../services/JournalServices";
 import AuthContext from "../authAPI/auth-context";
-
-export function CardHolder(props){
+import JournalCalendar from './JournalCalendar'
+export function CardHolder({isPublic,showCalendar}){
     const auth = useContext(AuthContext);
     const [journals, setJournals] = useState([]);
 
     useEffect( ()=> {
-        if(props.isPublic){
+        if(isPublic){
             getExploreJournals().then( res =>{
                 setJournals(res);
             }).catch( err => {
@@ -38,7 +38,7 @@ export function CardHolder(props){
             setJournals(newJournals);
         }
     }
-
+console.log(showCalendar);
     return (
         <>
             <Box m={5} mt={0}>
@@ -48,11 +48,15 @@ export function CardHolder(props){
                     justify="center"
                     alignItems="center"
                     spacing={3}>
+                    {showCalendar&&<><Grid item xs={12} sm = {6} md={4} lg = {3}>
+                        <JournalCalendar/>
+                    </Grid></>}
+                        
                 {journals.map((journal) => (
                     <Grid key={journal._id} item xs={12} sm = {6} md={4} lg = {3}>
                         <EntryCards
                             content={journal}
-                            isPublic = {props.isPublic}
+                            isPublic = {isPublic}
                             updateJournal = {updateJournal}
                         />
                     </Grid>
