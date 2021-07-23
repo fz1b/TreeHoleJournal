@@ -3,7 +3,6 @@ import CardHolder from "../components/CardHolder";
 import Header from "../components/Header";
 import { makeStyles, ThemeProvider } from "@material-ui/core";
 import bgImg from "../assets/explore_bg.svg";
-import ExploreTabs from "../components/ExploreTabs"
 
 const useStyles = makeStyles((theme) => ({
   explore_bg: {
@@ -26,8 +25,7 @@ export default function Explore() {
       <div className="explore">
         <Header pageName=""/>
         <div className={classes.explore_bg}/>
-        <ExploreTabs/>
-        <CardHolder isPublic={true} />
+        <CardHolder isPublic={true} showCalender={false}/>
       </div>
     </ThemeProvider>
   );

@@ -42,14 +42,26 @@ app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
 
 // Journal Endpoints
-// Journals -- Explore
-app.get('/explore', journalController.getExploreJournals)
-app.post('/explore/:journal_id/comments/:commenter_id', journalController.createComment);
+// get public and anonymous journals for Explore page
+app.get('/explore', journalController.getExploreJournals);
+// get public and anonymous journals filtered by search criteria
+app.get('/explore/search/:criteria', journalController.searchExploreJournals);
+// get the journal's author info
+app.get('/journals/author/:journal_id', journalController.getJournalAuthor);
+// get the comment's author info
+app.get('/comments/:journal_id/:comment_id', journalController.getCommentAuthor);
+// create a new comment
+app.post('/comments/:journal_id/:commenter_token', journalController.createComment);
+// edit an existing comment
 app.put('/explore/:journal_id/comments/:comment_id', journalController.editComment);
+// delete a comment
 app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
 
 // Journals -- Me
-app.get('/me/:user_id', journalController.getUserJournals);
+// get journals written by the given user
+app.get('/me/:idToken', journalController.getUserJournals);
+// get journals written by the given user that contain the string in title or content
+app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
 app.post('/me/:user_id', journalController.createNewJournal);
 app.delete('/me/:user_id/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);
