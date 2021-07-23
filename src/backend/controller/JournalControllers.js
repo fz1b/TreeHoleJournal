@@ -1,6 +1,7 @@
 // controller for Journal
 
 const mongoose = require("mongoose");
+const axios = require('axios');
 const {Journal, PRIVACY} = require("../models/JournalSchema");
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
@@ -20,20 +21,42 @@ const getExploreJournals = async (req, res) => {
 }
 
 // get all journals from a specific user
-// req-param: user_id
+// req-param: idToken
 // req-body: null
 // response: list of Journals JSON obj
 const getUserJournals = async (req, res) => {
-    Journal.find({author_id: req.params.user_id})
-        .then(journals => {
-            // console.log(journals);
-            res.status(200).json(journals);
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json(err);
-        })
+    axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken).then(user =>{
+        Journal.find({author_id: user.data.userData._id}, '-author_id')
+            .then(journals => {
+                // console.log(journals);
+                res.status(200).json(journals);
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json(err);
+            })
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json(err)
+    });
 }
+
+// get the journal's author info
+// req-param: journal_id
+// req-body: null
+// response: the User JSON without user_id
+const getJournalAuthor = async (req, res) => {
+    Journal.findById(req.params.journal_id).then(journal => {
+        let user_id = journal.author_id;
+        axios.get('http://localhost:5000/users/info/id/'+user_id).then(author =>{
+            // console.log(author.data);
+            res.status(200).json(author.data)
+        }).catch(err=>{
+            res.status(500).json(err)
+        });
+    })
+}
+
 
 // get all journals from a specific user
 // req-param: user_id
@@ -109,32 +132,60 @@ const editJournalPrivacySetting = async (req, res)=>{
     })
 }
 
+// get the comment's author info
+// req-param: journal_id, comment_id
+// req-body: null
+// response: the User JSON without user_id
+const getCommentAuthor = async (req, res) => {
+    Journal.findById(req.params.journal_id).then(journal => {
+        let user_id = journal.comments.id(req.params.comment_id).author_id;
+        axios.get('http://localhost:5000/users/info/id/'+user_id).then(author =>{
+            // console.log(author.data);
+            res.status(200).json(author.data)
+        }).catch(err=>{
+            res.status(500).json(err)
+        });
+    })
+}
+
+
 // create a comment and add it to a journal
-// req-param: user_id, journal_id
+// req-param: commenter_token, journal_id
 // req-body: comment fields
 // response: the journal JSON with comments added
 const createComment = async (req, res)=>{
-    const comment = {
-        _id: new mongoose.Types.ObjectId(),
-        author_id: req.params.commenter_id,
-        date: req.body.date,
-        content: req.body.content,
-        anonymous: req.body.anonymous,
-        edited: false
-    }
-
-    Journal.findByIdAndUpdate(req.params.journal_id,
-        {
-            $push: {
-                comments: comment
+    try {
+        axios.get('http://localhost:5000/users/info/secure/'+req.params.commenter_token).then(response =>{
+            if (response.status !== 200) {
+                console.log(response.data.message);
+                return res.status(500).json(response.data.message);
             }
-        }, {new: true})
-        .then(result=>{
-            res.status(200).json(result);
-        }).catch(err => {
-        console.error(err);
-        res.status(500).json(err);
-    })
+            let commenter_id = response.data.userData._id;
+            const comment = {
+                _id: new mongoose.Types.ObjectId(),
+                author_id: commenter_id,
+                date: req.body.date,
+                content: req.body.content,
+                anonymous: req.body.anonymous,
+                edited: false
+            }
+
+            Journal.findByIdAndUpdate(req.params.journal_id,
+                {
+                    $push: {
+                        comments: comment
+                    }
+                }, {new: true})
+                .then(newJournals=>{
+                    return res.status(200).json(newJournals);
+                })
+                .catch(err => {
+                    return res.status(500).json(err);
+                })
+        })
+    } catch (e) {
+        return res.status(500).json(e.data.message);
+    }
 }
 
 // edit a comment, set the 'edited' field to true
@@ -179,10 +230,12 @@ const deleteComment = async (req,res)=>{
 
 exports.getExploreJournals = getExploreJournals;
 exports.getUserJournals = getUserJournals;
+exports.getJournalAuthor = getJournalAuthor;
 exports.createNewJournal = createNewJournal;
 exports.deleteJournal = deleteJournal;
 exports.editJournal = editJournal;
 exports.editJournalPrivacySetting = editJournalPrivacySetting;
+exports.getCommentAuthor = getCommentAuthor;
 exports.createComment = createComment;
 exports.editComment = editComment;
 exports.deleteComment =deleteComment;

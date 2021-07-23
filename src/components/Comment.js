@@ -6,7 +6,7 @@ import {FiMoreVertical} from "react-icons/fi";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import styled from "styled-components";
-const axios = require('axios').default;
+import {getCommentAuthor} from "../services/JournalServices";
 
 function Comment(props) {
     const [name, setName] = useState('');
@@ -21,21 +21,12 @@ function Comment(props) {
     color: grey;
     `;
 
-    // TODO: used backend endpoints for now, need to be refactored
-    axios.get('/users/info/id/'+props.comment.author_id)
-        .then(res => {
-            // console.log(res);
-            if (res.status !== 200){
-                console.error(res.data);
-            } else {
-                let user = res.data.data;
-                setName(user.name);
-                setInitial(name.charAt(0))
-            }
-        })
-        .catch(err => {
-            console.error(err);
-        })
+    getCommentAuthor(props.journalID, props.comment._id).then(res=>{
+        setName(res.name);
+        setInitial(name.charAt(0))
+    }).catch(err=>{
+        // do nothing, display empty profile pic
+    })
 
     return (
         <Box display='flex' mb={2}>

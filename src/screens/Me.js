@@ -6,8 +6,9 @@ import { makeStyles, ThemeProvider } from "@material-ui/core";
 import { MdAddCircleOutline } from "react-icons/md";
 import DatePicker from "../components/DatePicker";
 import journalImg from "../assets/myjournals_bg.svg"
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import JounalModal from "../components/JournalModal"
+import AuthContext from "../authAPI/auth-context";
 
 import getUserJournals from "../services/JournalServices";
 
@@ -46,7 +47,7 @@ const newJournal = {
 }
 
 export default function Me() {
-
+  const auth = useContext(AuthContext);
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
   const [journals, setJournals] = useState([]);
@@ -63,13 +64,13 @@ export default function Me() {
   }
 
   useEffect( ()=> {
-    getUserJournals('wHoVreiPACc0BjVYyHPEBooQejD3').then( res =>{
+    getUserJournals(auth.token).then( res =>{
             setJournals(res);
         }).catch( err => {
             setJournals([]);
             console.error(err);
         })
-  },[]);
+  },[auth.token]);
 
   return (
     <ThemeProvider theme={customizedTheme}>
