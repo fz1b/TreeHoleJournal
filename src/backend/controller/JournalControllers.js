@@ -9,12 +9,31 @@ const {Journal, PRIVACY} = require("../models/JournalSchema");
 // req-body: null
 // response: list of Journals JSON obj
 const getExploreJournals = async (req, res) => {
-    Journal.find({$or: [{privacy: PRIVACY.PUBLIC}, {privacy: PRIVACY.ANONYMOUS}]})
+    Journal.find({$or: [{privacy: PRIVACY.PUBLIC}, {privacy: PRIVACY.ANONYMOUS}]},'-author_id')
         .then(journals => {
             // console.log(journals);
             res.status(200).json(journals);
         })
         .catch(err => {
+            console.error(err);
+            res.status(500).json(err);
+        })
+}
+
+// get PUBLIC and ANONYMOUS journals that contain the criteria string in title or content
+// req-param: criteria
+// req-body: null
+// response: list of Journals JSON obj
+const searchExploreJournals = async (req, res) => {
+    Journal.find({
+        $and: [
+            {$or: [{privacy: PRIVACY.PUBLIC}, {privacy: PRIVACY.ANONYMOUS}]},
+            {$or: [{title: {$regex : req.params.criteria, $options: '-i' }},
+                    {content: {$regex : req.params.criteria, $options: '-i'}}]}
+        ]}, '-author_id').then(journals => {
+            // console.log(journals);
+            res.status(200).json(journals);
+        }).catch(err => {
             console.error(err);
             res.status(500).json(err);
         })
@@ -27,6 +46,32 @@ const getExploreJournals = async (req, res) => {
 const getUserJournals = async (req, res) => {
     axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken).then(user =>{
         Journal.find({author_id: user.data.userData._id}, '-author_id')
+            .then(journals => {
+                // console.log(journals);
+                res.status(200).json(journals);
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json(err);
+            })
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json(err)
+    });
+}
+
+// get the user's journals that contain the criteria string in title or content
+// req-param: idToken, criteria
+// req-body: null
+// response: list of Journals JSON obj
+const searchUserJournals = async (req, res) => {
+    axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken).then(user =>{
+        Journal.find({
+            $and: [
+                {author_id: user.data.userData._id},
+                {$or: [{title: {$regex : req.params.criteria, $options: '-i' }},
+                        {content: {$regex : req.params.criteria, $options: '-i'}}]}
+            ]}, '-author_id')
             .then(journals => {
                 // console.log(journals);
                 res.status(200).json(journals);
@@ -229,7 +274,9 @@ const deleteComment = async (req,res)=>{
 }
 
 exports.getExploreJournals = getExploreJournals;
+exports.searchExploreJournals = searchExploreJournals;
 exports.getUserJournals = getUserJournals;
+exports.searchUserJournals = searchUserJournals;
 exports.getJournalAuthor = getJournalAuthor;
 exports.createNewJournal = createNewJournal;
 exports.deleteJournal = deleteJournal;
