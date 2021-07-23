@@ -4,7 +4,9 @@ import { ThemeProvider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import GlobalCss from '../GlobalCss';
 import JournalModal from '../components/JournalModal'
-import {useState} from 'react';
+import {useContext, useState} from 'react';
+import {searchExploreJournals, searchUserJournals} from "../services/JournalServices";
+import AuthContext from "../authAPI/auth-context";
 
 const mockJournal = {
     uniqueID: '111',
@@ -15,7 +17,9 @@ const mockJournal = {
     privacy_setting:'private'
 }
 
+
 function TestPage(){
+    const auth = useContext(AuthContext);
     const [showModal, setShowModal] = useState(false)
     const handleShowModal = () =>{
         setShowModal(true);
@@ -24,9 +28,8 @@ function TestPage(){
         setShowModal(false)
     }
     const handleRequest = ()=>{
-        // editJournal('3545345354', '60ebcceb76ac463ed317f37b', 'Test Test', '', 'https://blooloop.com/wp-content/uploads/2021/04/vancouver-aquarium-herschend-768x480.jpeg',
-        //     'sunny', '354354534354545345', 'ANONYMOUS')
-        //     .then(res => alert(JSON.stringify(res)));
+        searchUserJournals(auth.token, 'test')
+            .then(res => alert(JSON.stringify(res)));
         // alert('HOW DARE YOU TOUCH MY BUTTON?');
     }
 
