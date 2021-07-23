@@ -40,7 +40,15 @@ export default function Login() {
             );
             // successful landing
             hideErrorMessage();
-            auth.loginHandler(response.data.idToken);
+            const expirationTime = new Date(
+                new Date().getTime() + + response.data.expiresIn * 1000
+            );
+            const tokenData = {
+                token: response.data.idToken,
+                expirationTime: expirationTime.toISOString(),
+                refreshToken: response.data.refreshToken
+            }
+            auth.loginHandler(tokenData);
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
 
