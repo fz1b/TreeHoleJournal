@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import axios from 'axios';
+import { refreshService } from '../services/UserServices';
 
 let refreshTimer;
 
@@ -53,21 +53,7 @@ export const AuthContextProvider = (props) => {
         }
 
         try {
-            const response = await axios.post(
-                'https://securetoken.googleapis.com/v1/token?key=AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs',
-                reqBody,
-                {
-                    headers: {'Content-Type': 'application/json'}
-                }
-            );
-            const expirationTime = new Date(
-                new Date().getTime() + +response.data.expires_in * 1000
-            );
-            const tokenData = {
-                token: response.data.id_token,
-                expirationTime: expirationTime.toISOString(),
-                refreshToken: response.data.refresh_token
-            }
+            const tokenData = await refreshService(reqBody);
             loginHandler(tokenData);
 
         } catch (err){

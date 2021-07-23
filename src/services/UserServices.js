@@ -10,7 +10,7 @@ async function userService(request, type) {
             url = 'http://localhost:5000/users/signup';
             break;
         case 'refresh':
-            url = 'https://securetoken.googleapis.com/v1/token?key=AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs';
+            url = 'http://localhost:5000/users/refreshtoken';
             break;
         default:
             url = null;
