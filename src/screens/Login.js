@@ -5,10 +5,10 @@ import customizedTheme from '../customizedTheme'
 import {useStyles} from '../stylesheets/LoginStyle'
 import {StyledTextField} from '../components/CustomizedComponents'
 import login_image from '../assets/login_image.png'
-import axios from 'axios';
 import AuthContext from '../authAPI/auth-context';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { useHistory } from 'react-router';
+import { loginService } from '../services/UserServices';
 
 export default function Login() {
     const classes = useStyles();
@@ -31,27 +31,11 @@ export default function Login() {
         }
         setIsLoading(true);
         try {
-            const response = await axios.post(
-                'http://localhost:5000/users/login',
-                reqBody,
-                {
-                    headers: {'Content-Type': 'application/json'}
-                }
-            );
-            // successful landing
             hideErrorMessage();
-            const expirationTime = new Date(
-                new Date().getTime() + +response.data.expiresIn * 1000
-            );
-            const tokenData = {
-                token: response.data.idToken,
-                expirationTime: expirationTime.toISOString(),
-                refreshToken: response.data.refreshToken
-            }
+            const tokenData = await loginService(reqBody);
             auth.loginHandler(tokenData);
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
-
         } catch (err){
             if(err.response.data.message) {
                 displayErrorMessage(err.response.data.message);
