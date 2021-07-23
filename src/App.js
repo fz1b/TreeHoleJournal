@@ -16,7 +16,7 @@ import { useIdleTimer } from 'react-idle-timer'
 function App() {
   const auth = useContext(AuthContext);
   const isLoggedIn = auth.isLoggedIn;
-  const timeout = 7200000; // 2hrs for idle time
+  const idleTimeout = 120*60*1000; // 2hrs for idle time
 
   const handleOnIdle = event => {
     if (isLoggedIn) {
@@ -25,7 +25,7 @@ function App() {
   }
 
   useIdleTimer({
-    timeout,
+    timeout: idleTimeout,
     onIdle: handleOnIdle
   });
 

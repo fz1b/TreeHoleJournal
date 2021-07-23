@@ -7,7 +7,6 @@ const AuthContext = React.createContext({
     token: '',
     isLoggedIn: false,
     refreshToken: '',
-    expirationTime: '',
     loginHandler: (tokenData) => {},
     logoutHandler: () => {}
 });
@@ -19,17 +18,9 @@ export const AuthContextProvider = (props) => {
         refreshToken: localStorage.getItem('refreshToken')
     }
 
-    let initToken, initExpirationTime, initRefreshToken;
-
-    if (initData.token && initData.expirationTime && initData.refreshToken) {
-        initToken = initData.token;
-        initExpirationTime = initData.expirationTime;
-        initRefreshToken = initData.refreshToken;
-    }
-
-    const [token, setToken] = useState(initToken);
-    const [expirationTime, setExpirationTime] = useState(initExpirationTime);
-    const [refreshToken, setRefreshToken] = useState(initRefreshToken);
+    const [token, setToken] = useState(initData.token);
+    const [expirationTime, setExpirationTime] = useState(initData.expirationTime);
+    const [refreshToken, setRefreshToken] = useState(initData.refreshToken);
     const isLoggedIn = !!token;
 
     const loginHandler = (tokenData) => {
@@ -38,7 +29,6 @@ export const AuthContextProvider = (props) => {
         setExpirationTime(tokenData.expirationTime);
         localStorage.setItem('expirationTime', tokenData.expirationTime);
         setRefreshToken(tokenData.refreshToken);
-        console.log(tokenData.refreshToken);
         localStorage.setItem('refreshToken', tokenData.refreshToken)
     };
 
@@ -52,14 +42,12 @@ export const AuthContextProvider = (props) => {
     };
 
     const refreshHandler = useCallback(async()=> {
-        console.log("refresh!");
         const reqBody = JSON.stringify({
             grant_type: "refresh_token",
             refresh_token: localStorage.getItem('refreshToken'),
         });
 
         if (!localStorage.getItem('refreshToken')){
-            console.log("WHY");
             logoutHandler();
             return;
         }
@@ -73,14 +61,13 @@ export const AuthContextProvider = (props) => {
                 }
             );
             const expirationTime = new Date(
-                new Date().getTime() + + response.data.expiresIn * 1000
+                new Date().getTime() + +response.data.expires_in * 1000
             );
             const tokenData = {
-                token: response.data.idToken,
+                token: response.data.id_token,
                 expirationTime: expirationTime.toISOString(),
-                refreshToken: response.data.refreshToken
+                refreshToken: response.data.refresh_token
             }
-            console.log("Refresh successful")
             loginHandler(tokenData);
 
         } catch (err){
@@ -88,15 +75,14 @@ export const AuthContextProvider = (props) => {
         }
     }, []);
 
+    // Control the timer of refresh token
     useEffect(() => {
         if (expirationTime && expirationTime !== '') {
-            console.log(expirationTime);
-            const remainingTime = new Date(expirationTime).getTime() - new Date().getTime() - 5*60*1000;
-            console.log(remainingTime);
+            const remainingTime = new Date(expirationTime).getTime() - new Date().getTime() - 5*60*1000; // set the timer to be 5mins earlier than exp. time
             if (remainingTime < 5*60*1000) {
                 refreshTimer = setTimeout(refreshHandler, 0);
             } else {
-                refreshTimer = setTimeout(refreshHandler, 30*1000);
+                refreshTimer = setTimeout(refreshHandler, remainingTime);
             }
         } else {
             clearTimeout(refreshTimer);
@@ -107,7 +93,6 @@ export const AuthContextProvider = (props) => {
         token: token,
         isLoggedIn: isLoggedIn,
         refreshToken: refreshToken,
-        expirationTime: expirationTime,
         loginHandler: loginHandler,
         logoutHandler: logoutHandler
     };

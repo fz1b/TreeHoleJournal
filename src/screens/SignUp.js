@@ -43,7 +43,7 @@ export default function SignUp() {
             // successful landing
             hideErrorMessage();
             const expirationTime = new Date(
-                new Date().getTime() + + response.data.expiresIn * 1000
+                new Date().getTime() + +response.data.expiresIn * 1000
             );
             const tokenData = {
                 token: response.data.idToken,
