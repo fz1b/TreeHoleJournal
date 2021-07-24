@@ -4,7 +4,7 @@ const axios = require('axios').default;
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // input: void
 // response: list of journals JSON obj
-export function getExploreJournals() {
+export default function getExploreJournals() {
     return axios.get('/explore')
         .then(res => {
             // console.log(res.data);
@@ -43,6 +43,10 @@ export function getJournalAuthor(journal_id) {
         console.error(err);
         return {};
     })
+}
+
+export function verifyAuthor(journal_id, author_id){
+
 }
 
 // create a new journal

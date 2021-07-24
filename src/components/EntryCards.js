@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import JournalModal from './JournalModal';
 import {
@@ -16,7 +16,8 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import EditIcon from "@material-ui/icons/Edit";
 import { red } from "@material-ui/core/colors";
-import {getJournalAuthor} from "../services/JournalServices";
+import {getJournalAuthor, verifyAuthor} from "../services/JournalServices";
+import AuthContext from "../authAPI/auth-context";
 
 const useStyles = makeStyles({
   avatar: {
@@ -26,20 +27,32 @@ const useStyles = makeStyles({
 
 export default function EntryCards(props) {
   const classes = useStyles();
+  const auth = useContext(AuthContext);
 
   const [showModal, setshowModal] = useState(false);
   const [isPublic, setVisibility] = useState(props.isPublic);
   const [authorName, setAuthorName] = useState('');
+  const [isEditable, setEditable] = useState(false)
 
   const toggleModal = () => {
     setshowModal(!showModal);
   };
 
-  getJournalAuthor(props.content._id).then(res => {
-    setAuthorName(res.name);
-  }).catch(err => {
-    // do nothing and use empty author
-  })
+  useEffect(() => {
+    getJournalAuthor(props.content._id).then(res => {
+      setAuthorName(res.name);
+    }).catch(err => {
+      // do nothing and use empty author
+    })
+  }, [props.content._id]);
+
+  useEffect(() => {
+    verifyAuthor(props.content._id, auth.token).then(res => {
+      setEditable(res.isEditable)
+    }).catch(err => {
+     setEditable(false)
+    })
+  }, [auth.token, props.content._id]);
 
   return (
     <>
@@ -98,7 +111,7 @@ export default function EntryCards(props) {
 
     {showModal &&
     <JournalModal journal={props.content} editing={false} handleClose={toggleModal}
-                  authorMode={isPublic} updateJournal = {props.updateJournal}/>}
+                  authorMode={isEditable} updateJournal = {props.updateJournal}/>}
     </>
   );
 }

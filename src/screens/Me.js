@@ -63,7 +63,7 @@ export default function Me() {
     setShowModal(false);
   }
 
-  useEffect( ()=> {
+  useEffect(()=> {
     getUserJournals(auth.token).then( res =>{
             setJournals(res);
         }).catch( err => {
@@ -90,7 +90,7 @@ export default function Me() {
           <DatePicker />
         </div>
         {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> handleSave={handleSave}</JounalModal>}
-        <CardHolder visibility={false} isPublic={false} content = {journals}/>
+        <CardHolder content = {journals}/>
       </div>
     </ThemeProvider>
   );

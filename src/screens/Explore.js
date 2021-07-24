@@ -44,7 +44,7 @@ export default function Explore() {
       <div className="explore">
         <Header pageName="" />
         <div className={classes.explore_bg} />
-        <CardHolder isPublic={true} content={journals} />
+        <CardHolder content={journals} />
       </div>
     </ThemeProvider>
   );
