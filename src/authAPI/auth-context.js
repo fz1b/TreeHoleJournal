@@ -12,12 +12,23 @@ const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-    const initData = {
+    let initData = {
         token: localStorage.getItem('token'),
         expirationTime: localStorage.getItem('expirationTime'),
         refreshToken: localStorage.getItem('refreshToken')
     }
-
+    if (initData.expirationTime !== '') {
+        const overTime = new Date().getTime() - new Date(initData.expirationTime).getTime();
+        if (overTime > 60*60*1000) {
+            // if now is more than one hour later than the token expiration time, logout the user 
+            initData = {
+                token: '',
+                expirationTime: '',
+                refreshToken: ''
+            };
+        } 
+    }
+    
     const [token, setToken] = useState(initData.token);
     const [expirationTime, setExpirationTime] = useState(initData.expirationTime);
     const [refreshToken, setRefreshToken] = useState(initData.refreshToken);
