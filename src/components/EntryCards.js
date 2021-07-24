@@ -15,7 +15,7 @@ import {
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import EditIcon from "@material-ui/icons/Edit";
-import { red } from "@material-ui/core/colors";
+import { red, grey } from "@material-ui/core/colors";
 import {getJournalAuthor, verifyAuthor} from "../services/JournalServices";
 import AuthContext from "../authAPI/auth-context";
 
@@ -23,6 +23,9 @@ const useStyles = makeStyles({
   avatar: {
     backgroundColor: red[500],
   },
+  anonymous_avatar: {
+    backgroundColor: grey[500],
+  }
 });
 
 export default function EntryCards(props) {
@@ -37,6 +40,9 @@ export default function EntryCards(props) {
   const toggleModal = () => {
     setshowModal(!showModal);
   };
+
+  const isAnonymous = props.content.privacy === 'ANONYMOUS'
+  const isMe = props.context === 'me'
 
   useEffect(() => {
     getJournalAuthor(props.content._id).then(res => {
@@ -57,15 +63,15 @@ export default function EntryCards(props) {
   return (
     <>
     <Card >
-      {isPublic && <CardHeader
+       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
+          <Avatar className={isAnonymous ? classes.anonymous_avatar: classes.avatar }>
             {props.content.avatar}
           </Avatar>
         }
-        title={authorName}
+        title={isAnonymous? isMe? authorName + ' (Anonymous)' : 'Anonymous': authorName }
         subheader={props.content.date}
-      />}
+      />
       <CardActionArea style={{display: 'block'}}>
         <CardMedia
           component="img"

@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import EntryCards from "./EntryCards";
 import {Grid, Box}  from '@material-ui/core/';
 
-export function CardHolder({content}){
+export function CardHolder({context, content}){
     const [journals, setJournals] = useState(content);
     useEffect(()=>{
         setJournals(content);
@@ -33,6 +33,7 @@ export function CardHolder({content}){
                         <EntryCards
                             content={journal}
                             updateJournal = {updateJournal}
+                            context={context}
                         />
                     </Grid>
                 ))}

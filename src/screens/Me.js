@@ -90,7 +90,7 @@ export default function Me() {
           <DatePicker />
         </div>
         {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> handleSave={handleSave}</JounalModal>}
-        <CardHolder content = {journals}/>
+        <CardHolder context = 'me' content = {journals}/>
       </div>
     </ThemeProvider>
   );
