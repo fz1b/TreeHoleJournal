@@ -10,7 +10,7 @@ import {useState, useEffect, useContext} from 'react';
 import JounalModal from "../components/JournalModal"
 import AuthContext from "../authAPI/auth-context";
 
-import getUserJournals from "../services/JournalServices";
+import {getUserJournals} from "../services/JournalServices";
 
 
 const useStyles = makeStyles((theme) => ({

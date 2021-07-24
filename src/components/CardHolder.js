@@ -30,7 +30,6 @@ export function CardHolder(props){
                     <Grid key={journal._id} item xs={12} sm = {6} md={4} lg = {3}>
                         <EntryCards
                             content={journal}
-                            isPublic={journal.isPublic}
                             updateJournal = {updateJournal}
                         />
                     </Grid>

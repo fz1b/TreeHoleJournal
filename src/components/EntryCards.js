@@ -30,7 +30,7 @@ export default function EntryCards(props) {
   const auth = useContext(AuthContext);
 
   const [showModal, setshowModal] = useState(false);
-  const [isPublic, setVisibility] = useState(props.isPublic);
+  const [isPublic, setVisibility] = useState(props.content.privacy === 'PUBLIC');
   const [authorName, setAuthorName] = useState('');
   const [isEditable, setEditable] = useState(false)
 

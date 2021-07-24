@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import { makeStyles, ThemeProvider } from "@material-ui/core";
 import bgImg from "../assets/explore_bg.svg";
 import { useState, useEffect, useContext } from "react";
-import getExploreJournals from "../services/JournalServices";
+import {getExploreJournals} from "../services/JournalServices";
 import ExploreTabs from "../components/ExploreTabs";
 import AuthContext from "../authAPI/auth-context";
 
@@ -44,6 +44,7 @@ export default function Explore() {
       <div className="explore">
         <Header pageName="" />
         <div className={classes.explore_bg} />
+        <ExploreTabs/>
         <CardHolder content={journals} />
       </div>
     </ThemeProvider>
