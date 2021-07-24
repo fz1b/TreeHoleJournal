@@ -1,10 +1,12 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import EntryCards from "./EntryCards";
 import {Grid, Box}  from '@material-ui/core/';
 
-export function CardHolder(props){
-    const [journals, setJournals] = useState(props.content);
-
+export function CardHolder({content}){
+    const [journals, setJournals] = useState(content);
+    useEffect(()=>{
+        setJournals(content);
+    },[content])
     const updateJournal = (journal_id, newJournal) => {
         // check if the newJournal is in the valid format
         if (Object.keys(newJournal).length > 0) {

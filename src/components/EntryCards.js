@@ -46,13 +46,13 @@ export default function EntryCards(props) {
     })
   }, [props.content._id]);
 
-  useEffect(() => {
-    verifyAuthor(props.content._id, auth.token).then(res => {
-      setEditable(res.isEditable)
-    }).catch(err => {
-     setEditable(false)
-    })
-  }, [auth.token, props.content._id]);
+  // useEffect(() => {
+  //   verifyAuthor(props.content._id, auth.token).then(res => {
+  //     setEditable(res.isEditable)
+  //   }).catch(err => {
+  //    setEditable(false)
+  //   })
+  // }, [auth.token, props.content._id]);
 
   return (
     <>
