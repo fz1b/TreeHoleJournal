@@ -165,11 +165,11 @@ export default function CustomizedDialogs({
                                 <BsFillChatSquareDotsFill/>
                             </IconButton>
                         </span>
-                        <span onClick={()=>handleEdit(true)}>
+                        {authorMode&&<span onClick={()=>handleEdit(true)}>
                             <IconButton>
                                 <FiEdit/>
                             </IconButton>
-                        </span>
+                        </span>}
                     </>
                 </DialogActions>
                 {showComments && <CommentArea journalID={journal._id}
