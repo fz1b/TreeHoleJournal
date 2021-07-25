@@ -21,7 +21,6 @@ export function CardHolder({showCalendar, content}){
             setJournals(newJournals);
         }
     }
-
     return (
         <>
             <Box m={5} mt={0}>

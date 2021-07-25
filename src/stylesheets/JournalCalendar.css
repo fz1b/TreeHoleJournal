@@ -38,3 +38,9 @@
     color:grey;
     border:none;
 }
+#clear_selection_button{
+    justify-content: center;
+    bottom: 60px;
+    position: relative;
+    display: flex;
+}
