@@ -38,7 +38,6 @@ export function CardHolder({isPublic,showCalendar}){
             setJournals(newJournals);
         }
     }
-console.log(showCalendar);
     return (
         <>
             <Box m={5} mt={0}>

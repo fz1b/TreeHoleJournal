@@ -78,10 +78,10 @@ export function getJournalAuthor(journal_id) {
 // create a new journal
 // input: user id, journal fields, except comments
 // response: the added journal
-export function createJournal(user_id, title, date, image, weather, content, privacy) {
-    return axios.post('/me/'+user_id, {
+export function createJournal(user_token, title, date, image, weather, content, privacy) {
+    return axios.post('/me/'+user_token, {
         title: title,
-        author_id: user_id,
+        author_id: user_token,
         date: date,
         image: image,
         weather: weather,

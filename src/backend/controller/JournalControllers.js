@@ -103,28 +103,32 @@ const getJournalAuthor = async (req, res) => {
 }
 
 
-// get all journals from a specific user
-// req-param: user_id
+// create a journal for the given user
+// req-param: idToken
 // req-body: journal fields
 // response: list of Journals JSON obj
 const createNewJournal = async (req, res)=>{
-    const journal = new Journal({
-        _id: new mongoose.Types.ObjectId(),
-        title: req.body.title,
-        author_id: req.params.user_id,
-        date: req.body.date,
-        image: req.body.image,
-        weather: req.body.weather,
-        content: req.body.content,
-        privacy: req.body.privacy,
-        comments: []
-    })
-
-    journal.save().then(result=>{
-        Journal.findById(journal._id).then(response=>res.status(200).json(response));
-    }).catch(err => {
-        console.error(err);
-        res.status(500).json(err);
+    axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken).then(user =>{
+        const journal = new Journal({
+            _id: new mongoose.Types.ObjectId(),
+            title: req.body.title,
+            author_id: user.data.userData._id,
+            date: req.body.date,
+            image: req.body.image,
+            weather: req.body.weather,
+            content: req.body.content,
+            privacy: req.body.privacy,
+            comments: []
+        })
+        journal.save().then(result=>{
+            Journal.findById(journal._id).then(response=>res.status(200).json(response));
+        }).catch(err => {
+            console.error(err);
+            res.status(500).json(err);
+        });
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json(err)
     });
 }
 

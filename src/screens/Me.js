@@ -31,12 +31,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 const date = new Date()
 const newJournal = {
-  uniqueID: '',
   title: '',
   date: date.toDateString(),
   coverImage: '',
   content: '',
-  privacy_setting:'private'
+  privacy_setting:'PRIVATE'
 }
 
 export default function Me() {
@@ -53,12 +52,16 @@ export default function Me() {
   const handleSave = ()=>{
     setShowModal(false);
   }
-  console.log("showcalendar")
+  const updateJournal = (journal_id, newJournal) => {
+    // refresh the page to re-render CardHolder
+    window.location.reload();
+  }
+
   return (
     <ThemeProvider theme={customizedTheme}>
       <div className="LandingPage">
         <Header pageName = "My Journals"/>
-        <div className={classes.my_journals_bg}></div>
+        <div className={classes.my_journals_bg}/>
         <div className={classes.compose}>
           <Button
             className={classes.compose_btn}
@@ -71,7 +74,9 @@ export default function Me() {
           </Button>
           
         </div>
-        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose} authorMode={true}> handleSave={handleSave}</JounalModal>}
+        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}
+                                   authorMode={true} updateJournal={updateJournal}>
+          handleSave={handleSave}</JounalModal>}
         <CardHolder visibility={false} isPublic={false} showCalendar={true}/>
       </div>
     </ThemeProvider>

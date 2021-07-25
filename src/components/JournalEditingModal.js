@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import {useState} from "react";
 import {withStyles} from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -19,7 +19,8 @@ import imgPlaceholder from "../assets/photo_placeholder.svg";
 import {FaHeart, FaRegHeart} from "react-icons/fa";
 import {BsFillChatSquareDotsFill} from "react-icons/bs";
 import {IconContext} from "react-icons";
-import {editJournal} from "../services/JournalServices";
+import {createJournal, editJournal} from "../services/JournalServices";
+import AuthContext from "../authAPI/auth-context";
 
 const styles = (theme) => ({
     root: {
@@ -113,6 +114,7 @@ export default function CustomizedDialogs({
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
     const [liked, setLiked] = useState(false);
+    const auth = useContext(AuthContext);
 
     const handlePrivacyChange = (event) => {
         setPrivacy(event.target.value);
@@ -130,19 +132,40 @@ export default function CustomizedDialogs({
         setLiked(state => !state)
     }
     const handleSave = (title, date, image, weather, content, privacy) =>{
-        editJournal(journal.author_id, journal._id,
-            title,
-            date,
-            image,
-            weather,
-            content,
-            privacy
-        ).then( res =>{
-            updateJournal(journal._id, res);
-        }).catch(err => {
-            console.log(err);
-        });
-        handleEdit(false);
+        if (!journal._id){
+            // create a new journal
+            createJournal(
+                auth.token,
+                title,
+                date,
+                image,
+                weather,
+                content,
+                privacy
+            ).then( res =>{
+                handleEdit(false);
+                updateJournal(journal._id, res);
+            }).catch(err => {
+                console.log(err);
+            });
+        } else {
+            // edit an existing journal
+            editJournal(
+                journal.author_id,
+                journal._id,
+                title,
+                date,
+                image,
+                weather,
+                content,
+                privacy
+            ).then( res =>{
+                updateJournal(journal._id, res);
+            }).catch(err => {
+                console.log(err);
+            });
+            handleEdit(false);
+        }
     }
 
     return (
@@ -207,9 +230,9 @@ export default function CustomizedDialogs({
                             onChange={handlePrivacyChange}
                             input={<BootstrapInput/>}
                         >
-                            <MenuItem value="PUBLIC">public</MenuItem>
-                            <MenuItem value="ANONYMOUS">anonymous</MenuItem>
-                            <MenuItem value="PRIVATE">private</MenuItem>
+                            <MenuItem value="PUBLIC">PUBLIC</MenuItem>
+                            <MenuItem value="ANONYMOUS">ANONYMOUS</MenuItem>
+                            <MenuItem value="PRIVATE">PRIVATE</MenuItem>
                         </Select>
 
                     </>}
