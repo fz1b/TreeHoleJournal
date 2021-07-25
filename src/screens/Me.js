@@ -89,7 +89,7 @@ export default function Me() {
           
         </div>
         {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> authorMode={true} handleSave={handleSave}</JounalModal>}
-        <CardHolder context = 'me' content = {journals}  showCalendar={true}/>
+        <CardHolder journals = {journals}  showCalendar={true}/>
       </div>
     </ThemeProvider>
   );
