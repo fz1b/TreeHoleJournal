@@ -16,8 +16,23 @@ export function getExploreJournals() {
         })
 }
 
+// get all journals with PUBLIC or ANONYMOUS privacy setting
+// input: search criteria String
+// response: list of Journals JSON obj that satisfy the criteria
+export function searchExploreJournals(criteria) {
+    return axios.get('/explore/search/'+criteria)
+        .then(res => {
+            // console.log(res.data);
+            return res.data;
+        })
+        .catch(err => {
+            console.error(err);
+            return err;
+        })
+}
+
 // get all journals from a specific user
-// input: user id
+// input: user_token
 // response: list of journals JSON obj
 export function getUserJournals(idToken) {
     return axios.get('/me/'+idToken)
@@ -28,6 +43,21 @@ export function getUserJournals(idToken) {
         .catch(err => {
             console.error(err);
             return [];
+        })
+}
+
+// get the user's journals that contain the criteria string in title or content
+// input: user_token, search criteria String
+// response: list of Journals JSON obj that satisfy the criteria
+export function searchUserJournals(idToken, criteria) {
+    return axios.get('/me/search/'+idToken+'/'+criteria)
+        .then(res => {
+            // console.log(res.data);
+            return res.data;
+        })
+        .catch(err => {
+            console.error(err);
+            return err;
         })
 }
 

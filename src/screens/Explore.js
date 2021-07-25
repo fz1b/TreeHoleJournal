@@ -45,7 +45,7 @@ export default function Explore() {
         <Header pageName="" />
         <div className={classes.explore_bg} />
         <ExploreTabs/>
-        <CardHolder content={journals} />
+        <CardHolder content={journals} showCalender={false} />
       </div>
     </ThemeProvider>
   );

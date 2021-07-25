@@ -3,7 +3,7 @@ import JournalEditingModal from './JournalEditingModal';
 import JournalViewingModal from './JournalViewingModal';
 
 function JournalModal(props){
-    const [editing,setEditing] = useState(false);
+    const [editing,setEditing] = useState(props.editing);
     const handleEdit = (edit)=>{
         setEditing(edit);
     }

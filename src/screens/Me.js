@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import Button from "@material-ui/core/Button";
 import { makeStyles, ThemeProvider } from "@material-ui/core";
 import { MdAddCircleOutline } from "react-icons/md";
-import DatePicker from "../components/DatePicker";
 import journalImg from "../assets/myjournals_bg.svg"
 import {useState, useEffect, useContext} from 'react';
 import JounalModal from "../components/JournalModal"
@@ -87,10 +86,10 @@ export default function Me() {
           >
             Compose
           </Button>
-          <DatePicker />
+          
         </div>
-        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> handleSave={handleSave}</JounalModal>}
-        <CardHolder context = 'me' content = {journals}/>
+        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> authorMode={true} handleSave={handleSave}</JounalModal>}
+        <CardHolder context = 'me' content = {journals}  showCalendar={true}/>
       </div>
     </ThemeProvider>
   );

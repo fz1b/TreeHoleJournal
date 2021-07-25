@@ -7,8 +7,8 @@ import {StyledTextField} from '../components/CustomizedComponents'
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import sign_up_image from '../assets/sign_up_image.png'
 import AuthContext from '../authAPI/auth-context';
-import axios from 'axios';
 import { useHistory } from 'react-router';
+import { signupService } from '../services/UserServices';
 
 export default function SignUp() {
     const classes = useStyles();
@@ -33,16 +33,9 @@ export default function SignUp() {
         } 
         setIsLoading(true);
         try {
-            const response = await axios.post(
-                'http://localhost:5000/users/signup',
-                reqBody,
-                {
-                    headers: {'Content-Type': 'application/json'}
-                }
-            );
-            // successful landing
             hideErrorMessage();
-            auth.loginHandler(response.data.idToken);
+            const tokenData = await signupService(reqBody);
+            auth.loginHandler(tokenData);
             // redirect user to me page, cannot use back button to go back.
             history.replace('/me');
         } catch (err){    
