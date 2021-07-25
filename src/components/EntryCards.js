@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import JournalModal from './JournalModal';
 import {
@@ -15,44 +15,63 @@ import {
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import EditIcon from "@material-ui/icons/Edit";
-import { red } from "@material-ui/core/colors";
-import {getJournalAuthor} from "../services/JournalServices";
+import { red, grey } from "@material-ui/core/colors";
+import {getJournalAuthor, verifyAuthor} from "../services/JournalServices";
+import AuthContext from "../authAPI/auth-context";
 
 const useStyles = makeStyles({
   avatar: {
     backgroundColor: red[500],
   },
+  anonymous_avatar: {
+    backgroundColor: grey[500],
+  }
 });
 
 export default function EntryCards(props) {
   const classes = useStyles();
+  const auth = useContext(AuthContext);
 
   const [showModal, setshowModal] = useState(false);
-  const [isPublic, setVisibility] = useState(props.isPublic);
+  const [isPublic, setVisibility] = useState(props.content.privacy === 'PUBLIC');
   const [authorName, setAuthorName] = useState('');
+  const [isEditable, setEditable] = useState(false)
 
   const toggleModal = () => {
     setshowModal(!showModal);
   };
 
-  getJournalAuthor(props.content._id).then(res => {
-    setAuthorName(res.name);
-  }).catch(err => {
-    // do nothing and use empty author
-  })
+  const isAnonymous = props.content.privacy === 'ANONYMOUS'
+  const isMe = props.context === 'me'
+
+  useEffect(() => {
+    getJournalAuthor(props.content._id).then(res => {
+      setAuthorName(res.name);
+    }).catch(err => {
+      // do nothing and use empty author
+    })
+  }, [props.content._id]);
+
+  // useEffect(() => {
+  //   verifyAuthor(props.content._id, auth.token).then(res => {
+  //     setEditable(res.isEditable)
+  //   }).catch(err => {
+  //    setEditable(false)
+  //   })
+  // }, [auth.token, props.content._id]);
 
   return (
     <>
     <Card >
-      {isPublic && <CardHeader
+       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
+          <Avatar className={isAnonymous ? classes.anonymous_avatar: classes.avatar }>
             {props.content.avatar}
           </Avatar>
         }
-        title={authorName}
+        title={isAnonymous? isMe? authorName + ' (Anonymous)' : 'Anonymous': authorName }
         subheader={props.content.date}
-      />}
+      />
       <CardActionArea style={{display: 'block'}}>
         <CardMedia
           component="img"
@@ -98,7 +117,7 @@ export default function EntryCards(props) {
 
     {showModal &&
     <JournalModal journal={props.content} editing={false} handleClose={toggleModal}
-                  authorMode={true} updateJournal = {props.updateJournal}/>}
+                  authorMode={isEditable} updateJournal = {props.updateJournal}/>}
     </>
   );
 }

@@ -5,8 +5,13 @@ import Button from "@material-ui/core/Button";
 import { makeStyles, ThemeProvider } from "@material-ui/core";
 import { MdAddCircleOutline } from "react-icons/md";
 import journalImg from "../assets/myjournals_bg.svg"
-import {useState} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import JounalModal from "../components/JournalModal"
+import AuthContext from "../authAPI/auth-context";
+
+import {getUserJournals} from "../services/JournalServices";
+
+
 const useStyles = makeStyles((theme) => ({
   my_journals_bg: {
     backgroundImage: `url(${journalImg})`,
@@ -29,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     paddingInline: '1rem',
   }
 }));
+
 const date = new Date()
 const newJournal = {
   uniqueID: '',
@@ -40,9 +46,11 @@ const newJournal = {
 }
 
 export default function Me() {
-
+  const auth = useContext(AuthContext);
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
+  const [journals, setJournals] = useState([]);
+
   const handleCompose = () => {
     setShowModal(true);
   }
@@ -53,7 +61,16 @@ export default function Me() {
   const handleSave = ()=>{
     setShowModal(false);
   }
-  console.log("showcalendar")
+
+  useEffect(()=> {
+    getUserJournals(auth.token).then( res =>{
+            setJournals(res);
+        }).catch( err => {
+            setJournals([]);
+            console.error(err);
+        })
+  },[auth.token]);
+
   return (
     <ThemeProvider theme={customizedTheme}>
       <div className="LandingPage">
@@ -71,8 +88,8 @@ export default function Me() {
           </Button>
           
         </div>
-        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose} authorMode={true}> handleSave={handleSave}</JounalModal>}
-        <CardHolder visibility={false} isPublic={false} showCalendar={true}/>
+        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> authorMode={true} handleSave={handleSave}</JounalModal>}
+        <CardHolder context = 'me' content = {journals}  showCalendar={true}/>
       </div>
     </ThemeProvider>
   );

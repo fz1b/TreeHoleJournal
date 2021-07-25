@@ -66,23 +66,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AccountInfo(props) {
     const classes = useStyles();
     const auth = useContext(AuthContext);
-    const setName = () => {
-
-        axios.get(
-            'http://localhost:5000/users/info', {
-                params: {
-                    idToken: auth.token
-                }
-            })
-            .then((response) => {
-                setAccountName(response.data.userData.name)
-                setEmail(response.data.userData.email)
-                // handleAccountName(response.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            });
-    }
+    
 
     const [open, setOpen] = React.useState(props.open);
     const [accountName, setAccountName] = React.useState("")
@@ -90,8 +74,20 @@ export default function AccountInfo(props) {
     const [password, setpassword] = React.useState("")
 
     useEffect(() => {
+        const setName = () => {
+            axios.get(
+                `http://localhost:5000/users/info/${auth.token}`)
+                .then((response) => {
+                    setAccountName(response.data.userData.name)
+                    setEmail(response.data.userData.email)
+                    // handleAccountName(response.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
+        }
         setName();
-    }, []);
+    }, [auth.token]);
 
     const handleClose = () => {
         setOpen(false)

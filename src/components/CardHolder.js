@@ -1,32 +1,15 @@
-import {useState, useEffect, useContext} from "react";
+import {useEffect, useState} from "react";
 import EntryCards from "./EntryCards";
 import {Grid, Box}  from '@material-ui/core/';
-import {getExploreJournals, getUserJournals} from "../services/JournalServices";
-import AuthContext from "../authAPI/auth-context";
 import JournalCalendar from './JournalCalendar'
-export function CardHolder({isPublic,showCalendar}){
-    const auth = useContext(AuthContext);
-    const [journals, setJournals] = useState([]);
+   
 
-    useEffect( ()=> {
-        if(isPublic){
-            getExploreJournals().then( res =>{
-                setJournals(res);
-            }).catch( err => {
-                setJournals([]);
-                console.error(err);
-            })
-        } else {
-            getUserJournals(auth.token).then( res =>{
-                setJournals(res);
-            }).catch( err => {
-                setJournals([]);
-                console.error(err);
-            })
-        }
-        },[]);
+export function CardHolder({showCalendar, content}){
+    const [journals, setJournals] = useState(content);
 
-
+    useEffect(()=>{
+        setJournals(content);
+    },[content])
     const updateJournal = (journal_id, newJournal) => {
         // check if the newJournal is in the valid format
         if (Object.keys(newJournal).length > 0) {
@@ -38,7 +21,7 @@ export function CardHolder({isPublic,showCalendar}){
             setJournals(newJournals);
         }
     }
-console.log(showCalendar);
+
     return (
         <>
             <Box m={5} mt={0}>
@@ -56,7 +39,6 @@ console.log(showCalendar);
                     <Grid key={journal._id} item xs={12} sm = {6} md={4} lg = {3}>
                         <EntryCards
                             content={journal}
-                            isPublic = {isPublic}
                             updateJournal = {updateJournal}
                         />
                     </Grid>

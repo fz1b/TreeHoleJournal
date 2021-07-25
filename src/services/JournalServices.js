@@ -75,6 +75,10 @@ export function getJournalAuthor(journal_id) {
     })
 }
 
+export function verifyAuthor(journal_id, author_id){
+
+}
+
 // create a new journal
 // input: user id, journal fields, except comments
 // response: the added journal
