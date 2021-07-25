@@ -2,7 +2,6 @@ import EntryCards from "./EntryCards";
 import {Grid, Box}  from '@material-ui/core/';
 import JournalCalendar from './JournalCalendar'
    
-
 export function CardHolder({showCalendar, journals}){
 
     const updateJournal = (journal_id, newJournal) => {
