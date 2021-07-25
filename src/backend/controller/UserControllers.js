@@ -295,8 +295,47 @@ const getUserInfoById = async (req, res) => {
     return res.status(200).json({status: 200, data: userData});
 }
 
+const refreshUserIdToken = async (req, res) => {
+    let firebaseResponse = {};
+    let response = {};
+
+    if(!req.body.grant_type || !req.body.refresh_token) {
+        return res.status(400).json({status:400, message:"Invalid request body"});
+    }
+
+    // Step One: Firebase
+    try {
+        firebaseResponse = await axios.post(
+            'https://securetoken.googleapis.com/v1/token',
+            req.body,
+            {
+                params: { key: firebaseAPIKey },
+                headers: { 'Content-Type': 'application/json' }
+            }
+        );
+    } catch (firebaseErr) {
+        if (firebaseErr.response.data.error.message) {
+            response = {
+                status: 400,
+                message: firebaseErr.response.data.error.message
+            };
+            return res.status(400).json(response);
+        }
+        return res.status(500).json({ status: 500, message: "Firebase Server Error" });
+    }
+
+    response = {
+        status: 200,
+        idToken: firebaseResponse.data.id_token,
+        refreshToken: firebaseResponse.data.refresh_token,
+        expiresIn: firebaseResponse.data.expires_in,
+    };
+    return res.status(200).json(response);
+}
+
 exports.getUserInfo = getUserInfo;
 exports.getUserInfoSecure = getUserInfoSecure;
 exports.signUp = signUp;
 exports.login = login;
 exports.getUserInfoById = getUserInfoById;
+exports.refreshUserIdToken = refreshUserIdToken;

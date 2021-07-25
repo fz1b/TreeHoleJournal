@@ -30,11 +30,13 @@ let server = app.listen(PORT, function () {
 app.post('/users/signup', userController.signUp);
 // login endpoint
 app.post('/users/login', userController.login);
+// refresh user idToken
+app.post('/users/refreshtoken', userController.refreshUserIdToken);
 // get user info (for FE use, hide userid)
 app.get('/users/info/:idToken', userController.getUserInfo);
 // get user info secure (for BE use, provide userid)
 app.get('/users/info/secure/:idToken', userController.getUserInfoSecure);
-// get user info by user_if (for BE use, hide user_id)
+// get user info by userid (for BE use)
 app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
 
