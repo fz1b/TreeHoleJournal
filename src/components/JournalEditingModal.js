@@ -106,7 +106,7 @@ export default function CustomizedDialogs({
                                               journal,
                                               handleClose,
                                               authorMode,
-                                              updateJournal,
+                                              updateJournals,
                                               handleEdit
                                           }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
@@ -143,11 +143,11 @@ export default function CustomizedDialogs({
                 content,
                 privacy
             ).then( res =>{
-                handleEdit(false);
-                updateJournal(journal._id, res);
+                updateJournals();
             }).catch(err => {
                 console.log(err);
             });
+            handleClose();
         } else {
             // edit an existing journal
             editJournal(
@@ -160,7 +160,7 @@ export default function CustomizedDialogs({
                 content,
                 privacy
             ).then( res =>{
-                updateJournal(journal._id, res);
+                updateJournals();
             }).catch(err => {
                 console.log(err);
             });

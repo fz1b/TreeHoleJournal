@@ -90,7 +90,8 @@ export function createJournal(user_token, title, date, image, weather, content, 
         image: image,
         weather: weather,
         content: content,
-        privacy: privacy
+        privacy: privacy,
+        comments: []
     }).then(res=>{
         return res.data;
     }).catch(err => {
