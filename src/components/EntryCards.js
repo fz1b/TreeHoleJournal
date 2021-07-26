@@ -79,6 +79,7 @@ export default function EntryCards(props) {
           height="200"
           image={props.content.image}
           className={classes.coverImage}
+          onClick={toggleModal}
         />
         <CardContent onClick={toggleModal}>
           <Typography gutterBottom variant="h5" component="h2">
