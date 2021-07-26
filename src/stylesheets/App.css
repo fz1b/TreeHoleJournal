@@ -1,46 +1,45 @@
-
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 .site-calendar-demo-card {
-  width: 300px;
-  border: 1px solid #f0f0f0;
-  border-radius: 2px;
+    width: 300px;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
 }
-.pro-sidebar{
-  height:100vh !important;
-  position: fixed !important;
+.pro-sidebar {
+    height: 100vh !important;
+    position: fixed !important;
 }
-.pro-sidebar-inner{
-  background:#3c7791 !important;
+.pro-sidebar-inner {
+    background: #3c7791 !important;
 }
-.pro-icon-wrapper{
-  background-color: none !important;
+.pro-icon-wrapper {
+    background-color: none !important;
 }

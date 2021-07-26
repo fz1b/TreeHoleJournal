@@ -1,8 +1,8 @@
 // controller for Journal
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const axios = require('axios');
-const {Journal, PRIVACY} = require("../models/JournalSchema");
+const {Journal, PRIVACY} = require('../models/JournalSchema');
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // req-param: null
