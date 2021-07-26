@@ -16,11 +16,11 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LeftNavBarDrawer from './LeftNavBarDrawer';
-import Button from "@material-ui/core/Button";
+import Button from '@material-ui/core/Button';
 import AuthContext from '../authAPI/auth-context';
 import { useHistory } from 'react-router';
 
-import AccountInfo from './AccountInfo'
+import AccountInfo from './AccountInfo';
 
 const drawerWidth = 240;
 
@@ -145,12 +145,12 @@ export default function PrimarySearchAppBar(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    const handleSearchChange = (e)=>{
+    const handleSearchChange = (e) => {
         props.handleSearchChange(e.target.value);
-    }
-    const handleSearch = ()=>{
+    };
+    const handleSearch = () => {
         props.handleSearch();
-    }
+    };
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -181,9 +181,9 @@ export default function PrimarySearchAppBar(props) {
     };
 
     const handleAccountInfo = () => {
-        setIsAccountInfoDisplayed(!isAccountInfoDisplayed)
+        setIsAccountInfoDisplayed(!isAccountInfoDisplayed);
         handleMenuClose();
-    }
+    };
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -213,16 +213,19 @@ export default function PrimarySearchAppBar(props) {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="secondary">
+                <IconButton aria-label='show 4 new mails' color='inherit'>
+                    <Badge badgeContent={4} color='secondary'>
                         <MailIcon />
                     </Badge>
                 </IconButton>
                 <p>Messages</p>
             </MenuItem>
             <MenuItem>
-                <IconButton aria-label="show 11 new notifications" color="inherit">
-                    <Badge badgeContent={11} color="secondary">
+                <IconButton
+                    aria-label='show 11 new notifications'
+                    color='inherit'
+                >
+                    <Badge badgeContent={11} color='secondary'>
                         <NotificationsIcon />
                     </Badge>
                 </IconButton>
@@ -230,10 +233,10 @@ export default function PrimarySearchAppBar(props) {
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
+                    aria-label='account of current user'
+                    aria-controls='primary-search-account-menu'
+                    aria-haspopup='true'
+                    color='inherit'
                 >
                     <AccountCircle />
                 </IconButton>
@@ -244,23 +247,23 @@ export default function PrimarySearchAppBar(props) {
 
     const appBarRightSideDesktop = (
         <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="secondary">
+            <IconButton aria-label='show 4 new mails' color='inherit'>
+                <Badge badgeContent={4} color='secondary'>
                     <MailIcon />
                 </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-                <Badge badgeContent={17} color="secondary">
+            <IconButton aria-label='show 17 new notifications' color='inherit'>
+                <Badge badgeContent={17} color='secondary'>
                     <NotificationsIcon />
                 </Badge>
             </IconButton>
             <IconButton
-                edge="end"
-                aria-label="account of current user"
+                edge='end'
+                aria-label='account of current user'
                 aria-controls={menuId}
-                aria-haspopup="true"
+                aria-haspopup='true'
                 onClick={handleProfileMenuOpen}
-                color="inherit"
+                color='inherit'
             >
                 <AccountCircle />
             </IconButton>
@@ -270,11 +273,11 @@ export default function PrimarySearchAppBar(props) {
     const appBarRightSideMobile = (
         <div className={classes.sectionMobile}>
             <IconButton
-                aria-label="show more"
+                aria-label='show more'
                 aria-controls={mobileMenuId}
-                aria-haspopup="true"
+                aria-haspopup='true'
                 onClick={handleMobileMenuOpen}
-                color="inherit"
+                color='inherit'
             >
                 <MoreIcon />
             </IconButton>
@@ -284,63 +287,75 @@ export default function PrimarySearchAppBar(props) {
     return (
         <div className={`${classes.grow} ${classes.root}`}>
             <AppBar
-                position="fixed"
+                position='fixed'
                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: open,
                 })}
             >
                 <Toolbar>
                     <IconButton
-                        edge="start"
-                        className={clsx(classes.menuButton, open && classes.hide)}
-                        color="inherit"
-                        aria-label="open drawer"
+                        edge='start'
+                        className={clsx(
+                            classes.menuButton,
+                            open && classes.hide
+                        )}
+                        color='inherit'
+                        aria-label='open drawer'
                         onClick={handleDrawerOpen}
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography className={classes.titleMd} variant="h4" noWrap>
+                    <Typography className={classes.titleMd} variant='h4' noWrap>
                         TreeHole
                     </Typography>
                     <Typography
                         className={classes.titleSm}
-                        variant="h6" noWrap
-                        style={{ paddingLeft: '1.5rem' }}>
+                        variant='h6'
+                        noWrap
+                        style={{ paddingLeft: '1.5rem' }}
+                    >
                         {pageName}
                     </Typography>
-                    {!open &&
-                        (<div className={classes.search}>
-                            <div className={classes.searchIcon} onClick={()=>handleSearch()}>
+                    {!open && (
+                        <div className={classes.search}>
+                            <div
+                                className={classes.searchIcon}
+                                onClick={() => handleSearch()}
+                            >
                                 <IconButton
-                                    edge="start"
+                                    edge='start'
                                     className={classes.menuButton}
-                                    color="inherit"
-                                    aria-label="search"
+                                    color='inherit'
+                                    aria-label='search'
                                 >
                                     <SearchIcon />
                                 </IconButton>
                             </div>
                             <InputBase
-                                placeholder="Search…"
+                                placeholder='Search…'
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
                                 inputProps={{ 'aria-label': 'search' }}
                                 value={props.searchContent}
-                                onChange={(e)=>handleSearchChange(e)}
+                                onChange={(e) => handleSearchChange(e)}
                             />
-                        </div>)}
+                        </div>
+                    )}
 
                     <div className={classes.grow} />
 
                     {isLoggedIn && appBarRightSideDesktop}
                     {isLoggedIn && appBarRightSideMobile}
-                    {!isLoggedIn && 
-                        <Button className={classes.loginButton} onClick={handleLogin}>
+                    {!isLoggedIn && (
+                        <Button
+                            className={classes.loginButton}
+                            onClick={handleLogin}
+                        >
                             LOGIN
                         </Button>
-                    }
+                    )}
                 </Toolbar>
             </AppBar>
 
@@ -348,8 +363,18 @@ export default function PrimarySearchAppBar(props) {
             {isLoggedIn && renderMenu}
 
             <div className={classes.headerBottomMargin} />
-            <LeftNavBarDrawer dWidth={drawerWidth} open={open} onClose={handleDrawerClose} histories={history}/>
-            {isAccountInfoDisplayed && <AccountInfo open={isAccountInfoDisplayed} handleInfoClose={setIsAccountInfoDisplayed} />}
+            <LeftNavBarDrawer
+                dWidth={drawerWidth}
+                open={open}
+                onClose={handleDrawerClose}
+                histories={history}
+            />
+            {isAccountInfoDisplayed && (
+                <AccountInfo
+                    open={isAccountInfoDisplayed}
+                    handleInfoClose={setIsAccountInfoDisplayed}
+                />
+            )}
         </div>
     );
 }

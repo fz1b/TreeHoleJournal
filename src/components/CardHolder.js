@@ -1,4 +1,4 @@
-import EntryCards from "./EntryCards";
+import EntryCards from './EntryCards';
 import {Grid, Box}  from '@material-ui/core/';
 import JournalCalendar from './JournalCalendar'
    
@@ -8,9 +8,9 @@ export function CardHolder({showCalendar, journals, updateJournals}){
             <Box m={5} mt={0}>
                 <Grid
                     container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
+                    direction='row'
+                    justify='center'
+                    alignItems='center'
                     spacing={3}>
                     {showCalendar&&<><Grid item xs={12} sm = {6} md={4} lg = {3}>
                         <JournalCalendar/>
