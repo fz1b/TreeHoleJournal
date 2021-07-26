@@ -165,17 +165,16 @@ export default function CustomizedDialogs({
         flexWrap: 'wrap',
         marginTop: 16,
         marginBottom: 20,
+        justifyContent: 'center',
     };
 
     const thumb = {
         display: 'inline-flex',
         borderRadius: 2,
         maxHeight: 500,
-        width: '100%',
         padding: 0,
         marginBottom: 20,
         boxSizing: 'border-box',
-        justifyContent: 'center',
     };
 
     const thumbInner = {
@@ -184,9 +183,8 @@ export default function CustomizedDialogs({
     };
 
     const img = {
-        width: 'auto',
         maxWidth: '100%',
-        height: '100%',
+        maxHeight: 500,
         borderRadius: 5,
         border: '5px solid #eaeaea',
     };
@@ -204,6 +202,10 @@ export default function CustomizedDialogs({
         },
     });
 
+    function changeBackground(e) {
+        e.target.style.opacity = '0.3';
+      }
+
     const thumbs = files.map((file) => (
             <div style={thumb} key={file.name}>
                 <div style={thumbInner}>
@@ -212,10 +214,6 @@ export default function CustomizedDialogs({
 
             </div>
     ));
-
-    function changeBackground(e) {
-        e.target.style.background = 'red';
-      }
 
     useEffect(
         () => () => {
