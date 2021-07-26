@@ -1,29 +1,29 @@
-import {makeStyles} from '@material-ui/core/styles';
-import login_background from "../assets/login_background.png";
-import customizedTheme from '../customizedTheme'
+import { makeStyles } from '@material-ui/core/styles';
+import login_background from '../assets/login_background.png';
+import customizedTheme from '../customizedTheme';
 
 export const useStyles = makeStyles((theme) => ({
     background: {
-        backgroundPosition: "center center",
-        backgroundSize: "cover",
-        backgroundAttachment: "fixed",
+        backgroundPosition: 'center center',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
         backgroundImage: `url(${login_background})`,
-        height:'100vh',
+        height: '100vh',
         width: '100vw',
-        position: 'fixed'
+        position: 'fixed',
     },
     main: {
         overflow: 'hidden',
         borderRadius: 20,
-        height:'75%',
+        height: '75%',
         width: '60%',
         marginTop: '5%',
         marginLeft: '20%',
         marginRight: '20%',
-        backgroundColor:'#ffffff',
+        backgroundColor: '#ffffff',
         position: 'responsive',
         [customizedTheme.breakpoints.down('lg')]: {
-            height:'80%',
+            height: '80%',
             width: '80%',
             marginLeft: '10%',
             marginRight: '10%',
@@ -31,12 +31,12 @@ export const useStyles = makeStyles((theme) => ({
         [customizedTheme.breakpoints.only('xs')]: {
             marginTop: '10%',
         },
-        "@media (max-height:700px)":{
-            height:'85%',
+        '@media (max-height:700px)': {
+            height: '85%',
         },
-        "@media (max-height:600px)":{
-            height:'90%',
-        }
+        '@media (max-height:600px)': {
+            height: '90%',
+        },
     },
     signUp_image: {
         width: '50%',
@@ -44,7 +44,7 @@ export const useStyles = makeStyles((theme) => ({
         float: 'left',
         [customizedTheme.breakpoints.down('sm')]: {
             width: '0%',
-            height: '0%'
+            height: '0%',
         },
     },
     signUp_form: {
@@ -96,13 +96,13 @@ export const useStyles = makeStyles((theme) => ({
         [customizedTheme.breakpoints.down('xs')]: {
             marginTop: '8%',
         },
-        "@media (max-height:600px)":{
+        '@media (max-height:600px)': {
             margin: theme.spacing(1, 0, 2),
-        }
+        },
     },
     signUp_button: {
         width: '80%',
-        textTransform: "none",
-        fontSize: '150%'
+        textTransform: 'none',
+        fontSize: '150%',
     },
 }));

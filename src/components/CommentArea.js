@@ -1,16 +1,16 @@
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import Typography from "@material-ui/core/Typography";
-import Avatar from "@material-ui/core/Avatar";
-import TextField from "@material-ui/core/TextField";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import { useContext, useState } from "react";
-import Comment from "./Comment";
-import {createComment, deleteComment} from "../services/JournalServices";
-import AuthContext from "../authAPI/auth-context";
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import { useContext, useState } from 'react';
+import Comment from './Comment';
+import { createComment } from '../services/JournalServices';
+import AuthContext from '../authAPI/auth-context';
 
 function CommentArea(props) {
-    const [comment, setComment] = useState("");
+    const [comment, setComment] = useState('');
     const [comments, setComments] = useState(props.comments);
     const [anchorEl, setAnchorEl] = useState(null);
     const auth = useContext(AuthContext);
@@ -25,29 +25,25 @@ function CommentArea(props) {
         setComment(e.target.value);
     };
     const handlePost = () => {
-        createComment(props.journalID, auth.token, 'July 17, 2021', comment, false)
+        createComment(
+            props.journalID,
+            auth.token,
+            'July 17, 2021',
+            comment,
+            false
+        )
             .then((res) => {
-                setComments(res.comments );
-                setComment('');
+                setComments(res.comments);
                 // update the list of journals so that the new comment renders when users close and open the modal again
-                props.updateJournals();
+                props.updateJournal(props.journalID, res);
             })
             .catch((err) => {
                 alert('Failed to comment the journal, please try again later.');
                 console.log(err);
             });
     };
-    const handleDeleteComment = (comment_id) => {
-        deleteComment(props.journalID, comment_id)
-            .then((res) => {
-                alert(JSON.stringify(res));
-                setComments(res.comments );
-                props.updateJournals();
-            })
-            .catch((err) => {
-                alert('Failed to delete the journal, please try again later.');
-                console.log(err);
-            });
+    const handleDeleteComment = (e) => {
+        setComments(comments.filter((c) => c.id !== e.target.id));
         setAnchorEl(null);
     };
 
@@ -57,7 +53,7 @@ function CommentArea(props) {
         <>
             {!areCommentsEmpty && (
                 <Box minHeight='120px' style={{ overflow: 'scroll' }}>
-                    <MuiDialogContent>
+                    <MuiDialogContent conditionalDividers>
                         <Typography component={'span'}>
                             {comments.map((c) => (
                                 <Comment
@@ -65,7 +61,9 @@ function CommentArea(props) {
                                     comment={c}
                                     journalID={props.journalID}
                                     anchorEl={anchorEl}
-                                    handleCommentEditClose={handleCommentEditClose}
+                                    handleCommentEditClose={
+                                        handleCommentEditClose
+                                    }
                                     handleCommentEdit={handleCommentEdit}
                                     handleDeleteComment={handleDeleteComment}
                                 />
@@ -75,11 +73,18 @@ function CommentArea(props) {
                 </Box>
             )}
             {areCommentsEmpty && (
-                <Box display='flex'
-                     justifyContent='center'
-                     alignItems='center'
-                     mb= {3}>
-                    <Typography variant="h6" component={'span'} gutterBottom color = 'primary'>
+                <Box
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
+                    mb={3}
+                >
+                    <Typography
+                        variant='h6'
+                        component={'span'}
+                        gutterBottom
+                        color='primary'
+                    >
                         No comments are present, you can be the first ~!
                     </Typography>
                 </Box>
@@ -87,7 +92,7 @@ function CommentArea(props) {
 
             <MuiDialogContent dividers>
                 <Typography component={'span'}>
-                    <Box display="flex">
+                    <Box display='flex'>
                         <Avatar>ME</Avatar>
                         <Box mx={3} width={'70%'}>
                             <TextField
@@ -101,8 +106,12 @@ function CommentArea(props) {
                                 value={comment}
                             />
                         </Box>
-                        <Button variant='contained' color='primary' onClick={handlePost}>
-                            {" "}
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={handlePost}
+                        >
+                            {' '}
                             post
                         </Button>
                     </Box>

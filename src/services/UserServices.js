@@ -2,7 +2,7 @@ import axios from 'axios';
 
 async function userService(request, type) {
     let url;
-    switch(type) {
+    switch (type) {
         case 'login':
             url = 'http://localhost:5000/users/login';
             break;
@@ -16,19 +16,17 @@ async function userService(request, type) {
             url = null;
             break;
     }
-    const response = await axios.post(
-        url,
-        request,
-        {headers: {'Content-Type': 'application/json'}}
-    );
+    const response = await axios.post(url, request, {
+        headers: { 'Content-Type': 'application/json' },
+    });
     const expirationTime = new Date(
         new Date().getTime() + +response.data.expiresIn * 1000
     );
     const tokenData = {
         token: response.data.idToken,
         expirationTime: expirationTime.toISOString(),
-        refreshToken: response.data.refreshToken
-    }
+        refreshToken: response.data.refreshToken,
+    };
     return tokenData;
 }
 

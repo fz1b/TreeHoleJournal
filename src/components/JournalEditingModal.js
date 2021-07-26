@@ -1,26 +1,26 @@
-import React, {useContext} from "react";
-import {useState} from "react";
-import {withStyles} from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import {FaRegTrashAlt} from "react-icons/fa";
-import styled from "styled-components";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-import {BootstrapInput} from "./CustomizedComponents";
-import imgPlaceholder from "../assets/photo_placeholder.svg";
-import {FaHeart, FaRegHeart} from "react-icons/fa";
-import {BsFillChatSquareDotsFill} from "react-icons/bs";
-import {IconContext} from "react-icons";
-import {createJournal, deleteJournal, editJournal} from "../services/JournalServices";
-import AuthContext from "../authAPI/auth-context";
+import React, { useContext } from 'react';
+import { useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import styled from 'styled-components';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import { BootstrapInput } from './CustomizedComponents';
+import imgPlaceholder from '../assets/photo_placeholder.svg';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { BsFillChatSquareDotsFill } from 'react-icons/bs';
+import { IconContext } from 'react-icons';
+import { createJournal, editJournal } from '../services/JournalServices';
+import AuthContext from '../authAPI/auth-context';
 
 const styles = (theme) => ({
     root: {
@@ -28,7 +28,7 @@ const styles = (theme) => ({
         padding: theme.spacing(2),
     },
     closeButton: {
-        position: "absolute",
+        position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500],
@@ -36,17 +36,17 @@ const styles = (theme) => ({
 });
 
 const DialogTitle = withStyles(styles)((props) => {
-    const {children, classes, onClose, ...other} = props;
+    const { children, classes, onClose, ...other } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
-            <Typography variant="h6">{children}</Typography>
+            <Typography variant='h6'>{children}</Typography>
             {onClose ? (
                 <IconButton
-                    aria-label="close"
+                    aria-label='close'
                     className={classes.closeButton}
                     onClick={onClose}
                 >
-                    <CloseIcon/>
+                    <CloseIcon />
                 </IconButton>
             ) : null}
         </MuiDialogTitle>
@@ -60,13 +60,13 @@ const DialogContent = withStyles((theme) => ({
 }))(MuiDialogContent);
 const DeleteImage = withStyles((theme) => ({
     root: {
-        transform: "translate(0, -8vh)",
-        background: "white",
+        transform: 'translate(0, -8vh)',
+        background: 'white',
     },
 }))(IconButton);
 const TitleInput = withStyles((theme) => ({
     root: {
-        width: "90%",
+        width: '90%',
     },
 }))(TextField);
 const DialogActions = withStyles((theme) => ({
@@ -76,39 +76,39 @@ const DialogActions = withStyles((theme) => ({
     },
 }))(MuiDialogActions);
 const Image = styled.img`
-  width: 100%;
-  border-radius: 10px;
+    width: 100%;
+    border-radius: 10px;
 `;
 const Date = styled.span`
-  position: absolute;
-  right: 80%;
+    position: absolute;
+    right: 80%;
 `;
 
 const ImgPlaceholder = styled.div`
-  background-image: url(${imgPlaceholder});
-  background-color: aliceblue;
-  background-repeat: no-repeat;
-  background-size: 60%;
-  height: 25vh;
-  width: 564px;
-  background-position: 60%;
-  border-radius: 10px;
-  border-style: dashed;
-  border-color: lightgrey;
+    background-image: url(${imgPlaceholder});
+    background-color: aliceblue;
+    background-repeat: no-repeat;
+    background-size: 60%;
+    height: 25vh;
+    width: 564px;
+    background-position: 60%;
+    border-radius: 10px;
+    border-style: dashed;
+    border-color: lightgrey;
 `;
 const UploadInstruction = styled.span`
-  position: absolute;
-  transform: translate(65%, 20px);
-  font-weight: bold;
+    position: absolute;
+    transform: translate(65%, 20px);
+    font-weight: bold;
 `;
 
 export default function CustomizedDialogs({
-                                              journal,
-                                              handleClose,
-                                              authorMode,
-                                              updateJournals,
-                                              handleEdit
-                                          }) {
+    journal,
+    handleClose,
+    authorMode,
+    updateJournals,
+    handleEdit,
+}) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
     const [title, setTitle] = useState(journal.title);
@@ -126,21 +126,13 @@ export default function CustomizedDialogs({
         setContent(e.target.value);
     };
     const handleImgDelete = () => {
-        setCoverImg("");
+        setCoverImg('');
     };
     const handleLike = () => {
-        setLiked(state => !state)
-    }
-    const handleJournalDelete = () =>{
-        handleClose();
-        deleteJournal(auth.token, journal._id).then(
-            updateJournals()
-        ).catch(err => {
-            console.log(err);
-        });
-    }
-    const handleSave = (title, date, image, weather, content, privacy) =>{
-        if (!journal._id){
+        setLiked((state) => !state);
+    };
+    const handleSave = (title, date, image, weather, content, privacy) => {
+        if (!journal._id) {
             // create a new journal
             createJournal(
                 auth.token,
@@ -150,11 +142,13 @@ export default function CustomizedDialogs({
                 weather,
                 content,
                 privacy
-            ).then( res =>{
-                updateJournals();
-            }).catch(err => {
-                console.log(err);
-            });
+            )
+                .then((res) => {
+                    updateJournals();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
             handleClose();
         } else {
             // edit an existing journal
@@ -167,35 +161,37 @@ export default function CustomizedDialogs({
                 weather,
                 content,
                 privacy
-            ).then( res =>{
-                updateJournals();
-            }).catch(err => {
-                console.log(err);
-            });
+            )
+                .then((res) => {
+                    updateJournals();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
             handleEdit(false);
         }
-    }
+    };
 
     return (
         <div>
             <Dialog
                 onClose={handleClose}
-                aria-labelledby="customized-dialog-title"
+                aria-labelledby='customized-dialog-title'
                 open={true}
-                maxWidth="sm"
+                maxWidth='sm'
             >
-                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                <DialogTitle id='customized-dialog-title' onClose={handleClose}>
                     <TitleInput
-                        id="outlined-basic"
-                        label="Title"
-                        variant="outlined"
-                        size="small"
+                        id='outlined-basic'
+                        label='Title'
+                        variant='outlined'
+                        size='small'
                         value={title}
                         onChange={handleTitleChange}
                     />
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Typography component={"span"} gutterBottom>
+                    <Typography component={'span'} gutterBottom>
                         {!coverImg && (
                             <UploadInstruction>
                                 Drag and drop or click to upload
@@ -203,25 +199,25 @@ export default function CustomizedDialogs({
                         )}
                         {!coverImg && (
                             <>
-                                <ImgPlaceholder/>{" "}
+                                <ImgPlaceholder />{' '}
                             </>
                         )}
 
-                        <Image src={coverImg} alt=""/>
+                        <Image src={coverImg} alt='' />
 
                         <span onClick={handleImgDelete}>
-                            {" "}
-                            <DeleteImage aria-label="delete">
-                                <FaRegTrashAlt/>
+                            {' '}
+                            <DeleteImage aria-label='delete'>
+                                <FaRegTrashAlt />
                             </DeleteImage>
                         </span>
                         <TextField
                             fullWidth
-                            label="Content"
-                            id="outlined-basic"
-                            variant="outlined"
+                            label='Content'
+                            id='outlined-basic'
+                            variant='outlined'
                             multiline
-                            rows="10"
+                            rows='10'
                             value={content}
                             onChange={handleContentChange}
                         />
@@ -229,50 +225,66 @@ export default function CustomizedDialogs({
                 </DialogContent>
                 <DialogActions>
                     <Date>{journal.date}</Date>
-                    {authorMode &&
-                    <>
-                        <Select
-                            labelId="demo-customized-select-label"
-                            id="demo-customized-select"
-                            value={privacy}
-                            onChange={handlePrivacyChange}
-                            input={<BootstrapInput/>}
-                        >
-                            <MenuItem value="PUBLIC">PUBLIC</MenuItem>
-                            <MenuItem value="ANONYMOUS">ANONYMOUS</MenuItem>
-                            <MenuItem value="PRIVATE">PRIVATE</MenuItem>
-                        </Select>
-
-                    </>}
+                    {authorMode && (
+                        <>
+                            <Select
+                                labelId='demo-customized-select-label'
+                                id='demo-customized-select'
+                                value={privacy}
+                                onChange={handlePrivacyChange}
+                                input={<BootstrapInput />}
+                            >
+                                <MenuItem value='PUBLIC'>PUBLIC</MenuItem>
+                                <MenuItem value='ANONYMOUS'>ANONYMOUS</MenuItem>
+                                <MenuItem value='PRIVATE'>PRIVATE</MenuItem>
+                            </Select>
+                        </>
+                    )}
                     <>
                         <span onClick={handleLike}>
-                            {!liked &&
-                            <IconButton>
-                                <FaRegHeart/>
-                            </IconButton>}
-                            {liked &&
-                            <IconContext.Provider value={{color: "#b95050"}}>
+                            {!liked && (
                                 <IconButton>
-                                    <FaHeart/>
+                                    <FaRegHeart />
                                 </IconButton>
-                            </IconContext.Provider>}
+                            )}
+                            {liked && (
+                                <IconContext.Provider
+                                    value={{ color: '#b95050' }}
+                                >
+                                    <IconButton>
+                                        <FaHeart />
+                                    </IconButton>
+                                </IconContext.Provider>
+                            )}
                         </span>
                         <IconButton>
-                            <BsFillChatSquareDotsFill/>
+                            <BsFillChatSquareDotsFill />
                         </IconButton>
-                        {authorMode &&
-                        <>
-                            <span onClick={() => handleJournalDelete()}>
-                                <IconButton>
-                                     <FaRegTrashAlt/>
-                                </IconButton>
-                            </span>
-                            <Button variant="contained" color="primary"
-                                    onClick={()=>
-                                        handleSave(title, journal.date, coverImg, journal.weather, content, privacy)}>
-                                Save
-                            </Button>
-                        </>}
+                        {authorMode && (
+                            <>
+                                <span>
+                                    <IconButton>
+                                        <FaRegTrashAlt />
+                                    </IconButton>
+                                </span>
+                                <Button
+                                    variant='contained'
+                                    color='primary'
+                                    onClick={() =>
+                                        handleSave(
+                                            title,
+                                            journal.date,
+                                            coverImg,
+                                            journal.weather,
+                                            content,
+                                            privacy
+                                        )
+                                    }
+                                >
+                                    Save
+                                </Button>
+                            </>
+                        )}
                     </>
                 </DialogActions>
             </Dialog>
