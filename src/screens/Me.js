@@ -66,6 +66,7 @@ export default function Me() {
       })
       setShowSearchTag(true)
     }
+
     const handleCompose = () => {
         setShowModal(true);
     }
@@ -103,6 +104,7 @@ export default function Me() {
         <ThemeProvider theme={customizedTheme}>
             <div className="LandingPage">
             <Header pageName = "My Journals" searchContent={searchContent} handleSearchChange={handleSearchChange} handleSearch={handleSearch}/>
+
                 <div className={classes.my_journals_bg}/>
                 <div className={classes.compose}>
                     <Button
@@ -118,7 +120,7 @@ export default function Me() {
                 {showModal &&
                 <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose} authorMode={true}
                              updateJournals={updateJournals}> handleSave={handleSave} </JounalModal>}
-                                {showSearchTag&&<SearchTag content={searchContent} count={2} clearSearch={handleClearSearch}/>}
+                 {showSearchTag&&<SearchTag content={searchContent} count={2} clearSearch={handleClearSearch}/>}
                 <CardHolder journals = {journals}  showCalendar={true} updateJournals={updateJournals}/>
             </div>
         </ThemeProvider>

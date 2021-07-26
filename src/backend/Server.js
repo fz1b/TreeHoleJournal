@@ -62,7 +62,7 @@ app.delete('/explore/:journal_id/comments/:comment_id', journalController.delete
 app.get('/me/:idToken', journalController.getUserJournals);
 // get journals written by the given user that contain the string in title or content
 app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
-app.post('/me/:user_id', journalController.createNewJournal);
+app.post('/me/:idToken', journalController.createNewJournal);
 app.delete('/me/:user_id/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);
 app.put('/me/:user_id/:journal_id/privacy', journalController.editJournalPrivacySetting);

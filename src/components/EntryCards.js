@@ -35,7 +35,7 @@ export default function EntryCards(props) {
   const [showModal, setshowModal] = useState(false);
   const [isPublic, setVisibility] = useState(props.content.privacy === 'PUBLIC');
   const [authorName, setAuthorName] = useState('');
-  const [isEditable, setEditable] = useState(false)
+  const [isEditable, setEditable] = useState(true);
 
   const toggleModal = () => {
     setshowModal(!showModal);
@@ -118,7 +118,7 @@ export default function EntryCards(props) {
 
     {showModal &&
     <JournalModal journal={props.content} editing={false} handleClose={toggleModal}
-                  authorMode={isEditable} updateJournal = {props.updateJournal}/>}
+                  authorMode={isEditable} updateJournals = {props.updateJournals}/>}
     </>
   );
 }
