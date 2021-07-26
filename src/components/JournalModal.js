@@ -15,14 +15,14 @@ function JournalModal(props){
                 handleClose={props.handleClose}
                 handleEdit={handleEdit}
                 authorMode={props.authorMode}
-                updateJournal={props.updateJournal}
+                updateJournals={props.updateJournals}
             />}
             {!editing&&<JournalViewingModal
                 journal={props.journal}
                 handleEdit={handleEdit}
                 handleClose={props.handleClose}
                 authorMode={props.authorMode}
-                updateJournal={props.updateJournal}
+                updateJournals={props.updateJournals}
             />}
         </>
     )
