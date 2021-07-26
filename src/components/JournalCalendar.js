@@ -14,8 +14,9 @@ return(
     onChange={setDate}
     value={date}
     tileDisabled={({date}) => !mockDates.includes(date.toDateString())}/>
-    <div>
-    <Button variant="contained"
+    <div id="clear_selection_button">
+    <Button 
+            variant="contained"
             color="primary"
             size="small">
                 Clear Selection

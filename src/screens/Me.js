@@ -8,8 +8,8 @@ import journalImg from "../assets/myjournals_bg.svg"
 import {useState, useEffect, useContext} from 'react';
 import JounalModal from "../components/JournalModal"
 import AuthContext from "../authAPI/auth-context";
-
-import {getUserJournals} from "../services/JournalServices";
+import SearchTag from "../components/SearchTag";
+import {getUserJournals,searchUserJournals} from "../services/JournalServices";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,6 +49,23 @@ export default function Me() {
     const classes = useStyles();
     const [showModal, setShowModal] = useState(false);
     const [journals, setJournals] = useState([]);
+    const [searchContent,setSearchContent] = useState("");
+    const [showSearchTag, setShowSearchTag] = useState(false);
+  
+    const handleClearSearch = ()=>{
+      fetchJournals();
+      setSearchContent("");
+      setShowSearchTag(false);
+    }
+    const handleSearchChange = (content)=>{
+      setSearchContent(content);
+    }
+    const handleSearch = ()=>{
+      searchUserJournals(auth.token,searchContent).then((res)=>{
+        setJournals(res)
+      })
+      setShowSearchTag(true)
+    }
 
     const handleCompose = () => {
         setShowModal(true);
@@ -60,14 +77,16 @@ export default function Me() {
     const handleSave = ()=>{
         setShowModal(false);
     }
-
+    const fetchJournals = ()=>{
+      getUserJournals(auth.token).then( res =>{
+        setJournals(res);
+    }).catch( err => {
+        setJournals([]);
+        console.error(err);
+    })
+      }
     useEffect(()=> {
-        getUserJournals(auth.token).then( res =>{
-            setJournals(res);
-        }).catch( err => {
-            setJournals([]);
-            console.error(err);
-        })
+        fetchJournals();
     },[auth.token]);
 
     const updateJournals = () => {
@@ -84,7 +103,8 @@ export default function Me() {
     return (
         <ThemeProvider theme={customizedTheme}>
             <div className="LandingPage">
-                <Header pageName = "My Journals"/>
+            <Header pageName = "My Journals" searchContent={searchContent} handleSearchChange={handleSearchChange} handleSearch={handleSearch}/>
+
                 <div className={classes.my_journals_bg}/>
                 <div className={classes.compose}>
                     <Button
@@ -100,6 +120,7 @@ export default function Me() {
                 {showModal &&
                 <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose} authorMode={true}
                              updateJournals={updateJournals}> handleSave={handleSave} </JounalModal>}
+                 {showSearchTag&&<SearchTag content={searchContent} count={2} clearSearch={handleClearSearch}/>}
                 <CardHolder journals = {journals}  showCalendar={true} updateJournals={updateJournals}/>
             </div>
         </ThemeProvider>

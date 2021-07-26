@@ -131,7 +131,7 @@ export default function PrimarySearchAppBar(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
-    const [isAccountInfoDisplayed, setIsAccountInfoDisplayed] = useState(false)
+    const [isAccountInfoDisplayed, setIsAccountInfoDisplayed] = useState(false);
 
     const auth = useContext(AuthContext);
     const isLoggedIn = auth.isLoggedIn;
@@ -145,7 +145,12 @@ export default function PrimarySearchAppBar(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-
+    const handleSearchChange = (e)=>{
+        props.handleSearchChange(e.target.value);
+    }
+    const handleSearch = ()=>{
+        props.handleSearch();
+    }
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -305,12 +310,12 @@ export default function PrimarySearchAppBar(props) {
                     </Typography>
                     {!open &&
                         (<div className={classes.search}>
-                            <div className={classes.searchIcon}>
+                            <div className={classes.searchIcon} onClick={()=>handleSearch()}>
                                 <IconButton
                                     edge="start"
                                     className={classes.menuButton}
                                     color="inherit"
-                                    aria-label="open drawer"
+                                    aria-label="search"
                                 >
                                     <SearchIcon />
                                 </IconButton>
@@ -322,6 +327,8 @@ export default function PrimarySearchAppBar(props) {
                                     input: classes.inputInput,
                                 }}
                                 inputProps={{ 'aria-label': 'search' }}
+                                value={props.searchContent}
+                                onChange={(e)=>handleSearchChange(e)}
                             />
                         </div>)}
 
