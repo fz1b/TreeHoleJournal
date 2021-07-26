@@ -101,12 +101,12 @@ export function createJournal(user_token, title, date, image, weather, content, 
 }
 
 // delete a journal
-// input: user_id, journal id,
+// input: user_token, journal id,
 // response: null
-export function deleteJournal(user_id, journal_id) {
-    return axios.delete('/me/'+user_id+'/'+journal_id)
+export function deleteJournal(user_token, journal_id) {
+    return axios.delete('/me/'+user_token+'/'+journal_id)
         .then(res=>{
-            return res.data;
+            return null;
         }).catch(err => {
             console.error(err);
             return err;
