@@ -182,7 +182,7 @@ export function editComment(journal_id, comment_id, content, anonymous) {
 export function deleteComment(journal_id, comment_id) {
     return axios.delete('/explore/comments/'+journal_id+ '/' +comment_id)
         .then(res=>{
-            console.log(res.data);
+            // console.log(res.data);
             return res.data;
         }).catch(err => {
             console.error(err);

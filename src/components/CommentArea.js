@@ -28,6 +28,7 @@ function CommentArea(props) {
         createComment(props.journalID, auth.token, 'July 17, 2021', comment, false)
             .then((res) => {
                 setComments(res.comments );
+                setComment('');
                 // update the list of journals so that the new comment renders when users close and open the modal again
                 props.updateJournals();
             })
@@ -55,7 +56,7 @@ function CommentArea(props) {
         <>
             {!areCommentsEmpty && (
                 <Box minHeight='120px' style={{ overflow: 'scroll' }}>
-                    <MuiDialogContent conditionalDividers>
+                    <MuiDialogContent>
                         <Typography component={'span'}>
                             {comments.map((c) => (
                                 <Comment

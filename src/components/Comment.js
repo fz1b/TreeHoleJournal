@@ -57,7 +57,10 @@ function Comment(props) {
                 open={Boolean(props.anchorEl)}
                 onClose={props.handleCommentEditClose}
             >
-                <MenuItem id={props.comment._id} onClick={props.handleDeleteComment}>Delete</MenuItem>
+                <MenuItem id={props.comment._id}
+                          onClick={()=>{props.handleDeleteComment(props.comment._id)}}>
+                    Delete
+                </MenuItem>
             </Menu>
         </Box>
     )
