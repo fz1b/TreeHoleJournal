@@ -55,7 +55,7 @@ app.post('/comments/:journal_id/:commenter_token', journalController.createComme
 // edit an existing comment
 app.put('/explore/:journal_id/comments/:comment_id', journalController.editComment);
 // delete a comment
-app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
+app.delete('/explore/comments/:journal_id/:comment_id', journalController.deleteComment)
 
 // Journals -- Me
 // get journals written by the given user

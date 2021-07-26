@@ -180,8 +180,9 @@ export function editComment(journal_id, comment_id, content, anonymous) {
 // input: journal_id, comment_id
 // response: the journal JSON with comments deleted
 export function deleteComment(journal_id, comment_id) {
-    return axios.delete('/explore/'+journal_id+'/comments/'+comment_id)
+    return axios.delete('/explore/comments/'+journal_id+ '/' +comment_id)
         .then(res=>{
+            console.log(res.data);
             return res.data;
         }).catch(err => {
             console.error(err);

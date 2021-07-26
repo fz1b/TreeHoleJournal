@@ -91,7 +91,7 @@ export default function CustomizedDialogs({
                                               handleEdit,
                                               handleClose,
                                               authorMode,
-                                              updateJournal,
+                                              updateJournals,
                                           }) {
     const [visibility, setVisibility] = useState(journal.privacy);
     const [liked, setLiked] = useState(false);
@@ -141,9 +141,9 @@ export default function CustomizedDialogs({
                                 onChange={handleVisibilityChange}
                                 input={<BootstrapInput />}
                             >
-                                <MenuItem value="PUBLIC">public</MenuItem>
-                                <MenuItem value="ANONYMOUS">anonymous</MenuItem>
-                                <MenuItem value="PRIVATE">private</MenuItem>
+                                <MenuItem value="PUBLIC">PUBLIC</MenuItem>
+                                <MenuItem value="ANONYMOUS">ANONYMOUS</MenuItem>
+                                <MenuItem value="PRIVATE">PRIVATE</MenuItem>
                             </Select>
                         </>
                     )}
@@ -183,7 +183,7 @@ export default function CustomizedDialogs({
                         <CommentArea
                             journalID={journal._id}
                             comments={journal.comments}
-                            updateJournal={updateJournal}
+                            updateJournals={updateJournals}
                         />
                     </CardContent>
                 </Collapse>
