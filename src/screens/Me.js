@@ -13,103 +13,114 @@ import {getUserJournals,searchUserJournals} from "../services/JournalServices";
 
 
 const useStyles = makeStyles((theme) => ({
-  my_journals_bg: {
-    backgroundImage: `url(${journalImg})`,
-    backgroundColor: 'aliceblue',
-    backgroundSize: '600px',
-    backgroundRepeat: 'no-repeat',
-    height: '30vh',
-    backgroundPosition: '30% -30%',
-  },
-  compose: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    [theme.breakpoints.down('xs')]: {
-      flexWrap: 'wrap',
-      marginBottom: '1.5rem'
+    my_journals_bg: {
+        backgroundImage: `url(${journalImg})`,
+        backgroundColor: 'aliceblue',
+        backgroundSize: '600px',
+        backgroundRepeat: 'no-repeat',
+        height: '30vh',
+        backgroundPosition: '30% -30%',
     },
-  },
-  compose_btn: {
-    margin: '30px',
-    paddingInline: '1rem',
-  }
+    compose: {
+        display: 'flex',
+        justifyContent: 'space-around',
+        [theme.breakpoints.down('xs')]: {
+          flexWrap: 'wrap',
+          marginBottom: '1.5rem'
+        },
+    },
+    compose_btn: {
+        margin: '30px',
+        paddingInline: '1rem',
+    }
 }));
 
 const date = new Date()
 const newJournal = {
-  uniqueID: '',
-  title: '',
-  date: date.toDateString(),
-  coverImage: '',
-  content: '',
-  privacy_setting:'private'
+    title: '',
+    date: date.toDateString(),
+    coverImage: '',
+    content: '',
+    privacy_setting:'PRIVATE'
 }
 
 export default function Me() {
-  const auth = useContext(AuthContext);
-  const classes = useStyles();
-  const [showModal, setShowModal] = useState(false);
-  const [journals, setJournals] = useState([]);
-  const [searchContent,setSearchContent] = useState("");
-  const [showSearchTag, setShowSearchTag] = useState(false);
-
-  const handleClearSearch = ()=>{
-    fetchJournals();
-    setSearchContent("");
-    setShowSearchTag(false);
-  }
-  const handleSearchChange = (content)=>{
-    setSearchContent(content);
-  }
-  const handleSearch = ()=>{
-    searchUserJournals(auth.token,searchContent).then((res)=>{
-      setJournals(res)
-    })
-    setShowSearchTag(true)
-  }
-  const handleCompose = () => {
-    setShowModal(true);
-  }
-  const handleModalClose = ()=>{
-    setShowModal(false);
-  }
-
-  const handleSave = ()=>{
-    setShowModal(false);
-  }
-  const fetchJournals = ()=>{
-    getUserJournals(auth.token).then( res =>{
-      setJournals(res);
-  }).catch( err => {
-      setJournals([]);
-      console.error(err);
-  })
+    const auth = useContext(AuthContext);
+    const classes = useStyles();
+    const [showModal, setShowModal] = useState(false);
+    const [journals, setJournals] = useState([]);
+    const [searchContent,setSearchContent] = useState("");
+    const [showSearchTag, setShowSearchTag] = useState(false);
+  
+    const handleClearSearch = ()=>{
+      fetchJournals();
+      setSearchContent("");
+      setShowSearchTag(false);
     }
-  useEffect(()=> {
-    fetchJournals();
-  },[auth.token]);
+    const handleSearchChange = (content)=>{
+      setSearchContent(content);
+    }
+    const handleSearch = ()=>{
+      searchUserJournals(auth.token,searchContent).then((res)=>{
+        setJournals(res)
+      })
+      setShowSearchTag(true)
+    }
+    const handleCompose = () => {
+        setShowModal(true);
+    }
+    const handleModalClose = ()=>{
+        setShowModal(false);
+    }
 
-  return (
-    <ThemeProvider theme={customizedTheme}>
-      <div className="LandingPage">
-        <Header pageName = "My Journals" searchContent={searchContent} handleSearchChange={handleSearchChange} handleSearch={handleSearch}/>
-        <div className={classes.my_journals_bg}></div>
-        <div className={classes.compose}>
-          <Button
-            className={classes.compose_btn}
-            variant="contained"
-            color="primary"
-            startIcon={<MdAddCircleOutline />}
-            onClick={handleCompose}
-          >
-            Compose
-          </Button>
-          
-        </div>
-        {showModal && <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose}> authorMode={true} handleSave={handleSave}</JounalModal>}
-        {showSearchTag&&<SearchTag content={searchContent} count={2} clearSearch={handleClearSearch}/>}
-        <CardHolder journals = {journals}  showCalendar={true}/>
-      </div>
-    </ThemeProvider>
-  );
+    const handleSave = ()=>{
+        setShowModal(false);
+    }
+    const fetchJournals = ()=>{
+      getUserJournals(auth.token).then( res =>{
+        setJournals(res);
+    }).catch( err => {
+        setJournals([]);
+        console.error(err);
+    })
+      }
+    useEffect(()=> {
+        fetchJournals();
+    },[auth.token]);
+
+    const updateJournals = () => {
+        // refresh the page to re-render CardHolder
+        // window.location.reload();
+        getUserJournals(auth.token).then( res =>{
+            setJournals(res);
+        }).catch( err => {
+            setJournals([]);
+            console.error(err);
+        })
+    }
+
+    return (
+        <ThemeProvider theme={customizedTheme}>
+            <div className="LandingPage">
+            <Header pageName = "My Journals" searchContent={searchContent} handleSearchChange={handleSearchChange} handleSearch={handleSearch}/>
+                <div className={classes.my_journals_bg}/>
+                <div className={classes.compose}>
+                    <Button
+                        className={classes.compose_btn}
+                        variant="contained"
+                        color="primary"
+                        startIcon={<MdAddCircleOutline />}
+                        onClick={handleCompose}
+                    >
+                    Compose
+                    </Button>
+                </div>
+                {showModal &&
+                <JounalModal journal={newJournal} editing={true} handleClose={handleModalClose} authorMode={true}
+                             updateJournals={updateJournals}> handleSave={handleSave} </JounalModal>}
+                                {showSearchTag&&<SearchTag content={searchContent} count={2} clearSearch={handleClearSearch}/>}
+                <CardHolder journals = {journals}  showCalendar={true} updateJournals={updateJournals}/>
+            </div>
+        </ThemeProvider>
+    );
 }
