@@ -186,6 +186,7 @@ const editJournalPrivacySetting = async (req, res)=>{
 // req-body: null
 // response: the User JSON without user_id
 const getCommentAuthor = async (req, res) => {
+    // console.log(req.params.journal_id);
     Journal.findById(req.params.journal_id).then(journal => {
         let user_id = journal.comments.id(req.params.comment_id).author_id;
         axios.get('http://localhost:5000/users/info/id/'+user_id).then(author =>{

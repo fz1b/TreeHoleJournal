@@ -28,6 +28,13 @@ function Comment(props) {
         // do nothing, display empty profile pic
     })
 
+    const handleDelete = () => {
+        alert(props.comment.content);
+        // props.handleDeleteComment(props.comment._id);
+    }
+
+    // alert(props.comment._id);
+
     return (
         <Box display='flex' mb={2}>
             <Avatar>{initial}</Avatar>
@@ -57,8 +64,7 @@ function Comment(props) {
                 open={Boolean(props.anchorEl)}
                 onClose={props.handleCommentEditClose}
             >
-                <MenuItem id={props.comment._id}
-                          onClick={()=>{props.handleDeleteComment(props.comment._id)}}>
+                <MenuItem id={props.comment._id} onClick={handleDelete}>
                     Delete
                 </MenuItem>
             </Menu>

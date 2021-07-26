@@ -40,6 +40,7 @@ function CommentArea(props) {
     const handleDeleteComment = (comment_id) => {
         deleteComment(props.journalID, comment_id)
             .then((res) => {
+                alert(JSON.stringify(res));
                 setComments(res.comments );
                 props.updateJournals();
             })
