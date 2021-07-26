@@ -62,6 +62,7 @@ export default function Explore() {
         <ExploreTabs/>
         {showSearchTag&&<SearchTag content={searchContent} count={2} clearSearch={handleClearSearch}/>}
         <CardHolder content={journals} showCalender={false} />
+
       </div>
     </ThemeProvider>
   );

@@ -1,15 +1,9 @@
-import {useEffect, useState} from "react";
 import EntryCards from "./EntryCards";
 import {Grid, Box}  from '@material-ui/core/';
 import JournalCalendar from './JournalCalendar'
    
+export function CardHolder({showCalendar, journals}){
 
-export function CardHolder({showCalendar, content}){
-    const [journals, setJournals] = useState(content);
-
-    useEffect(()=>{
-        setJournals(content);
-    },[content])
     const updateJournal = (journal_id, newJournal) => {
         // check if the newJournal is in the valid format
         if (Object.keys(newJournal).length > 0) {
@@ -18,7 +12,7 @@ export function CardHolder({showCalendar, content}){
             });
             let newJournals = [...journals];
             newJournals[index] = newJournal;
-            setJournals(newJournals);
+            // setJournals(newJournals);
         }
     }
     return (
