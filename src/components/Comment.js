@@ -51,9 +51,7 @@ function Comment(props) {
                     <Date>
                         {props.comment.date}
                     </Date>
-
                 </Box>
-
             </Box>
             {/* TODO: determine edit on the backend */}
             {true &&<span onClick={props.handleCommentEdit}><IconButton  size='small'><FiMoreVertical/></IconButton></span>}
