@@ -38,14 +38,15 @@ const firebaseAPIKey = 'AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs';
 //     }
 // }
 const signUp = async (req, res) => {
-
     const { email, password, name } = req.body;
 
     let firebaseResponse = {};
     let response = {};
 
-    if(!email || !password || !name) {
-        return res.status(400).json({status:400, message:'Invalid request body'});
+    if (!email || !password || !name) {
+        return res
+            .status(400)
+            .json({ status: 400, message: 'Invalid request body' });
     }
 
     // Step One: Firebase
@@ -55,34 +56,39 @@ const signUp = async (req, res) => {
             {
                 email: email,
                 password: password,
-                returnSecureToken: true
+                returnSecureToken: true,
             },
             {
                 params: { key: firebaseAPIKey },
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
             }
         );
     } catch (firebaseErr) {
         if (firebaseErr.response.data.error.message) {
             response = {
                 status: 400,
-                message: firebaseErr.response.data.error.message
+                message: firebaseErr.response.data.error.message,
             };
             return res.status(400).json(response);
         }
-        return res.status(500).json({ status: 500, message: 'Firebase Server Error' });
+        return res
+            .status(500)
+            .json({ status: 500, message: 'Firebase Server Error' });
     }
 
     // Step Two: our database
     const newUser = new User({
         name,
         email,
-        _id: firebaseResponse.data.localId
+        _id: firebaseResponse.data.localId,
     });
     try {
         await newUser.save();
     } catch (err) {
-        return res.status(500).json({ status: 500, message: 'Sign Up successful Database error' });
+        return res.status(500).json({
+            status: 500,
+            message: 'Sign Up successful Database error',
+        });
     }
 
     response = {
@@ -94,11 +100,11 @@ const signUp = async (req, res) => {
             name: newUser.name,
             email: newUser.email,
             likes: newUser.likes,
-            collections: newUser.collections
-        }
+            collections: newUser.collections,
+        },
     };
     return res.status(200).json(response);
-}
+};
 
 // Request Body Format
 // {
@@ -132,14 +138,15 @@ const signUp = async (req, res) => {
 //     }
 // }
 const login = async (req, res) => {
-
     const { email, password } = req.body;
 
     let firebaseResponse = {};
     let response = {};
 
-    if(!email || !password) {
-        return res.status(400).json({status:400, message:'Invalid request body'});
+    if (!email || !password) {
+        return res
+            .status(400)
+            .json({ status: 400, message: 'Invalid request body' });
     }
 
     // Step One: Verify in Firebase
@@ -149,22 +156,24 @@ const login = async (req, res) => {
             {
                 email: email,
                 password: password,
-                returnSecureToken: true
+                returnSecureToken: true,
             },
             {
                 params: { key: firebaseAPIKey },
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
             }
         );
     } catch (firebaseErr) {
         if (firebaseErr.response.data.error.message) {
             response = {
                 status: 400,
-                message: firebaseErr.response.data.error.message
+                message: firebaseErr.response.data.error.message,
             };
             return res.status(400).json(response);
         }
-        return res.status(500).json({ status: 500, message: 'Firebase Server Error' });
+        return res
+            .status(500)
+            .json({ status: 500, message: 'Firebase Server Error' });
     }
 
     // Step Two: Verify in our database
@@ -176,7 +185,7 @@ const login = async (req, res) => {
             const newUser = new User({
                 name: 'Please update your name',
                 email,
-                _id: firebaseResponse.data.localId
+                _id: firebaseResponse.data.localId,
             });
             await newUser.save();
             foundUser = newUser;
@@ -194,18 +203,20 @@ const login = async (req, res) => {
             name: foundUser.name,
             email: foundUser.email,
             likes: foundUser.likes,
-            collections: foundUser.collections
-        }
+            collections: foundUser.collections,
+        },
     };
     return res.status(200).json(response);
-}
+};
 
 const getUserInfoHelper = async (req, res, isSecure) => {
     const idtoken = req.params.idToken;
     let firebaseResponse = {};
 
     if (!idtoken) {
-        return res.status(400).json({status:400, message:'Invalid request body'});
+        return res
+            .status(400)
+            .json({ status: 400, message: 'Invalid request body' });
     }
 
     // Step One: call Firebase
@@ -213,25 +224,27 @@ const getUserInfoHelper = async (req, res, isSecure) => {
         firebaseResponse = await axios.post(
             'https://identitytoolkit.googleapis.com/v1/accounts:lookup',
             {
-                idToken: idtoken
+                idToken: idtoken,
             },
             {
                 params: { key: firebaseAPIKey },
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
             }
         );
     } catch (firebaseErr) {
         if (firebaseErr.response.data.error.message) {
             let response = {
                 status: 400,
-                message: firebaseErr.response.data.error.message
+                message: firebaseErr.response.data.error.message,
             };
             return res.status(400).json(response);
         }
-        return res.status(500).json({ status: 500, message: 'Firebase Server Error' });
+        return res
+            .status(500)
+            .json({ status: 500, message: 'Firebase Server Error' });
     }
 
-    // Step Two: Get User Info from our database 
+    // Step Two: Get User Info from our database
     const userid = firebaseResponse.data.users[0].localId;
     let userData;
 
@@ -242,12 +255,11 @@ const getUserInfoHelper = async (req, res, isSecure) => {
             userData = await User.findById(userid, '-_id');
         }
     } catch (err) {
-        return res.status(500).json({status: 500, message: 'Database Error'});
+        return res.status(500).json({ status: 500, message: 'Database Error' });
     }
 
-    return res.status(200).json({status: 200, userData: userData});
-
-}
+    return res.status(200).json({ status: 200, userData: userData });
+};
 
 // Request Body Format
 // {
@@ -276,10 +288,10 @@ const getUserInfoHelper = async (req, res, isSecure) => {
 // }
 const getUserInfo = async (req, res) => {
     return await getUserInfoHelper(req, res, false);
-}
+};
 const getUserInfoSecure = async (req, res) => {
     return await getUserInfoHelper(req, res, true);
-}
+};
 
 // get user info by user_id, for BE only
 // req-param: user_id
@@ -290,17 +302,19 @@ const getUserInfoById = async (req, res) => {
     try {
         userData = await User.findById(req.params.user_id, '-_id');
     } catch (err) {
-        return res.status(500).json({status: 500, message: 'Database Error'});
+        return res.status(500).json({ status: 500, message: 'Database Error' });
     }
-    return res.status(200).json({status: 200, data: userData});
-}
+    return res.status(200).json({ status: 200, data: userData });
+};
 
 const refreshUserIdToken = async (req, res) => {
     let firebaseResponse = {};
     let response = {};
 
-    if(!req.body.grant_type || !req.body.refresh_token) {
-        return res.status(400).json({status:400, message:'Invalid request body'});
+    if (!req.body.grant_type || !req.body.refresh_token) {
+        return res
+            .status(400)
+            .json({ status: 400, message: 'Invalid request body' });
     }
 
     // Step One: Firebase
@@ -310,18 +324,20 @@ const refreshUserIdToken = async (req, res) => {
             req.body,
             {
                 params: { key: firebaseAPIKey },
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
             }
         );
     } catch (firebaseErr) {
         if (firebaseErr.response.data.error.message) {
             response = {
                 status: 400,
-                message: firebaseErr.response.data.error.message
+                message: firebaseErr.response.data.error.message,
             };
             return res.status(400).json(response);
         }
-        return res.status(500).json({ status: 500, message: 'Firebase Server Error' });
+        return res
+            .status(500)
+            .json({ status: 500, message: 'Firebase Server Error' });
     }
 
     response = {
@@ -331,7 +347,7 @@ const refreshUserIdToken = async (req, res) => {
         expiresIn: firebaseResponse.data.expires_in,
     };
     return res.status(200).json(response);
-}
+};
 
 exports.getUserInfo = getUserInfo;
 exports.getUserInfoSecure = getUserInfoSecure;
