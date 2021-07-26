@@ -43,6 +43,7 @@ export default function Explore() {
   const fetchJournals = () => {
     getExploreJournals(auth.token)
       .then((res) => {
+        console.log(res)
         setJournals(res);
       })
       .catch((err) => {
@@ -61,7 +62,7 @@ export default function Explore() {
         <div className={classes.explore_bg} />
         <ExploreTabs/>
         {showSearchTag&&<SearchTag content={searchContent} count={2} clearSearch={handleClearSearch}/>}
-        <CardHolder content={journals} showCalender={false} />
+        <CardHolder journals={journals} showCalendar={false} />
 
       </div>
     </ThemeProvider>
