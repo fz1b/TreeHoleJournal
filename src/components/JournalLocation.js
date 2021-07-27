@@ -48,7 +48,7 @@ return(
         {address && <div style={{color:"gray"}}>
                             {address}
                         </div>}
-        {!showInput&&!address &&<Button color="primary" size="small" style={{textTransform: 'none'}} onClick={handleLocationAdd}>Add a Location</Button>} 
+        {!showInput&&!address &&<Button color="primary" size="small" style={{fontSize: 'medium'}} onClick={handleLocationAdd}>Add a Location</Button>} 
         {showInput&&
         <TextField 
                         id='outlined-basic'
@@ -59,14 +59,15 @@ return(
                         {...getInputProps({ placeholder: "Type location..." })}
                     />}
           </Box>
-            <Box ml={8}>
+            <Box ml={5}>
             <div>
               {loading ? <div>...loading</div> : null}
 
               {suggestions.map(suggestion => {
                 const style = {
                   backgroundColor: suggestion.active ? "#eceaea" : "#fff",
-                  color:"grey"
+                  color:"grey",
+                  margin: 10
                 };
 
                 return (
