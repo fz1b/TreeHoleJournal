@@ -53,7 +53,7 @@ function CommentArea(props) {
         <>
             {!areCommentsEmpty && (
                 <Box minHeight='120px' style={{ overflow: 'scroll' }}>
-                    <MuiDialogContent conditionalDividers>
+                    <MuiDialogContent>
                         <Typography component={'span'}>
                             {comments.map((c) => (
                                 <Comment

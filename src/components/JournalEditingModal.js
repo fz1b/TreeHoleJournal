@@ -19,7 +19,7 @@ import imgPlaceholder from '../assets/photo_placeholder.svg';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
-import { createJournal, editJournal } from '../services/JournalServices';
+import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import AuthContext from '../authAPI/auth-context';
 
 const styles = (theme) => ({
@@ -128,6 +128,14 @@ export default function CustomizedDialogs({
     const handleImgDelete = () => {
         setCoverImg('');
     };
+    const handleDelete = () => {
+        handleClose();
+        deleteJournal(auth.token, journal._id).then(
+            updateJournals()
+        ).catch(err => {
+            console.log(err);
+        });
+    }
     const handleLike = () => {
         setLiked((state) => !state);
     };
@@ -262,7 +270,7 @@ export default function CustomizedDialogs({
                         </IconButton>
                         {authorMode && (
                             <>
-                                <span>
+                                <span onClick={handleDelete}>
                                     <IconButton>
                                         <FaRegTrashAlt />
                                     </IconButton>

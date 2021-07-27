@@ -48,6 +48,8 @@ app.get('/explore', journalController.getExploreJournals);
 app.get('/explore/search/:criteria', journalController.searchExploreJournals);
 // get the journal's author info
 app.get('/journals/author/:journal_id', journalController.getJournalAuthor);
+// verify user editing access
+app.get('/journal/access/:journal_id/:idToken', journalController.verifyEditingAccess);
 // get the comment's author info
 app.get('/comments/:journal_id/:comment_id', journalController.getCommentAuthor);
 // create a new comment
@@ -63,6 +65,7 @@ app.get('/me/:idToken', journalController.getUserJournals);
 // get journals written by the given user that contain the string in title or content
 app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
 app.post('/me/:idToken', journalController.createNewJournal);
+// delete a journal
 app.delete('/me/:idToken/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);
 app.put('/me/:user_id/:journal_id/privacy', journalController.editJournalPrivacySetting);
