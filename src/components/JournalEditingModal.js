@@ -21,7 +21,7 @@ import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
 import { createJournal, editJournal } from '../services/JournalServices';
 import AuthContext from '../authAPI/auth-context';
-
+import JournalLocation from '../components/JournalLocation';
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -81,7 +81,7 @@ const Image = styled.img`
 `;
 const Date = styled.span`
     position: absolute;
-    right: 80%;
+    right: 75%;
 `;
 
 const ImgPlaceholder = styled.div`
@@ -223,6 +223,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
+                <JournalLocation/>
                 <DialogActions>
                     <Date>{journal.date}</Date>
                     {authorMode && (
