@@ -35,7 +35,8 @@ function CommentArea(props) {
             .then((res) => {
                 setComments(res.comments);
                 // update the list of journals so that the new comment renders when users close and open the modal again
-                props.updateJournal(props.journalID, res);
+                props.updateJournals();
+                setComment('');
             })
             .catch((err) => {
                 alert('Failed to comment the journal, please try again later.');
