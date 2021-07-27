@@ -111,11 +111,15 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
+    const [location,setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
     const [liked, setLiked] = useState(false);
     const auth = useContext(AuthContext);
-
+    const handleLocation = (loc)=>{
+        console.log(loc);
+        setLocation(loc);
+    }
     const handlePrivacyChange = (event) => {
         setPrivacy(event.target.value);
     };
@@ -131,7 +135,7 @@ export default function CustomizedDialogs({
     const handleLike = () => {
         setLiked((state) => !state);
     };
-    const handleSave = (title, date, image, weather, content, privacy) => {
+    const handleSave = (title, date, image, weather, content, location, privacy) => {
         if (!journal._id) {
             // create a new journal
             createJournal(
@@ -141,6 +145,7 @@ export default function CustomizedDialogs({
                 image,
                 weather,
                 content,
+                location,
                 privacy
             )
                 .then((res) => {
@@ -223,7 +228,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
-                <JournalLocation/>
+                <JournalLocation handleLocation={handleLocation}/>
                 <DialogActions>
                     <Date>{journal.date}</Date>
                     {authorMode && (
@@ -278,6 +283,7 @@ export default function CustomizedDialogs({
                                             coverImg,
                                             journal.weather,
                                             content,
+                                            location,
                                             privacy
                                         )
                                     }

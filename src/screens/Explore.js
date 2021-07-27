@@ -57,7 +57,12 @@ export default function Explore() {
     useEffect(() => {
         fetchJournals();
     }, [auth.token]);
-
+  //   useEffect(() => {
+  //     navigator.geolocation.getCurrentPosition(function (position) {
+  //         console.log('Latitude is :', position.coords.latitude);
+  //         console.log('Longitude is :', position.coords.longitude);
+  //     });
+  // }, []);
     return (
         <ThemeProvider theme={customizedTheme}>
             <div className='explore'>

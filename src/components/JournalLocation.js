@@ -16,23 +16,19 @@ const LocationContent = withStyles((theme) => ({
         padding:"10px"
     },
 }))(MuiDialogContent);
-function JournalLocation(){
+function JournalLocation({handleLocation, address}){
     const[showInput,setShowInput] = useState(false);
     const [location, setLocation] = useState("");
-
-    const [coordinates, setCoordinates] = useState({
-        lat: null,
-        lng: null
-      });
     const handleLocationAdd = ()=>{
-        console.log("add")
         setShowInput(true);
     }
     const handleSelect = async (value)=>{
         const results = await geocodeByAddress(value);
         const latLng = await getLatLng(results[0]);
+        handleLocation({address:value,
+                        lat:latLng.lat,
+                        lng:latLng.lng})
         setLocation(value);
-        setCoordinates(latLng);
     }
 return(
     <>
@@ -43,13 +39,16 @@ return(
     onSelect={handleSelect}>
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
           <>
-          <Box display="flex">
+          <Box display="flex" alignItems="center">
           <Box mr={2}>
         <IconContext.Provider value={{ color: '#50A9C1'}}>
         <HiOutlineLocationMarker size={30}/>
          </IconContext.Provider>
         </Box>
-        {!showInput&&<Button color="primary" size="small" style={{textTransform: 'none'}} onClick={handleLocationAdd}>Add a Location</Button>} 
+        {address && <div style={{color:"gray"}}>
+                            {address}
+                        </div>}
+        {!showInput&&!address &&<Button color="primary" size="small" style={{textTransform: 'none'}} onClick={handleLocationAdd}>Add a Location</Button>} 
         {showInput&&
         <TextField 
                         id='outlined-basic'

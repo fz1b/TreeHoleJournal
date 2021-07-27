@@ -1,3 +1,4 @@
+const { Decimal128 } = require('bson');
 const mongoose = require('mongoose');
 
 const PRIVACY = {
@@ -26,6 +27,12 @@ const JournalSchema = mongoose.Schema(
         image: String,
         weather: String,
         content: String,
+        location:{
+            address:String,
+            lat:Decimal128,
+            lng:Decimal128
+
+        },
         privacy: { type: String, enum: [PRIVACY.PUBLIC, PRIVACY.ANONYMOUS, PRIVACY.PRIVATE]},
         comments: [CommentSchema]
     },

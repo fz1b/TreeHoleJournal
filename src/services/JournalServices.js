@@ -94,6 +94,7 @@ export function createJournal(
     image,
     weather,
     content,
+    location,
     privacy
 ) {
     return axios
@@ -104,10 +105,12 @@ export function createJournal(
             image: image,
             weather: weather,
             content: content,
+            location:location,
             privacy: privacy,
             comments: [],
         })
         .then((res) => {
+            console.log(res.data)
             return res.data;
         })
         .catch((err) => {

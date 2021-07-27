@@ -117,6 +117,7 @@ const createNewJournal = async (req, res)=>{
             image: req.body.image,
             weather: req.body.weather,
             content: req.body.content,
+            location: req.body.location,
             privacy: req.body.privacy,
             comments: []
         })
