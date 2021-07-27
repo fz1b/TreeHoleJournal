@@ -66,7 +66,8 @@ return(
 
               {suggestions.map(suggestion => {
                 const style = {
-                  backgroundColor: suggestion.active ? "#eceaea" : "#fff"
+                  backgroundColor: suggestion.active ? "#eceaea" : "#fff",
+                  color:"grey"
                 };
 
                 return (
