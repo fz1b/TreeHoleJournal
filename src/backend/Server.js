@@ -1,29 +1,35 @@
 let express = require('express');
 var cors = require('cors');
 let app = express();
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 const DB_NAME = 'TreeHole';
-const mongoURL = 'mongodb+srv://CallbackKarma:treehole2021@cluster0.uyjr5.mongodb.net/'+DB_NAME+'?retryWrites=true&w=majority';
+const mongoURL =
+    'mongodb+srv://CallbackKarma:treehole2021@cluster0.uyjr5.mongodb.net/' +
+    DB_NAME +
+    '?retryWrites=true&w=majority';
 const userController = require('./controller/UserControllers');
 const journalController = require('./controller/JournalControllers');
 
 let server = app.listen(PORT, function () {
     // let host = server.address().address;
     let port = server.address().port;
-    mongoose.connect(mongoURL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true
-    })
-        .then(res=>console.log("server started on port: %s", port))
-        .catch(err=>{console.error(err);});
-})
+    mongoose
+        .connect(mongoURL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+        })
+        .then((res) => console.log('server started on port: %s', port))
+        .catch((err) => {
+            console.error(err);
+        });
+});
 
 // User Endpoints
 // signup endpoint
@@ -39,8 +45,6 @@ app.get('/users/info/secure/:idToken', userController.getUserInfoSecure);
 // get user info by userid (for BE use)
 app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
-
-
 // Journal Endpoints
 // get public and anonymous journals for Explore page
 app.get('/explore', journalController.getExploreJournals);
@@ -49,13 +53,25 @@ app.get('/explore/search/:criteria', journalController.searchExploreJournals);
 // get the journal's author info
 app.get('/journals/author/:journal_id', journalController.getJournalAuthor);
 // get the comment's author info
-app.get('/comments/:journal_id/:comment_id', journalController.getCommentAuthor);
+app.get(
+    '/comments/:journal_id/:comment_id',
+    journalController.getCommentAuthor
+);
 // create a new comment
-app.post('/comments/:journal_id/:commenter_token', journalController.createComment);
+app.post(
+    '/comments/:journal_id/:commenter_token',
+    journalController.createComment
+);
 // edit an existing comment
-app.put('/explore/:journal_id/comments/:comment_id', journalController.editComment);
+app.put(
+    '/explore/:journal_id/comments/:comment_id',
+    journalController.editComment
+);
 // delete a comment
-app.delete('/explore/:journal_id/comments/:comment_id', journalController.deleteComment)
+app.delete(
+    '/explore/:journal_id/comments/:comment_id',
+    journalController.deleteComment
+);
 
 // Journals -- Me
 // get journals written by the given user
@@ -65,4 +81,7 @@ app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
 app.post('/me/:idToken', journalController.createNewJournal);
 app.delete('/me/:user_id/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);
-app.put('/me/:user_id/:journal_id/privacy', journalController.editJournalPrivacySetting);
+app.put(
+    '/me/:user_id/:journal_id/privacy',
+    journalController.editJournalPrivacySetting
+);

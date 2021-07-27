@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     likes: [{ type: mongoose.Types.ObjectId, required: false }],
-    collections: [{ type: mongoose.Types.ObjectId, required: false }]
+    collections: [{ type: mongoose.Types.ObjectId, required: false }],
 });
 
 userSchema.plugin(uniqueValidator);
