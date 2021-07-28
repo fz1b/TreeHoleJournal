@@ -238,8 +238,8 @@ export default function CustomizedDialogs({
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
-            console.log('Latitude is :', position.coords.latitude);
-            console.log('Longitude is :', position.coords.longitude);
+            // console.log('Latitude is :', position.coords.latitude);
+            // console.log('Longitude is :', position.coords.longitude);
         });
     }, []);
 
@@ -289,7 +289,7 @@ export default function CustomizedDialogs({
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Date>{journal.date}</Date>
+                    <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
                         <>
                             <Select

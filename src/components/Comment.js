@@ -45,7 +45,7 @@ function Comment(props) {
                 </Box>
                 <Box px={1}>{props.comment.content}</Box>
                 <Box px={1}>
-                    <Date>{props.comment.date}</Date>
+                    <Date>{props.comment.date.toDateString()}</Date>
                 </Box>
             </Box>
             {/* TODO: determine edit on the backend */}

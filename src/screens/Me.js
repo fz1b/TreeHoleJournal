@@ -37,10 +37,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const date = new Date();
 const newJournal = {
     title: '',
-    date: date.toDateString(),
+    date: new Date(),
     coverImage: '',
     content: '',
     privacy_setting: 'PRIVATE',

@@ -131,7 +131,7 @@ export default function CustomizedDialogs({
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Date>{journal.date}</Date>
+                    <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
                         <>
                             <Select
