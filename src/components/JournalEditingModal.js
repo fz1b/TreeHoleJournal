@@ -178,7 +178,6 @@ export default function CustomizedDialogs({
     };
 
     const thumbInner = {
-        
         minWidth: 0,
     };
 
@@ -187,6 +186,7 @@ export default function CustomizedDialogs({
         maxHeight: 500,
         borderRadius: 5,
         border: '5px solid #eaeaea',
+        boxSizing: 'border-box',
     };
       
     const { getRootProps, getInputProps } = useDropzone({
@@ -202,14 +202,11 @@ export default function CustomizedDialogs({
         },
     });
 
-    function changeBackground(e) {
-        e.target.style.opacity = '0.3';
-      }
 
     const thumbs = files.map((file) => (
             <div style={thumb} key={file.name}>
                 <div style={thumbInner}>
-                    <img onMouseOver={changeBackground} src={file.preview} style={img} alt={file.size} />
+                    <img src={file.preview} style={img} alt={file.size} />
                 </div>
 
             </div>
@@ -222,13 +219,6 @@ export default function CustomizedDialogs({
         },
         [files]
     );
-
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            console.log('Latitude is :', position.coords.latitude);
-            console.log('Longitude is :', position.coords.longitude);
-        });
-    }, []);
 
     return (
         <div>
