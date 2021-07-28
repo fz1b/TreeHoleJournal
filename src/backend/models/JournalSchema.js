@@ -19,7 +19,7 @@ const JournalSchema = mongoose.Schema(
     {
         _id: mongoose.SchemaTypes.ObjectId,
         title: String,
-        author_id: String,
+        author_id: {type: String, ref:'User'},
         date: String,
         image: String,
         weather: String,
@@ -29,6 +29,7 @@ const JournalSchema = mongoose.Schema(
             enum: [PRIVACY.PUBLIC, PRIVACY.ANONYMOUS, PRIVACY.PRIVATE],
         },
         comments: [CommentSchema],
+        likedby: [{type: String, ref:'User'}]
     },
     {
         collection: 'journals',
