@@ -29,8 +29,8 @@ const JournalSchema = mongoose.Schema(
         content: String,
         location:{
             address:String,
-            lat:Decimal128,
-            lng:Decimal128
+            lat:String,
+            lng:String
 
         },
         privacy: { type: String, enum: [PRIVACY.PUBLIC, PRIVACY.ANONYMOUS, PRIVACY.PRIVATE]},

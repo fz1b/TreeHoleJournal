@@ -7,10 +7,12 @@ import { useState, useEffect, useContext } from 'react';
 import {
     getExploreJournals,
     searchExploreJournals,
+    getNearbyJournals,
 } from '../services/JournalServices';
 import ExploreTabs from '../components/ExploreTabs';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
+import {getDistance} from 'geolib';
 const useStyles = makeStyles((theme) => ({
     explore_bg: {
         backgroundImage: `url(${bgImg})`,
@@ -29,6 +31,10 @@ export default function Explore() {
     const [journals, setJournals] = useState([]);
     const [searchContent, setSearchContent] = useState('');
     const [showSearchTag, setShowSearchTag] = useState(false);
+    const [tab,setTab] = useState("");
+    const handleTab = (value)=>{
+      setTab(value);
+    }
     const handleClearSearch = () => {
         fetchJournals();
         setSearchContent('');
@@ -46,7 +52,6 @@ export default function Explore() {
     const fetchJournals = () => {
         getExploreJournals(auth.token)
             .then((res) => {
-                console.log(res);
                 setJournals(res);
             })
             .catch((err) => {
@@ -57,12 +62,17 @@ export default function Explore() {
     useEffect(() => {
         fetchJournals();
     }, [auth.token]);
-  //   useEffect(() => {
-  //     navigator.geolocation.getCurrentPosition(function (position) {
-  //         console.log('Latitude is :', position.coords.latitude);
-  //         console.log('Longitude is :', position.coords.longitude);
-  //     });
-  // }, []);
+    useEffect(() => {
+      if(tab==="Nearby"){
+        navigator.geolocation.getCurrentPosition(function (position) {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude
+          getNearbyJournals(lat,lng).then(res=>{
+            setJournals(res);
+          })
+      });
+      }
+  }, [tab]);
     return (
         <ThemeProvider theme={customizedTheme}>
             <div className='explore'>
@@ -73,7 +83,7 @@ export default function Explore() {
                     handleSearch={handleSearch}
                 />
                 <div className={classes.explore_bg} />
-                <ExploreTabs />
+                <ExploreTabs handleTab={handleTab}/>
                 {showSearchTag && (
                     <SearchTag
                         content={searchContent}

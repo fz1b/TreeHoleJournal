@@ -1,6 +1,6 @@
 // services for journals
+import {getDistance} from 'geolib';
 const axios = require('axios').default;
-
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // input: void
 // response: list of journals JSON obj
@@ -16,6 +16,30 @@ export function getExploreJournals() {
             return err;
         });
 }
+export function getNearbyJournals(lat, lng) {
+    return axios
+        .get('/explore')
+        .then((res) => {
+            let journals=res.data.filter((j)=>j.location);
+            journals.sort(function(a,b){
+                const distA = getDistance(
+                    {latitude: lat, longitude: lng},
+                    {latitude: a.location.lat, longitude:a.location.lng},
+                );
+                const distB = getDistance(
+                    {latitude: lat, longitude: lng},
+                    {latitude: b.location.lat, longitude: b.location.lng},
+                );
+                return (distA-distB);
+            });
+            return journals;
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        });
+}
+
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // input: search criteria String
