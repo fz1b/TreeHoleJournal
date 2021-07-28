@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -15,11 +15,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { BootstrapInput } from './CustomizedComponents';
-import imgPlaceholder from '../assets/photo_placeholder.svg';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
 import { createJournal, editJournal } from '../services/JournalServices';
+import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
 
 const styles = (theme) => ({
@@ -58,12 +58,6 @@ const DialogContent = withStyles((theme) => ({
         padding: theme.spacing(2),
     },
 }))(MuiDialogContent);
-const DeleteImage = withStyles((theme) => ({
-    root: {
-        transform: 'translate(0, -8vh)',
-        background: 'white',
-    },
-}))(IconButton);
 const TitleInput = withStyles((theme) => ({
     root: {
         width: '90%',
@@ -75,31 +69,25 @@ const DialogActions = withStyles((theme) => ({
         padding: theme.spacing(1),
     },
 }))(MuiDialogActions);
-const Image = styled.img`
-    width: 100%;
-    border-radius: 10px;
-`;
 const Date = styled.span`
     position: absolute;
-    right: 80%;
+    right: 78%;
 `;
 
-const ImgPlaceholder = styled.div`
-    background-image: url(${imgPlaceholder});
-    background-color: aliceblue;
-    background-repeat: no-repeat;
-    background-size: 60%;
-    height: 25vh;
-    width: 564px;
-    background-position: 60%;
-    border-radius: 10px;
+const Dropzone = styled.div`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #eeeeee;
     border-style: dashed;
-    border-color: lightgrey;
-`;
-const UploadInstruction = styled.span`
-    position: absolute;
-    transform: translate(65%, 20px);
-    font-weight: bold;
+    background-color: #fafafa;
+    color: #bdbdbd;
+    outline: none;
+    transition: border 0.24s ease-in-out;
 `;
 
 export default function CustomizedDialogs({
@@ -115,6 +103,7 @@ export default function CustomizedDialogs({
     const [coverImg, setCoverImg] = useState(journal.image);
     const [liked, setLiked] = useState(false);
     const auth = useContext(AuthContext);
+    const [files, setFiles] = useState([]);
 
     const handlePrivacyChange = (event) => {
         setPrivacy(event.target.value);
@@ -125,9 +114,7 @@ export default function CustomizedDialogs({
     const handleContentChange = (e) => {
         setContent(e.target.value);
     };
-    const handleImgDelete = () => {
-        setCoverImg('');
-    };
+
     const handleLike = () => {
         setLiked((state) => !state);
     };
@@ -172,12 +159,84 @@ export default function CustomizedDialogs({
         }
     };
 
+    const thumbsContainer = {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 16,
+        marginBottom: 20,
+        justifyContent: 'center',
+    };
+
+    const thumb = {
+        display: 'inline-flex',
+        borderRadius: 2,
+        maxHeight: 500,
+        padding: 0,
+        marginBottom: 20,
+        boxSizing: 'border-box',
+    };
+
+    const thumbInner = {
+        
+        minWidth: 0,
+    };
+
+    const img = {
+        maxWidth: '100%',
+        maxHeight: 500,
+        borderRadius: 5,
+        border: '5px solid #eaeaea',
+    };
+      
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/*',
+        onDrop: (acceptedFiles) => {
+            setFiles(
+                acceptedFiles.map((file) =>
+                    Object.assign(file, {
+                        preview: URL.createObjectURL(file),
+                    })
+                )
+            );
+        },
+    });
+
+    function changeBackground(e) {
+        e.target.style.opacity = '0.3';
+      }
+
+    const thumbs = files.map((file) => (
+            <div style={thumb} key={file.name}>
+                <div style={thumbInner}>
+                    <img onMouseOver={changeBackground} src={file.preview} style={img} alt={file.size} />
+                </div>
+
+            </div>
+    ));
+
+    useEffect(
+        () => () => {
+            // Make sure to revoke the data uris to avoid memory leaks
+            files.forEach((file) => URL.revokeObjectURL(file.preview));
+        },
+        [files]
+    );
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            console.log('Latitude is :', position.coords.latitude);
+            console.log('Longitude is :', position.coords.longitude);
+        });
+    }, []);
+
     return (
         <div>
             <Dialog
                 onClose={handleClose}
                 aria-labelledby='customized-dialog-title'
                 open={true}
+                fullWidth={true}
                 maxWidth='sm'
             >
                 <DialogTitle id='customized-dialog-title' onClose={handleClose}>
@@ -191,26 +250,19 @@ export default function CustomizedDialogs({
                     />
                 </DialogTitle>
                 <DialogContent dividers>
+                    <section className='container'>
+                        {files.length === 0 && (
+                            <Dropzone
+                                {...getRootProps({ className: 'dropzone' })}
+                            >
+                                <input {...getInputProps()} />
+                                <p>Drag the cover image, or click to upload</p>
+                            </Dropzone>
+                        )}
+                        <aside style={thumbsContainer}>{thumbs}</aside>
+                    </section>
+
                     <Typography component={'span'} gutterBottom>
-                        {!coverImg && (
-                            <UploadInstruction>
-                                Drag and drop or click to upload
-                            </UploadInstruction>
-                        )}
-                        {!coverImg && (
-                            <>
-                                <ImgPlaceholder />{' '}
-                            </>
-                        )}
-
-                        <Image src={coverImg} alt='' />
-
-                        <span onClick={handleImgDelete}>
-                            {' '}
-                            <DeleteImage aria-label='delete'>
-                                <FaRegTrashAlt />
-                            </DeleteImage>
-                        </span>
                         <TextField
                             fullWidth
                             label='Content'
