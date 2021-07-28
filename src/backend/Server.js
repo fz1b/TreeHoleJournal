@@ -1,6 +1,9 @@
+require('dotenv').config()
 let express = require('express');
 var cors = require('cors');
 let app = express();
+
+
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -10,7 +13,7 @@ const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 const DB_NAME = 'TreeHole';
 const mongoURL =
-    'mongodb+srv://CallbackKarma:treehole2021@cluster0.uyjr5.mongodb.net/' +
+    process.env.MONGO_URL+
     DB_NAME +
     '?retryWrites=true&w=majority';
 const userController = require('./controller/UserControllers');

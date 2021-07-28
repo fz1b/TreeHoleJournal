@@ -111,14 +111,17 @@ export default function CustomizedDialogs({
     const [files, setFiles] = useState([]);
     const [uploaded, setLoaded] = useState(false);
 
+    const ACCESS_KEY_ID = process.env.REACT_APP_ACCESS_KEY_ID
+    const APP_REGION = process.env.REACT_APP_REGION
+    const API_KEY = process.env.REACT_APP_SECRET_ACCESS_KEY
+    
     const config = {
         bucketName: 'treehole',
-        region: 'us-west-1',
-        accessKeyId: 'AKIA2IFZOIW22O2QF5BC',
-        secretAccessKey: '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',
-    }
+        region: APP_REGION,
+        accessKeyId: ACCESS_KEY_ID,
+        secretAccessKey: API_KEY,
+    };
     const S3Client = new S3(config);
-
 
     const handlePrivacyChange = (event) => {
         setPrivacy(event.target.value);
@@ -133,7 +136,7 @@ export default function CustomizedDialogs({
     const handleLike = () => {
         setLiked((state) => !state);
     };
-    
+
     const handleSave = (title, date, image, weather, content, privacy) => {
         if (!journal._id) {
             // create a new journal
@@ -177,14 +180,14 @@ export default function CustomizedDialogs({
 
 
     const uploadFiles = () => {
-
-    S3Client.uploadFile(files[0], sha256(files[0].name))
-    .then(data => {
-        console.log(data.location)
-        setLoaded(true)
-        setCoverImg(data.location)
-    }).catch(err => console.error(err))
-    }
+        S3Client.uploadFile(files[0], sha256(files[0].name))
+            .then((data) => {
+                console.log(data.location);
+                setLoaded(true);
+                setCoverImg(data.location);
+            })
+            .catch((err) => console.error(err));
+    };
 
     const thumbsContainer = {
         display: 'flex',
@@ -216,8 +219,8 @@ export default function CustomizedDialogs({
     };
 
     const buttonStyle = {
-        margin: 10
-    }
+        margin: 10,
+    };
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
@@ -288,12 +291,24 @@ export default function CustomizedDialogs({
                         >
                             {files.length !== 0 && (
                                 <div>
-                                <Button onClick={() => setFiles([])} style={buttonStyle} variant='contained' color='secondary' disabled={uploaded}>
-                                    Remove Upload
-                                </Button>
-                                <Button onClick={() => uploadFiles([])}style={buttonStyle} variant='contained' color='primary' disabled={uploaded}>
-                                    Upload Picture
-                                </Button>
+                                    <Button
+                                        onClick={() => setFiles([])}
+                                        style={buttonStyle}
+                                        variant='contained'
+                                        color='secondary'
+                                        disabled={uploaded}
+                                    >
+                                        Remove Upload
+                                    </Button>
+                                    <Button
+                                        onClick={() => uploadFiles()}
+                                        style={buttonStyle}
+                                        variant='contained'
+                                        color='primary'
+                                        disabled={uploaded}
+                                    >
+                                        Upload Picture
+                                    </Button>
                                 </div>
                             )}
                         </div>
