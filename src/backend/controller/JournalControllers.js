@@ -194,6 +194,23 @@ const createNewJournal = async (req, res) => {
         });
 };
 
+// return true if the user has editing access to the journal  (is the author)
+// req-param: journal_id, user_token
+// req-body: null
+// response: true if the user is the author, false otherwise {editable: true/false}
+const verifyEditingAccess = async (req, res) => {
+    axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken)
+        .then(user=>{
+            Journal.findById(req.params.journal_id)
+                .then(journal => {
+                    res.status(200).json({editable: user.data.userData._id === journal.author_id});
+                })
+        })
+        .catch(err=>{
+            res.status(500).json(err)
+        });
+}
+
 // delete a journal
 // req-param: user_id, journal id,
 // req-body: null
@@ -373,6 +390,7 @@ exports.getUserJournals = getUserJournals;
 exports.searchUserJournals = searchUserJournals;
 exports.getJournalAuthor = getJournalAuthor;
 exports.createNewJournal = createNewJournal;
+exports.verifyEditingAccess = verifyEditingAccess;
 exports.deleteJournal = deleteJournal;
 exports.editJournal = editJournal;
 exports.editJournalPrivacySetting = editJournalPrivacySetting;

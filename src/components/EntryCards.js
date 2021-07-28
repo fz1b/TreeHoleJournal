@@ -16,7 +16,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/Edit';
 import { red, grey } from '@material-ui/core/colors';
-import { getJournalAuthor, verifyAuthor } from '../services/JournalServices';
+import {getJournalAuthor, verifyEditingAccess} from '../services/JournalServices';
 import AuthContext from '../authAPI/auth-context';
 
 const useStyles = makeStyles({
@@ -37,7 +37,7 @@ export default function EntryCards(props) {
         props.content.privacy === 'PUBLIC'
     );
     const [authorName, setAuthorName] = useState('');
-    const [isEditable, setEditable] = useState(true);
+    const [isEditable, setEditable] = useState(false);
 
     const toggleModal = () => {
         setshowModal(!showModal);
@@ -54,15 +54,14 @@ export default function EntryCards(props) {
             .catch((err) => {
                 // do nothing and use empty author
             });
-    }, [props.content._id]);
 
-    // useEffect(() => {
-    //   verifyAuthor(props.content._id, auth.token).then(res => {
-    //     setEditable(res.isEditable)
-    //   }).catch(err => {
-    //    setEditable(false)
-    //   })
-    // }, [auth.token, props.content._id]);
+        verifyEditingAccess(props.content._id, auth.token).then(res => {
+            setEditable(res);
+        }).catch(err => {
+            setEditable(false);
+        })
+    }, [auth.token, props.content._id]);
+
 
     return (
         <>
