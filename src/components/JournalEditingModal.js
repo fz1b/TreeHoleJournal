@@ -21,6 +21,8 @@ import { IconContext } from 'react-icons';
 import { createJournal, editJournal } from '../services/JournalServices';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
+import S3 from 'aws-s3';
+import sha256 from 'crypto-js/sha256';
 
 const styles = (theme) => ({
     root: {
@@ -58,17 +60,20 @@ const DialogContent = withStyles((theme) => ({
         padding: theme.spacing(2),
     },
 }))(MuiDialogContent);
+
 const TitleInput = withStyles((theme) => ({
     root: {
         width: '90%',
     },
 }))(TextField);
+
 const DialogActions = withStyles((theme) => ({
     root: {
         margin: 0,
         padding: theme.spacing(1),
     },
 }))(MuiDialogActions);
+
 const Date = styled.span`
     position: absolute;
     right: 78%;
@@ -104,6 +109,16 @@ export default function CustomizedDialogs({
     const [liked, setLiked] = useState(false);
     const auth = useContext(AuthContext);
     const [files, setFiles] = useState([]);
+    const [uploaded, setLoaded] = useState(false);
+
+    const config = {
+        bucketName: 'treehole',
+        region: 'us-west-1',
+        accessKeyId: 'AKIA2IFZOIW22O2QF5BC',
+        secretAccessKey: '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',
+    }
+    const S3Client = new S3(config);
+
 
     const handlePrivacyChange = (event) => {
         setPrivacy(event.target.value);
@@ -118,6 +133,7 @@ export default function CustomizedDialogs({
     const handleLike = () => {
         setLiked((state) => !state);
     };
+    
     const handleSave = (title, date, image, weather, content, privacy) => {
         if (!journal._id) {
             // create a new journal
@@ -159,12 +175,22 @@ export default function CustomizedDialogs({
         }
     };
 
+
+    const uploadFiles = () => {
+
+    S3Client.uploadFile(files[0], sha256(files[0].name))
+    .then(data => {
+        console.log(data.location)
+        setLoaded(true)
+        setCoverImg(data.location)
+    }).catch(err => console.error(err))
+    }
+
     const thumbsContainer = {
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
         marginTop: 16,
-        marginBottom: 20,
         justifyContent: 'center',
     };
 
@@ -188,7 +214,11 @@ export default function CustomizedDialogs({
         border: '5px solid #eaeaea',
         boxSizing: 'border-box',
     };
-      
+
+    const buttonStyle = {
+        margin: 10
+    }
+
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: (acceptedFiles) => {
@@ -202,14 +232,12 @@ export default function CustomizedDialogs({
         },
     });
 
-
     const thumbs = files.map((file) => (
-            <div style={thumb} key={file.name}>
-                <div style={thumbInner}>
-                    <img src={file.preview} style={img} alt={file.size} />
-                </div>
-
+        <div style={thumb} key={file.name}>
+            <div style={thumbInner}>
+                <img src={file.preview} style={img} alt={file.size} />
             </div>
+        </div>
     ));
 
     useEffect(
@@ -250,6 +278,25 @@ export default function CustomizedDialogs({
                             </Dropzone>
                         )}
                         <aside style={thumbsContainer}>{thumbs}</aside>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: 20,
+                            }}
+                        >
+                            {files.length !== 0 && (
+                                <div>
+                                <Button onClick={() => setFiles([])} style={buttonStyle} variant='contained' color='secondary' disabled={uploaded}>
+                                    Remove Upload
+                                </Button>
+                                <Button onClick={() => uploadFiles([])}style={buttonStyle} variant='contained' color='primary' disabled={uploaded}>
+                                    Upload Picture
+                                </Button>
+                                </div>
+                            )}
+                        </div>
                     </section>
 
                     <Typography component={'span'} gutterBottom>
