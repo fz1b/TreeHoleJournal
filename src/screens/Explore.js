@@ -50,7 +50,7 @@ export default function Explore() {
         setShowSearchTag(true);
     };
     const fetchJournals = () => {
-        getExploreJournals(auth.token)
+        getExploreJournals()
             .then((res) => {
                 setJournals(res);
             })
@@ -59,6 +59,7 @@ export default function Explore() {
                 console.error(err);
             });
     };
+
     useEffect(() => {
         fetchJournals();
     }, [auth.token]);
@@ -91,7 +92,7 @@ export default function Explore() {
                         clearSearch={handleClearSearch}
                     />
                 )}
-                <CardHolder journals={journals} showCalendar={false} />
+                <CardHolder journals={journals} showCalendar={false} updateJournals={fetchJournals}/>
             </div>
         </ThemeProvider>
     );

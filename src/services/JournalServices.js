@@ -106,7 +106,18 @@ export function getJournalAuthor(journal_id) {
         });
 }
 
-export function verifyAuthor(journal_id, author_id) {}
+export function verifyEditingAccess(journal_id, user_token) {
+    return axios
+        .get('/journal/access/' + journal_id + '/' + user_token)
+        .then((res) => {
+            // console.log(res.data);
+            return res.data.editable;
+        })
+        .catch((err) => {
+            console.error(err);
+            return false;
+        });
+}
 
 // create a new journal
 // input: user id, journal fields, except comments
@@ -144,18 +155,16 @@ export function createJournal(
 }
 
 // delete a journal
-// input: user_id, journal id,
+// input: user_token, journal id,
 // response: null
-export function deleteJournal(user_id, journal_id) {
-    return axios
-        .delete('/me/' + user_id + '/' + journal_id)
-        .then((res) => {
-            return res.data;
-        })
-        .catch((err) => {
+export function deleteJournal(user_token, journal_id) {
+    return axios.delete('/me/'+user_token+'/'+journal_id)
+        .then(res=>{
+            return null;
+        }).catch(err => {
             console.error(err);
             return err;
-        });
+        })
 }
 
 // edit a journal
