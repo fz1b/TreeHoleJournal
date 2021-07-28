@@ -45,6 +45,8 @@ app.get('/users/info/secure/:idToken', userController.getUserInfoSecure);
 // get user info by userid (for BE use)
 app.get('/users/info/id/:user_id', userController.getUserInfoById);
 
+
+
 // Journal Endpoints
 // get public and anonymous journals for Explore page
 app.get('/explore', journalController.getExploreJournals);
@@ -52,6 +54,8 @@ app.get('/explore', journalController.getExploreJournals);
 app.get('/explore/search/:criteria', journalController.searchExploreJournals);
 // get the journal's author info
 app.get('/journals/author/:journal_id', journalController.getJournalAuthor);
+// verify user editing access
+app.get('/journal/access/:journal_id/:idToken', journalController.verifyEditingAccess);
 // get the comment's author info
 app.get(
     '/comments/:journal_id/:comment_id',
@@ -68,10 +72,7 @@ app.put(
     journalController.editComment
 );
 // delete a comment
-app.delete(
-    '/explore/:journal_id/comments/:comment_id',
-    journalController.deleteComment
-);
+app.delete('/explore/comments/:journal_id/:comment_id', journalController.deleteComment)
 
 // Journals -- Me
 // get journals written by the given user
@@ -79,7 +80,8 @@ app.get('/me/:idToken', journalController.getUserJournals);
 // get journals written by the given user that contain the string in title or content
 app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
 app.post('/me/:idToken', journalController.createNewJournal);
-app.delete('/me/:user_id/:journal_id', journalController.deleteJournal);
+// delete a journal
+app.delete('/me/:idToken/:journal_id', journalController.deleteJournal);
 app.put('/me/:user_id/:journal_id', journalController.editJournal);
 app.put(
     '/me/:user_id/:journal_id/privacy',

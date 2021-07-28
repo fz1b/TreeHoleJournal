@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, {useContext, useEffect} from 'react';
 import { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -18,7 +18,7 @@ import { BootstrapInput } from './CustomizedComponents';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
-import { createJournal, editJournal } from '../services/JournalServices';
+import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
 
@@ -58,6 +58,12 @@ const DialogContent = withStyles((theme) => ({
         padding: theme.spacing(2),
     },
 }))(MuiDialogContent);
+const DeleteImage = withStyles((theme) => ({
+    root: {
+        transform: 'translate(0, -8vh)',
+        background: 'white',
+    },
+}))(IconButton);
 const TitleInput = withStyles((theme) => ({
     root: {
         width: '90%',
@@ -114,7 +120,14 @@ export default function CustomizedDialogs({
     const handleContentChange = (e) => {
         setContent(e.target.value);
     };
-
+    const handleDelete = () => {
+        handleClose();
+        deleteJournal(auth.token, journal._id).then(
+            updateJournals()
+        ).catch(err => {
+            console.log(err);
+        });
+    }
     const handleLike = () => {
         setLiked((state) => !state);
     };
@@ -178,7 +191,7 @@ export default function CustomizedDialogs({
     };
 
     const thumbInner = {
-        
+
         minWidth: 0,
     };
 
@@ -188,7 +201,7 @@ export default function CustomizedDialogs({
         borderRadius: 5,
         border: '5px solid #eaeaea',
     };
-      
+
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: (acceptedFiles) => {
@@ -314,7 +327,7 @@ export default function CustomizedDialogs({
                         </IconButton>
                         {authorMode && (
                             <>
-                                <span>
+                                <span onClick={handleDelete}>
                                     <IconButton>
                                         <FaRegTrashAlt />
                                     </IconButton>
