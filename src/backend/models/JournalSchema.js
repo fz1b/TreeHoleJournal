@@ -8,7 +8,7 @@ const PRIVACY = {
 
 const CommentSchema = mongoose.Schema({
     _id: mongoose.SchemaTypes.ObjectId,
-    author_id: String,
+    author_id: {type: String, ref:'User'},
     date: String,
     content: String,
     anonymous: Boolean,

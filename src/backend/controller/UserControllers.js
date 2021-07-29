@@ -452,6 +452,11 @@ const getLikedJournalsByUserToken = async (req, res) => {
         }
     });
 
+    likes = likes.filter(journal => {
+        let { privacy } = journal;
+        return privacy !== PRIVACY.PRIVATE;
+    })
+
     return res.status(200).json({status: 200, likedJournals: likes});
 
 };
