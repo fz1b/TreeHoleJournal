@@ -3,24 +3,32 @@ import 'react-calendar/dist/Calendar.css';
 import { useState } from 'react';
 import '../stylesheets/JournalCalendar.css';
 import Button from '@material-ui/core/Button';
-function JournalCalendar({ journals }) {
-    const [date, setDate] = useState(new Date());
-    const mockDates = ['Fri Jul 23 2021', 'Tue Jul 20 2021'];
-    // const datesWithJournals = journals.map((j)=>j.date);
+function JournalCalendar({ journals,handleDateSelection }) {
+    const [date, setDate] = useState(null);
+    const validDates = journals.map((j)=>j.date.toDateString());
+    const handleClear =()=>{
+        setDate(null);
+        console.log("clear")
+        handleDateSelection(null);
+    }
+    const handleSelect = (date)=>{
+        setDate(date);
+        handleDateSelection(date);
+    }
     return (
         <>
             <Calendar
                 tileClassName={({ date }) =>
-                    mockDates.includes(date.toDateString()) ? 'journal' : null
+                validDates.includes(date.toDateString()) ? 'journal' : null
                 }
-                onChange={setDate}
+                onChange={handleSelect}
                 value={date}
                 tileDisabled={({ date }) =>
-                    !mockDates.includes(date.toDateString())
+                    !validDates.includes(date.toDateString())
                 }
             />
             <div id='clear_selection_button'>
-                <Button variant='contained' color='primary' size='small'>
+                <Button variant='contained' color='primary' size='small' onClick={handleClear}>
                     Clear Selection
                 </Button>
             </div>

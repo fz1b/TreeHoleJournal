@@ -12,6 +12,7 @@ import SearchTag from '../components/SearchTag';
 import {
     getUserJournals,
     searchUserJournals,
+    getUserJournalsByDate
 } from '../services/JournalServices';
 
 const useStyles = makeStyles((theme) => ({
@@ -79,6 +80,16 @@ export default function Me() {
     const handleSave = () => {
         setShowModal(false);
     };
+    const handleDateSelection = (date) =>{
+      console.log(date);
+      if(!date){
+        fetchJournals();
+      }else{
+        getUserJournalsByDate(auth.token,date).then((res)=>{
+          setJournals(res);
+        })
+      }
+    }
     const fetchJournals = () => {
         getUserJournals(auth.token)
             .then((res) => {
@@ -148,6 +159,7 @@ export default function Me() {
                     />
                 )}
                 <CardHolder
+                    handleDateSelection={handleDateSelection}
                     journals={journals}
                     showCalendar={true}
                     updateJournals={updateJournals}
