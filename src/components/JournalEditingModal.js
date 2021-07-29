@@ -110,16 +110,12 @@ export default function CustomizedDialogs({
     const auth = useContext(AuthContext);
     const [files, setFiles] = useState([]);
     const [uploaded, setLoaded] = useState(false);
-
-    const ACCESS_KEY_ID = process.env.REACT_APP_ACCESS_KEY_ID
-    const APP_REGION = process.env.REACT_APP_REGION
-    const API_KEY = process.env.REACT_APP_SECRET_ACCESS_KEY
     
     const config = {
         bucketName: 'treehole',
-        region: APP_REGION,
-        accessKeyId: ACCESS_KEY_ID,
-        secretAccessKey: API_KEY,
+        region: process.env.REACT_APP_REGION,
+        accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+        secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
     };
     const S3Client = new S3(config);
 

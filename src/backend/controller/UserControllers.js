@@ -2,8 +2,7 @@
 const axios = require('axios');
 const mongoose = require('mongoose');
 const User = require('../models/UserSchema');
-
-const firebaseAPIKey = 'AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs';
+require('dotenv').config()
 
 // Request Body Format
 // {
@@ -59,7 +58,7 @@ const signUp = async (req, res) => {
                 returnSecureToken: true,
             },
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_API },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
@@ -159,7 +158,7 @@ const login = async (req, res) => {
                 returnSecureToken: true,
             },
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_API },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
@@ -227,7 +226,7 @@ const getUserInfoHelper = async (req, res, isSecure) => {
                 idToken: idtoken,
             },
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_API },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
@@ -323,7 +322,7 @@ const refreshUserIdToken = async (req, res) => {
             'https://securetoken.googleapis.com/v1/token',
             req.body,
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_API },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
