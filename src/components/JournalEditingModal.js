@@ -21,7 +21,7 @@ import { IconContext } from 'react-icons';
 import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
-
+import JournalLocation from '../components/JournalLocation';
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -77,7 +77,8 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 const Date = styled.span`
     position: absolute;
-    right: 78%;
+    right: 75%;
+
 `;
 
 const Dropzone = styled.div`
@@ -105,10 +106,15 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
+    const [location,setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
     const [liked, setLiked] = useState(false);
     const auth = useContext(AuthContext);
+
+    const handleLocation = (loc)=>{
+        setLocation(loc);
+    }
     const [files, setFiles] = useState([]);
 
     const handlePrivacyChange = (event) => {
@@ -131,7 +137,7 @@ export default function CustomizedDialogs({
     const handleLike = () => {
         setLiked((state) => !state);
     };
-    const handleSave = (title, date, image, weather, content, privacy) => {
+    const handleSave = (title, date, image, weather, content, location, privacy) => {
         if (!journal._id) {
             // create a new journal
             createJournal(
@@ -141,6 +147,7 @@ export default function CustomizedDialogs({
                 image,
                 weather,
                 content,
+                location,
                 privacy
             )
                 .then((res) => {
@@ -238,8 +245,8 @@ export default function CustomizedDialogs({
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(function (position) {
-            console.log('Latitude is :', position.coords.latitude);
-            console.log('Longitude is :', position.coords.longitude);
+            // console.log('Latitude is :', position.coords.latitude);
+            // console.log('Longitude is :', position.coords.longitude);
         });
     }, []);
 
@@ -288,6 +295,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
+                <JournalLocation handleLocation={handleLocation}/>
                 <DialogActions>
                     <Date>{journal.date}</Date>
                     {authorMode && (
@@ -342,6 +350,7 @@ export default function CustomizedDialogs({
                                             coverImg,
                                             journal.weather,
                                             content,
+                                            location,
                                             privacy
                                         )
                                     }
