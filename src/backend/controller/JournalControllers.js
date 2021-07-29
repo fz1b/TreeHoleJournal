@@ -163,6 +163,7 @@ const getJournalAuthor = async (req, res) => {
 // req-param: idToken
 // req-body: journal fields
 // response: list of Journals JSON obj
+
 const createNewJournal = async (req, res) => {
     axios
         .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
@@ -175,6 +176,7 @@ const createNewJournal = async (req, res) => {
                 image: req.body.image,
                 weather: req.body.weather,
                 content: req.body.content,
+                location: req.body.location,
                 privacy: req.body.privacy,
                 comments: [],
             });

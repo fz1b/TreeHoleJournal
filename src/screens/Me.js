@@ -42,6 +42,7 @@ const newJournal = {
     date: new Date(),
     coverImage: '',
     content: '',
+    location:null,
     privacy_setting: 'PRIVATE',
 };
 
