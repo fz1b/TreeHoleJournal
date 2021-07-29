@@ -19,6 +19,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
 import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
+import JournalLocation from '../components/JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
 import S3 from 'aws-s3';
@@ -76,7 +77,8 @@ const DialogActions = withStyles((theme) => ({
 
 const Date = styled.span`
     position: absolute;
-    right: 78%;
+    right: 75%;
+
 `;
 
 const Dropzone = styled.div`
@@ -104,10 +106,15 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
+    const [location,setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
     const [liked, setLiked] = useState(false);
     const auth = useContext(AuthContext);
+
+    const handleLocation = (loc)=>{
+        setLocation(loc);
+    }
     const [files, setFiles] = useState([]);
     const [uploaded, setLoaded] = useState(false);
     
@@ -139,8 +146,7 @@ export default function CustomizedDialogs({
     const handleLike = () => {
         setLiked((state) => !state);
     };
-
-    const handleSave = (title, date, image, weather, content, privacy) => {
+    const handleSave = (title, date, image, weather, content, location, privacy) => {
         if (!journal._id) {
             // create a new journal
             createJournal(
@@ -150,6 +156,7 @@ export default function CustomizedDialogs({
                 image,
                 weather,
                 content,
+                location,
                 privacy
             )
                 .then((res) => {
@@ -254,6 +261,7 @@ export default function CustomizedDialogs({
         [files]
     );
 
+
     return (
         <div>
             <Dialog
@@ -330,6 +338,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
+                <JournalLocation handleLocation={handleLocation}/>
                 <DialogActions>
                     <Date>{journal.date}</Date>
                     {authorMode && (
@@ -384,6 +393,7 @@ export default function CustomizedDialogs({
                                             coverImg,
                                             journal.weather,
                                             content,
+                                            location,
                                             privacy
                                         )
                                     }

@@ -43,6 +43,7 @@ const newJournal = {
     date: date.toDateString(),
     coverImage: '',
     content: '',
+    location:null,
     privacy_setting: 'PRIVATE',
 };
 
