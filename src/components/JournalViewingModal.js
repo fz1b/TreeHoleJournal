@@ -133,7 +133,7 @@ export default function CustomizedDialogs({
                 </DialogContent>
                {journal.location&& <JournalLocation address={journal.location.address}/>}
                 <DialogActions>
-                    <Date>{journal.date}</Date>
+                    <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
                         <>
                             <Select

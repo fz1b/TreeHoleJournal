@@ -9,6 +9,7 @@
 .react-calendar button {
     width: 36px;
     border-radius: 50%;
+    border: 1px solid #50a9c1;
 }
 
 .react-calendar__month-view__days__day--weekend {
@@ -45,4 +46,7 @@
     bottom: 60px;
     position: relative;
     display: flex;
+}
+.react-calendar__tile--now:hover{
+    background: #50a9c1;
 }

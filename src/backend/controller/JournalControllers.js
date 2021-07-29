@@ -12,7 +12,7 @@ const getExploreJournals = async (req, res) => {
     Journal.find(
         { $or: [{ privacy: PRIVACY.PUBLIC }, { privacy: PRIVACY.ANONYMOUS }] },
         ['-author_id', '-comments.author_id']
-    )
+    ).sort('-date')
         .then((journals) => {
             // console.log(journals);
             res.status(200).json(journals);
@@ -56,7 +56,7 @@ const searchExploreJournals = async (req, res) => {
             ],
         },
         ['-author_id', '-comments.author_id']
-    )
+    ).sort('-date')
         .then((journals) => {
             // console.log(journals);
             res.status(200).json(journals);
@@ -75,7 +75,9 @@ const getUserJournals = async (req, res) => {
     axios
         .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
         .then((user) => {
-            Journal.find({ author_id: user.data.userData._id }, ['-author_id', '-comments.author_id'])
+            Journal.find({ author_id: user.data.userData._id },
+                ['-author_id', '-comments.author_id']
+            ).sort('-date')
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -122,7 +124,7 @@ const searchUserJournals = async (req, res) => {
                     ],
                 },
                 ['-author_id', '-comments.author_id']
-            )
+            ).sort('-date')
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -137,6 +139,43 @@ const searchUserJournals = async (req, res) => {
             res.status(500).json(err);
         });
 };
+
+// get the user's journal filtered by a given date
+// req-param: user_token, stringified Date (YYYY-MM-DD)
+// req-body: void
+// response: list of Journals JSON obj
+const getUserJournalsByDate = async (req, res) => {
+    axios
+        .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
+        .then((user) => {
+            let start = new Date(req.params.date);
+            let end = new Date(req.params.date);
+            end.setDate(end.getDate()+1);
+            Journal.find(
+                {
+                    author_id: user.data.userData._id,
+                    date: {
+                        $gte:start,
+                        $lt: end
+                    }
+                },
+                ['-author_id', '-comments.author_id']
+            ).sort('-date')
+                .then((journals) => {
+                    // console.log(journals);
+                    res.status(200).json(journals);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    res.status(500).json(err);
+                });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+}
+
 
 // get the journal's author info
 // req-param: journal_id
@@ -390,6 +429,7 @@ exports.getExploreJournals = getExploreJournals;
 exports.searchExploreJournals = searchExploreJournals;
 exports.getUserJournals = getUserJournals;
 exports.searchUserJournals = searchUserJournals;
+exports.getUserJournalsByDate = getUserJournalsByDate;
 exports.getJournalAuthor = getJournalAuthor;
 exports.createNewJournal = createNewJournal;
 exports.verifyEditingAccess = verifyEditingAccess;

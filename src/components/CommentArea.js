@@ -28,7 +28,7 @@ function CommentArea(props) {
         createComment(
             props.journalID,
             auth.token,
-            'July 17, 2021',
+            new window.Date(),
             comment,
             false
         )

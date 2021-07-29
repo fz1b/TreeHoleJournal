@@ -2,7 +2,7 @@ import EntryCards from './EntryCards';
 import { Grid, Box } from '@material-ui/core/';
 import JournalCalendar from './JournalCalendar';
 
-export function CardHolder({ showCalendar, journals, updateJournals }) {
+export function CardHolder({ handleDateSelection,showCalendar, journals, updateJournals }) {
     return (
         <>
             <Box m={5} mt={0}>
@@ -16,7 +16,7 @@ export function CardHolder({ showCalendar, journals, updateJournals }) {
                     {showCalendar && (
                         <>
                             <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <JournalCalendar />
+                                <JournalCalendar journals={journals} handleDateSelection={handleDateSelection}/>
                             </Grid>
                         </>
                     )}

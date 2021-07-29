@@ -1,6 +1,30 @@
 // services for journals
 import {getDistance} from 'geolib';
 const axios = require('axios').default;
+
+// convert journal date from string to Date obj
+// input: journal JSON obj
+// return: journal with Date obj
+function processJournal(journal) {
+    journal.date = new Date(journal.date);
+    for (let comment of journal.comments) {
+        comment.date = new Date(comment.date);
+    }
+    return journal;
+}
+
+// convert journal date from string to Date obj
+// input: list of journals JSON obj
+// return: list of journals with Date obj
+function processJournals(journals) {
+    let processed = [];
+    for (let journal of journals) {
+        journal =  processJournal(journal);
+        processed.push(journal);
+    }
+    return processed;
+}
+
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // input: void
 // response: list of journals JSON obj
@@ -9,7 +33,7 @@ export function getExploreJournals() {
         .get('/explore')
         .then((res) => {
             // console.log(res.data);
-            return res.data;
+            return processJournals(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -49,7 +73,7 @@ export function searchExploreJournals(criteria) {
         .get('/explore/search/' + criteria)
         .then((res) => {
             // console.log(res.data);
-            return res.data;
+            return processJournals(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -59,13 +83,13 @@ export function searchExploreJournals(criteria) {
 
 // get all journals from a specific user
 // input: user_token
-// response: list of journals JSON obj
+// return: list of journal obj
 export function getUserJournals(idToken) {
     return axios
         .get('/me/' + idToken)
         .then((res) => {
-            // console.log(res);
-            return res.data;
+            // convert date from string to Date
+            return processJournals(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -81,7 +105,26 @@ export function searchUserJournals(idToken, criteria) {
         .get('/me/search/' + idToken + '/' + criteria)
         .then((res) => {
             // console.log(res.data);
-            return res.data;
+            return processJournals(res.data);
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        });
+}
+
+// get the user's journal filtered by a given date
+// input: user_token, Date
+// req-body: void
+// response: list of Journals JSON obj
+export function getUserJournalsByDate(idToken, date) {
+    if (!date) date = new Date();
+    let dateYYYY_MM_DD = date.toISOString().substring(0, 10);
+    return axios
+        .get('/me/date/' + idToken + '/' + dateYYYY_MM_DD)
+        .then((res) => {
+            // console.log(res.data);
+            return processJournals(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -106,6 +149,9 @@ export function getJournalAuthor(journal_id) {
         });
 }
 
+// return true if the user has editing access to the journal  (is the author)
+// input: journal_id, user_token
+// return: true if the user is the author, false otherwise {editable: true/false}
 export function verifyEditingAccess(journal_id, user_token) {
     return axios
         .get('/journal/access/' + journal_id + '/' + user_token)
@@ -121,7 +167,7 @@ export function verifyEditingAccess(journal_id, user_token) {
 
 // create a new journal
 // input: user id, journal fields, except comments
-// response: the added journal
+// return: the added journal
 export function createJournal(
     user_token,
     title,
@@ -145,8 +191,7 @@ export function createJournal(
             comments: [],
         })
         .then((res) => {
-            // console.log(res.data)
-            return res.data;
+            return processJournal(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -156,7 +201,7 @@ export function createJournal(
 
 // delete a journal
 // input: user_token, journal id,
-// response: null
+// return: void
 export function deleteJournal(user_token, journal_id) {
     return axios.delete('/me/'+user_token+'/'+journal_id)
         .then(res=>{
@@ -169,7 +214,7 @@ export function deleteJournal(user_token, journal_id) {
 
 // edit a journal
 // input: user_id, journal id, journal fields
-// response: the journal JSON after edition
+// return: the journal JSON after edition
 export function editJournal(
     user_id,
     journal_id,
@@ -190,7 +235,7 @@ export function editJournal(
             privacy: privacy,
         })
         .then((res) => {
-            return res.data;
+            return processJournal(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -207,7 +252,7 @@ export function changePrivacySetting(user_id, journal_id, privacy) {
             privacy: privacy,
         })
         .then((res) => {
-            return res.data;
+            return processJournal(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -232,7 +277,7 @@ export function createComment(
             anonymous: anonymous,
         })
         .then((res) => {
-            return res.data;
+            return processJournal(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -250,7 +295,7 @@ export function editComment(journal_id, comment_id, content, anonymous) {
             anonymous: anonymous,
         })
         .then((res) => {
-            return res.data;
+            return processJournal(res.data);
         })
         .catch((err) => {
             console.error(err);
@@ -265,7 +310,7 @@ export function deleteComment(journal_id, comment_id) {
     return axios
         .delete('/explore/' + journal_id + '/comments/' + comment_id)
         .then((res) => {
-            return res.data;
+            return processJournal(res.data);
         })
         .catch((err) => {
             console.error(err);

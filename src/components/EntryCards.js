@@ -62,7 +62,6 @@ export default function EntryCards(props) {
         })
     }, [auth.token, props.content._id]);
 
-
     return (
         <>
             <Card>
@@ -85,7 +84,7 @@ export default function EntryCards(props) {
                                 : 'Anonymous'
                             : authorName
                     }
-                    subheader={props.content.date}
+                    subheader={props.content.date.toDateString()}
                 />
                 <CardActionArea style={{ display: 'block' }}>
                     <CardMedia
