@@ -91,7 +91,7 @@ export default function CustomizedDialogs({
     handleEdit,
     handleClose,
     authorMode,
-    updateJournal,
+    updateJournals,
 }) {
     const [visibility, setVisibility] = useState(journal.privacy);
     const [liked, setLiked] = useState(false);
@@ -189,7 +189,7 @@ export default function CustomizedDialogs({
                         <CommentArea
                             journalID={journal._id}
                             comments={journal.comments}
-                            updateJournal={updateJournal}
+                            updateJournals={updateJournals}
                         />
                     </CardContent>
                 </Collapse>

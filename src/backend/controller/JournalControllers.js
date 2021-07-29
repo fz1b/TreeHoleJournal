@@ -11,7 +11,7 @@ const { Journal, PRIVACY } = require('../models/JournalSchema');
 const getExploreJournals = async (req, res) => {
     Journal.find(
         { $or: [{ privacy: PRIVACY.PUBLIC }, { privacy: PRIVACY.ANONYMOUS }] },
-        '-author_id'
+        ['-author_id', '-comments.author_id']
     )
         .then((journals) => {
             // console.log(journals);
@@ -55,7 +55,7 @@ const searchExploreJournals = async (req, res) => {
                 },
             ],
         },
-        '-author_id'
+        ['-author_id', '-comments.author_id']
     )
         .then((journals) => {
             // console.log(journals);
@@ -75,7 +75,7 @@ const getUserJournals = async (req, res) => {
     axios
         .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
         .then((user) => {
-            Journal.find({ author_id: user.data.userData._id }, '-author_id')
+            Journal.find({ author_id: user.data.userData._id }, ['-author_id', '-comments.author_id'])
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -121,7 +121,7 @@ const searchUserJournals = async (req, res) => {
                         },
                     ],
                 },
-                '-author_id'
+                ['-author_id', '-comments.author_id']
             )
                 .then((journals) => {
                     // console.log(journals);
@@ -193,6 +193,23 @@ const createNewJournal = async (req, res) => {
             res.status(500).json(err);
         });
 };
+
+// return true if the user has editing access to the journal  (is the author)
+// req-param: journal_id, user_token
+// req-body: null
+// response: true if the user is the author, false otherwise {editable: true/false}
+const verifyEditingAccess = async (req, res) => {
+    axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken)
+        .then(user=>{
+            Journal.findById(req.params.journal_id)
+                .then(journal => {
+                    res.status(200).json({editable: user.data.userData._id === journal.author_id});
+                })
+        })
+        .catch(err=>{
+            res.status(500).json(err)
+        });
+}
 
 // delete a journal
 // req-param: user_id, journal id,
@@ -373,6 +390,7 @@ exports.getUserJournals = getUserJournals;
 exports.searchUserJournals = searchUserJournals;
 exports.getJournalAuthor = getJournalAuthor;
 exports.createNewJournal = createNewJournal;
+exports.verifyEditingAccess = verifyEditingAccess;
 exports.deleteJournal = deleteJournal;
 exports.editJournal = editJournal;
 exports.editJournalPrivacySetting = editJournalPrivacySetting;
