@@ -11,7 +11,7 @@ const { Journal, PRIVACY } = require('../models/JournalSchema');
 const getExploreJournals = async (req, res) => {
     Journal.find(
         { $or: [{ privacy: PRIVACY.PUBLIC }, { privacy: PRIVACY.ANONYMOUS }] },
-        '-author_id'
+        ['-author_id', '-comments.author_id']
     ).sort('-date')
         .then((journals) => {
             // console.log(journals);
@@ -55,7 +55,7 @@ const searchExploreJournals = async (req, res) => {
                 },
             ],
         },
-        '-author_id'
+        ['-author_id', '-comments.author_id']
     ).sort('-date')
         .then((journals) => {
             // console.log(journals);
@@ -75,7 +75,9 @@ const getUserJournals = async (req, res) => {
     axios
         .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
         .then((user) => {
-            Journal.find({ author_id: user.data.userData._id }, '-author_id').sort('-date')
+            Journal.find({ author_id: user.data.userData._id },
+                ['-author_id', '-comments.author_id']
+            ).sort('-date')
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -121,7 +123,7 @@ const searchUserJournals = async (req, res) => {
                         },
                     ],
                 },
-                '-author_id'
+                ['-author_id', '-comments.author_id']
             ).sort('-date')
                 .then((journals) => {
                     // console.log(journals);
