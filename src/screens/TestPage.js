@@ -6,6 +6,7 @@ import GlobalCss from '../GlobalCss';
 import JournalModal from '../components/JournalModal';
 import { useContext, useState } from 'react';
 import {
+    getUserJournalsByDate,
     searchExploreJournals,
     searchUserJournals,
 } from '../services/JournalServices';
@@ -32,7 +33,8 @@ function TestPage() {
         setShowModal(false);
     };
     const handleRequest = () => {
-        searchUserJournals(auth.token, 'test').then((res) =>
+        let date = new Date('2021-07-11');
+        getUserJournalsByDate(auth.token, date).then((res) =>
             alert(JSON.stringify(res))
         );
         // alert('HOW DARE YOU TOUCH MY BUTTON?');

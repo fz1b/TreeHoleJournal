@@ -79,6 +79,9 @@ app.delete('/explore/comments/:journal_id/:comment_id', journalController.delete
 app.get('/me/:idToken', journalController.getUserJournals);
 // get journals written by the given user that contain the string in title or content
 app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
+// get journals written by the given user on the specified date
+app.get('/me/date/:idToken/:date', journalController.getUserJournalsByDate);
+// create a new journal
 app.post('/me/:idToken', journalController.createNewJournal);
 // delete a journal
 app.delete('/me/:idToken/:journal_id', journalController.deleteJournal);

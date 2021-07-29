@@ -113,6 +113,25 @@ export function searchUserJournals(idToken, criteria) {
         });
 }
 
+// get the user's journal filtered by a given date
+// input: user_token, Date
+// req-body: void
+// response: list of Journals JSON obj
+export function getUserJournalsByDate(idToken, date) {
+    if (!date) date = new Date();
+    let dateYYYY_MM_DD = date.toISOString().substring(0, 10);
+    return axios
+        .get('/me/date/' + idToken + '/' + dateYYYY_MM_DD)
+        .then((res) => {
+            // console.log(res.data);
+            return processJournals(res.data);
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        });
+}
+
 // get the journal's author info
 // req-param: journal_id
 // req-body: null
