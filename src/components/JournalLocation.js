@@ -58,27 +58,27 @@ return(
                         value={""}
                         {...getInputProps({ placeholder: "Type location..." })}
                     />}
-          </Box>
-            <Box ml={5}>
-            <div>
-              {loading ? <div>...loading</div> : null}
-
-              {suggestions.map(suggestion => {
-                const style = {
-                  backgroundColor: suggestion.active ? "#eceaea" : "#fff",
-                  color:"grey",
-                  margin: 10
-                };
-
-                return (
-                  <div {...getSuggestionItemProps(suggestion, { style })}>
-                    {suggestion.description}
-                  </div>
-                );
-              })}
-            </div>
             </Box>
-          </>
+            <Box ml={5}>
+                <div>
+                    {loading ? <div>...loading</div> : null}
+
+                    {suggestions.map((suggestion, index) => {
+                        const style = {
+                          backgroundColor: suggestion.active ? "#eceaea" : "#fff",
+                          color:"grey",
+                          margin: 10
+                        };
+
+                        return (
+                          <div key={index} {...getSuggestionItemProps(suggestion, { style })}>
+                            {suggestion.description}
+                          </div>
+                        );
+                    })}
+                </div>
+            </Box>
+            </>
         )}
     </PlacesAutocomplete>
     </LocationContent>
