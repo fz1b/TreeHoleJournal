@@ -340,7 +340,7 @@ export default function CustomizedDialogs({
                 </DialogContent>
                 <JournalLocation handleLocation={handleLocation}/>
                 <DialogActions>
-                    <Date>{journal.date}</Date>
+                    <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
                         <>
                             <Select
