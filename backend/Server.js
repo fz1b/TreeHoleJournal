@@ -18,7 +18,6 @@ const journalController = require('./controller/JournalControllers');
 const path = require("path");
 
 let server = app.listen(PORT, function () {
-    // let host = server.address().address;
     let port = server.address().port;
     mongoose
         .connect(mongoURL, {
@@ -26,13 +25,24 @@ let server = app.listen(PORT, function () {
             useUnifiedTopology: true,
             useCreateIndex: true,
         })
-        .then((res) => console.log('server started on port: %s', port))
+        .then((res) => {
+          // journalController.setToDevelopmentSever();
+            if (port === 5000){
+                // development mode
+                journalController.setHost('http://localhost:5000/');
+            } else {
+                // deployment
+                journalController.setHost('https://treehole-journals.herokuapp.com/');
+            }
+            console.log('server started on port: %s', port);
+        })
         .catch((err) => {
             console.error(err);
         });
 });
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
+
 
 // User Endpoints
 // signup endpoint

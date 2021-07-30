@@ -40,6 +40,7 @@ export function getExploreJournals() {
             return err;
         });
 }
+
 export function getNearbyJournals(lat, lng) {
     return axios
         .get('/explore')

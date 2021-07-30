@@ -3,6 +3,18 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
+let serverHost = 'https://treehole-journals.herokuapp.com/';
+
+
+// set the server host to the given address
+// req-param: void
+// req-body: void
+// response: void
+const setHost = async (host) => {
+    serverHost = host;
+}
+
+
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // req-param: null
@@ -73,7 +85,7 @@ const searchExploreJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const getUserJournals = async (req, res) => {
     axios
-        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
+        .get(serverHost + 'users/info/secure/' + req.params.idToken)
         .then((user) => {
             Journal.find({ author_id: user.data.userData._id },
                 ['-author_id', '-comments.author_id']
@@ -99,7 +111,7 @@ const getUserJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const searchUserJournals = async (req, res) => {
     axios
-        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
+        .get(serverHost + 'users/info/secure/' + req.params.idToken)
         .then((user) => {
             Journal.find(
                 {
@@ -146,7 +158,7 @@ const searchUserJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const getUserJournalsByDate = async (req, res) => {
     axios
-        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
+        .get(serverHost+'users/info/secure/' + req.params.idToken)
         .then((user) => {
             let start = new Date(req.params.date);
             let end = new Date(req.params.date);
@@ -185,7 +197,7 @@ const getJournalAuthor = async (req, res) => {
     Journal.findById(req.params.journal_id).then((journal) => {
         let user_id = journal.author_id;
         axios
-            .get('https://treehole-journals.herokuapp.com/users/info/id/' + user_id)
+            .get(serverHost+'users/info/id/' + user_id)
             .then((author) => {
                 // console.log(author.data);
                 res.status(200).json(author.data);
@@ -203,7 +215,7 @@ const getJournalAuthor = async (req, res) => {
 
 const createNewJournal = async (req, res) => {
     axios
-        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
+        .get(serverHost+'users/info/secure/' + req.params.idToken)
         .then((user) => {
             const journal = new Journal({
                 _id: new mongoose.Types.ObjectId(),
@@ -240,7 +252,7 @@ const createNewJournal = async (req, res) => {
 // req-body: null
 // response: true if the user is the author, false otherwise {editable: true/false}
 const verifyEditingAccess = async (req, res) => {
-    axios.get('https://treehole-journals.herokuapp.com/users/info/secure/'+req.params.idToken)
+    axios.get(serverHost+'users/info/secure/'+req.params.idToken)
         .then(user=>{
             Journal.findById(req.params.journal_id)
                 .then(journal => {
@@ -319,7 +331,7 @@ const getCommentAuthor = async (req, res) => {
     Journal.findById(req.params.journal_id).then((journal) => {
         let user_id = journal.comments.id(req.params.comment_id).author_id;
         axios
-            .get('https://treehole-journals.herokuapp.com/users/info/id/' + user_id)
+            .get(serverHost+'users/info/id/' + user_id)
             .then((author) => {
                 // console.log(author.data);
                 res.status(200).json(author.data);
@@ -338,7 +350,7 @@ const createComment = async (req, res) => {
     try {
         axios
             .get(
-                'https://treehole-journals.herokuapp.com/users/info/secure/' +
+              serverHost+'users/info/secure/' +
                     req.params.commenter_token
             )
             .then((response) => {
@@ -425,6 +437,7 @@ const deleteComment = async (req, res) => {
         });
 };
 
+exports.setHost = setHost;
 exports.getExploreJournals = getExploreJournals;
 exports.searchExploreJournals = searchExploreJournals;
 exports.getUserJournals = getUserJournals;
