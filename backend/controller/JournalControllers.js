@@ -16,7 +16,6 @@ const setHost = async (host) => {
 }
 
 
-
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // req-param: null
 // req-body: null
