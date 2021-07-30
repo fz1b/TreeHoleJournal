@@ -2,6 +2,7 @@
 const axios = require('axios');
 const mongoose = require('mongoose');
 const User = require('../models/UserSchema');
+const { Journal, PRIVACY } = require('../models/JournalSchema');
 
 const firebaseAPIKey = 'AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs';
 
@@ -349,9 +350,123 @@ const refreshUserIdToken = async (req, res) => {
     return res.status(200).json(response);
 };
 
+// body format:
+// {
+//  "journalId": "",
+//  "idToken": ""
+// }
+const likeJournalHelper = async (req, res, type) => {
+    const { journalId, idToken } = req.body;
+    if (!journalId || !idToken) {
+        return res
+            .status(400)
+            .json({ status: 400, message: 'Invalid request body' });
+    }
+    try {
+        userResponse = await axios.get('http://localhost:5000/users/info/secure/' + idToken);
+    } catch (err) {
+        return res.status(500).json({ status: 500, message: 'Server Error' });
+    }
+    const userid = userResponse.data.userData._id;
+    let foundUser;
+    let foundJournal;
+    try {
+        foundUser = await User.findById(userid);
+        foundJournal = await Journal.findById(journalId);
+        if (!foundUser || !foundJournal) {
+            return res.status(500).json({ status: 500, message: 'Database Error' });
+        }
+        if (type === 'like') {
+            if (foundUser.likes.includes(journalId) && foundJournal.likedby.includes(userid)) {
+                return res.status(200).json({ status: 200, journalId: journalId });
+            }
+        } else {
+            if (!foundUser.likes.includes(journalId) && !foundJournal.likedby.includes(userid)) {
+                return res.status(200).json({ status: 200, journalId: journalId });
+            }
+        }
+    } catch (err) {
+        return res.status(500).json({ status: 500, message: 'Database Error' });
+    }
+    try {
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        if (type==='like') {
+            foundUser.likes.push(journalId);
+            foundJournal.likedby.push(userid);
+        } else {
+            foundUser.likes.pull(journalId);
+            foundJournal.likedby.pull(userid);
+        }
+        await foundUser.save({ session: sess });
+        await foundJournal.save({ session: sess });
+        await sess.commitTransaction();
+    } catch (err) {
+        return res.status(500).json({ status: 500, message: 'Database Error' });
+    }
+
+    return res.status(200).json({ status: 200, journalId: journalId });
+};
+
+const likeJournal = async (req, res) => {
+    likeJournalHelper(req, res, 'like');
+};
+
+const unlikeJournal = async (req, res) => {
+    likeJournalHelper(req, res, 'unlike');
+};
+
+const getLikedJournalsByUserToken = async (req, res) => {
+    const idToken = req.params.idToken;
+    if (!idToken) {
+        return res
+            .status(400)
+            .json({ status: 400, message: 'Invalid request body' });
+    }
+    try {
+        userResponse = await axios.get('http://localhost:5000/users/info/secure/' + idToken);
+    } catch (err) {
+        return res.status(500).json({ status: 500, message: 'Server Error' });
+    }
+    const userid = userResponse.data.userData._id;
+    let foundUserWithLikes;
+    try {
+        foundUserWithLikes = await User.findById(userid).populate('likes');
+        if (!foundUserWithLikes) {
+            return res.status(500).json({ status: 500, message: 'Database Error' });
+        }
+    } catch(err) {
+        return res.status(500).json({ status: 500, message: 'Database Error' });
+    }
+
+    let likes = foundUserWithLikes.likes.map(journal => {
+        let {author_id, likedby, comments, ...rest} = journal.toObject();
+        comments = comments.map(comment => {
+            let {author_id, ...rest} = comment;
+            return {...rest};
+        })
+        return {
+            ...rest,
+            likesNum: likedby.length,
+            comments
+        }
+    });
+
+    likes = likes.filter(journal => {
+        let { privacy } = journal;
+        return privacy !== PRIVACY.PRIVATE;
+    })
+
+    return res.status(200).json({status: 200, likedJournals: likes});
+
+};
+
 exports.getUserInfo = getUserInfo;
 exports.getUserInfoSecure = getUserInfoSecure;
 exports.signUp = signUp;
 exports.login = login;
 exports.getUserInfoById = getUserInfoById;
 exports.refreshUserIdToken = refreshUserIdToken;
+exports.likeJournal = likeJournal;
+exports.unlikeJournal = unlikeJournal;
+exports.getLikedJournalsByUserToken = getLikedJournalsByUserToken;

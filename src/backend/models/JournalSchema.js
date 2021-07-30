@@ -9,7 +9,7 @@ const PRIVACY = {
 
 const CommentSchema = mongoose.Schema({
     _id: mongoose.SchemaTypes.ObjectId,
-    author_id: String,
+    author_id: {type: String, ref:'User'},
     date: Date,
     content: String,
     anonymous: Boolean,
@@ -20,7 +20,7 @@ const JournalSchema = mongoose.Schema(
     {
         _id: mongoose.SchemaTypes.ObjectId,
         title: String,
-        author_id: String,
+        author_id: {type: String, ref:'User'},
         date: Date,
         image: String,
         weather: String,
@@ -36,6 +36,7 @@ const JournalSchema = mongoose.Schema(
             enum: [PRIVACY.PUBLIC, PRIVACY.ANONYMOUS, PRIVACY.PRIVATE],
         },
         comments: [CommentSchema],
+        likedby: [{type: String, ref:'User'}]
     },
     {
         collection: 'journals',

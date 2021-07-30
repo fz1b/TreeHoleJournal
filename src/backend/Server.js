@@ -44,6 +44,12 @@ app.get('/users/info/:idToken', userController.getUserInfo);
 app.get('/users/info/secure/:idToken', userController.getUserInfoSecure);
 // get user info by userid (for BE use)
 app.get('/users/info/id/:user_id', userController.getUserInfoById);
+// let user to like a journal (for FE)
+app.post('/users/like/add', userController.likeJournal);
+// let user to undo 'like a journal' (for FE)
+app.post('/users/like/remove', userController.unlikeJournal);
+// get all of user's liked journals (for FE)
+app.get('/users/like/journals/:idToken', userController.getLikedJournalsByUserToken);
 
 
 
