@@ -11,7 +11,7 @@ import { getCommentAuthor } from '../services/JournalServices';
 function Comment(props) {
     const [name, setName] = useState('');
     const [initial, setInitial] = useState('');
-
+    const [anchorEl,setAnchorEl] = useState(null);
     const Name = styled.span`
         font-size: 0.9rem;
         font-weight: bolder;
@@ -20,7 +20,15 @@ function Comment(props) {
         font-size: 0.8rem;
         color: grey;
     `;
-
+    const handleCommentEdit = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCommentEditClose = () => {
+        setAnchorEl(null);
+    };
+    const handleDelete  = () =>{
+        props.handleDeleteComment(props.comment._id)
+    }
     getCommentAuthor(props.journalID, props.comment._id)
         .then((res) => {
             setName(res.name);
@@ -50,7 +58,7 @@ function Comment(props) {
             </Box>
             {/* TODO: determine edit on the backend */}
             {true && (
-                <span onClick={props.handleCommentEdit}>
+                <span onClick={handleCommentEdit}>
                     <IconButton size='small'>
                         <FiMoreVertical />
                     </IconButton>
@@ -58,14 +66,13 @@ function Comment(props) {
             )}
             <Menu
                 id='simple-menu'
-                anchorEl={props.anchorEl}
+                anchorEl={anchorEl}
                 keepMounted
-                open={Boolean(props.anchorEl)}
-                onClose={props.handleCommentEditClose}
+                open={Boolean(anchorEl)}
+                onClose={handleCommentEditClose}
             >
                 <MenuItem
-                    id={props.comment._id}
-                    onClick={props.handleDeleteComment}
+                    onClick={handleDelete}
                 >
                     Delete
                 </MenuItem>

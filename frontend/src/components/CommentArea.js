@@ -6,21 +6,15 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { useContext, useState } from 'react';
 import Comment from './Comment';
-import { createComment } from '../services/JournalServices';
+import { createComment,deleteComment } from '../services/JournalServices';
 import AuthContext from '../authAPI/auth-context';
 
 function CommentArea(props) {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState(props.comments);
-    const [anchorEl, setAnchorEl] = useState(null);
+    // const [anchorEl, setAnchorEl] = useState(null);
     const auth = useContext(AuthContext);
 
-    const handleCommentEdit = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleCommentEditClose = () => {
-        setAnchorEl(null);
-    };
     const handleCommentChange = (e) => {
         setComment(e.target.value);
     };
@@ -43,9 +37,11 @@ function CommentArea(props) {
                 console.log(err);
             });
     };
-    const handleDeleteComment = (e) => {
-        setComments(comments.filter((c) => c.id !== e.target.id));
-        setAnchorEl(null);
+    const handleDeleteComment = (commentId) => {
+        console.log(commentId);
+        deleteComment(props.journalID,commentId).then((res)=>{
+            console.log(res);
+        })
     };
 
     const areCommentsEmpty = props.comments.length === 0;
@@ -57,18 +53,16 @@ function CommentArea(props) {
                     <MuiDialogContent>
                         <Typography component={'span'}>
                             {comments.map((c) => (
-                                <Comment
-                                    key={c._id}
-                                    comment={c}
-                                    journalID={props.journalID}
-                                    anchorEl={anchorEl}
-                                    handleCommentEditClose={
-                                        handleCommentEditClose
-                                    }
-                                    handleCommentEdit={handleCommentEdit}
-                                    handleDeleteComment={handleDeleteComment}
-                                />
-                            ))}
+                             <Comment
+                                key={c._id}
+                                id={c._id}
+                                comment={c}
+                                journalID={props.journalID}
+                                handleDeleteComment={handleDeleteComment}
+                            />
+                            )
+                            
+                            )}
                         </Typography>
                     </MuiDialogContent>
                 </Box>
