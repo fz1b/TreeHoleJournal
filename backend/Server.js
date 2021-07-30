@@ -15,6 +15,7 @@ const mongoURL =
     '?retryWrites=true&w=majority';
 const userController = require('./controller/UserControllers');
 const journalController = require('./controller/JournalControllers');
+const path = require("path");
 
 let server = app.listen(PORT, function () {
     // let host = server.address().address;
@@ -30,6 +31,8 @@ let server = app.listen(PORT, function () {
             console.error(err);
         });
 });
+
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 // User Endpoints
 // signup endpoint

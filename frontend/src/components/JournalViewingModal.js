@@ -21,7 +21,7 @@ import { IconContext } from 'react-icons';
 import CommentArea from './CommentArea';
 import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
-import JournalLocation from '../components/JournalLocation';
+import JournalLocation from './JournalLocation';
 const styles = (theme) => ({
     root: {
         margin: 0,
