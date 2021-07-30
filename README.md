@@ -45,6 +45,7 @@ Add registered professional therapist access.
 - Explore other posts by location
 - Direct messages
 - Report abuse
+- Search functionality
 - Filter through existing journals by date/location
 - Add music/video support
 
