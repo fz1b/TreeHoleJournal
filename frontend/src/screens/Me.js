@@ -151,10 +151,10 @@ export default function Me() {
                         handleSave={handleSave}{' '}
                     </JounalModal>
                 )}
-                {showSearchTag && (
+                {showSearchTag && searchContent&&(
                     <SearchTag
                         content={searchContent}
-                        count={2}
+                        count={journals.length}
                         clearSearch={handleClearSearch}
                     />
                 )}

@@ -12,7 +12,6 @@ import {
 import ExploreTabs from '../components/ExploreTabs';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
-import {getDistance} from 'geolib';
 const useStyles = makeStyles((theme) => ({
     explore_bg: {
         backgroundImage: `url(${bgImg})`,
@@ -85,10 +84,10 @@ export default function Explore() {
                 />
                 <div className={classes.explore_bg} />
                 <ExploreTabs handleTab={handleTab}/>
-                {showSearchTag && (
+                {showSearchTag && searchContent&&(
                     <SearchTag
                         content={searchContent}
-                        count={2}
+                        count={journals.length}
                         clearSearch={handleClearSearch}
                     />
                 )}
