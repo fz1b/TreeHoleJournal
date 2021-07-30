@@ -19,7 +19,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
 import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
-import JournalLocation from '../components/JournalLocation';
+import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
 import S3 from 'aws-s3';

@@ -40,14 +40,10 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "node backend/Server.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "ui": "react-scripts start",
-    "server": "nodemon frontend/src/Backend/Server.js",
-    "dev": "concurrently \\\"react-scripts start\\\" \\\"nodemon backend/Server.js\\\"",
-    "heroku-postbuild": "cd frontend && npm install && npm run build"
+    "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:5000/",
   "eslintConfig": {
