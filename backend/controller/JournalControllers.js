@@ -427,7 +427,7 @@ const deleteComment = async (req, res) => {
         });
 };
 
-exports.setHost = setHost;
+
 exports.getExploreJournals = getExploreJournals;
 exports.searchExploreJournals = searchExploreJournals;
 exports.getUserJournals = getUserJournals;
