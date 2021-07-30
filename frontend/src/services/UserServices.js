@@ -4,13 +4,13 @@ async function userService(request, type) {
     let url;
     switch (type) {
         case 'login':
-            url = 'http://localhost:5000/users/login';
+            url = '/users/login';
             break;
         case 'signup':
-            url = 'http://localhost:5000/users/signup';
+            url = '/users/signup';
             break;
         case 'refresh':
-            url = 'http://localhost:5000/users/refreshtoken';
+            url = '/users/refreshtoken';
             break;
         default:
             url = null;
