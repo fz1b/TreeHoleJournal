@@ -21,7 +21,7 @@ import { IconContext } from 'react-icons';
 import CommentArea from './CommentArea';
 import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
-
+import JournalLocation from '../components/JournalLocation';
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -70,7 +70,8 @@ const Image = styled.img`
 `;
 const Date = styled.span`
     position: absolute;
-    right: 80%;
+    right: 75%;
+    color: grey;
 `;
 
 const ImgPlaceholder = styled.div`
@@ -91,7 +92,7 @@ export default function CustomizedDialogs({
     handleEdit,
     handleClose,
     authorMode,
-    updateJournal,
+    updateJournals,
 }) {
     const [visibility, setVisibility] = useState(journal.privacy);
     const [liked, setLiked] = useState(false);
@@ -130,8 +131,9 @@ export default function CustomizedDialogs({
                         {journal.content}
                     </Typography>
                 </DialogContent>
+               {journal.location&& <JournalLocation address={journal.location.address}/>}
                 <DialogActions>
-                    <Date>{journal.date}</Date>
+                    <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
                         <>
                             <Select
@@ -189,7 +191,7 @@ export default function CustomizedDialogs({
                         <CommentArea
                             journalID={journal._id}
                             comments={journal.comments}
-                            updateJournal={updateJournal}
+                            updateJournals={updateJournals}
                         />
                     </CardContent>
                 </Collapse>

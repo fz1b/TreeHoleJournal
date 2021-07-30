@@ -7,10 +7,12 @@ import { useState, useEffect, useContext } from 'react';
 import {
     getExploreJournals,
     searchExploreJournals,
+    getNearbyJournals,
 } from '../services/JournalServices';
 import ExploreTabs from '../components/ExploreTabs';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
+import {getDistance} from 'geolib';
 const useStyles = makeStyles((theme) => ({
     explore_bg: {
         backgroundImage: `url(${bgImg})`,
@@ -29,6 +31,10 @@ export default function Explore() {
     const [journals, setJournals] = useState([]);
     const [searchContent, setSearchContent] = useState('');
     const [showSearchTag, setShowSearchTag] = useState(false);
+    const [tab,setTab] = useState("");
+    const handleTab = (value)=>{
+      setTab(value);
+    }
     const handleClearSearch = () => {
         fetchJournals();
         setSearchContent('');
@@ -44,9 +50,8 @@ export default function Explore() {
         setShowSearchTag(true);
     };
     const fetchJournals = () => {
-        getExploreJournals(auth.token)
+        getExploreJournals()
             .then((res) => {
-                console.log(res);
                 setJournals(res);
             })
             .catch((err) => {
@@ -54,10 +59,21 @@ export default function Explore() {
                 console.error(err);
             });
     };
+
     useEffect(() => {
         fetchJournals();
     }, [auth.token]);
-
+    useEffect(() => {
+      if(tab==="Nearby"){
+        navigator.geolocation.getCurrentPosition(function (position) {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude
+          getNearbyJournals(lat,lng).then(res=>{
+            setJournals(res);
+          })
+      });
+      }
+  }, [tab]);
     return (
         <ThemeProvider theme={customizedTheme}>
             <div className='explore'>
@@ -68,7 +84,7 @@ export default function Explore() {
                     handleSearch={handleSearch}
                 />
                 <div className={classes.explore_bg} />
-                <ExploreTabs />
+                <ExploreTabs handleTab={handleTab}/>
                 {showSearchTag && (
                     <SearchTag
                         content={searchContent}
@@ -76,7 +92,7 @@ export default function Explore() {
                         clearSearch={handleClearSearch}
                     />
                 )}
-                <CardHolder journals={journals} showCalendar={false} />
+                <CardHolder journals={journals} showCalendar={false} updateJournals={fetchJournals}/>
             </div>
         </ThemeProvider>
     );

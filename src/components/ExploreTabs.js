@@ -12,27 +12,27 @@ const useStyles = makeStyles({
     },
 });
 
-function ExploreTabs() {
+function ExploreTabs({handleTab}) {
     const classes = useStyles();
-    const [value, setValue] = useState(0);
-
+  const [value,setValue] = useState("Newest")
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+      setValue(newValue)
+        handleTab(newValue);
     };
 
     return (
         <Box my={2}>
             <Paper elevation={0} className={classes.root}>
                 <Tabs
-                    value={value}
+                  value={value}
                     onChange={handleChange}
                     indicatorColor='primary'
                     textColor='primary'
                     centered
                 >
-                    <Tab icon={<RiTimeLine />} label='Newest' />
-                    <Tab icon={<HiFire />} label='Hottest' />
-                    <Tab icon={<HiOutlineLocationMarker />} label='Nearby' />
+                    <Tab value="Newest" icon={<RiTimeLine />} label='Newest' />
+                    <Tab value="Hottest" icon={<HiFire />} label='Hottest' />
+                    <Tab value="Nearby" icon={<HiOutlineLocationMarker />} label='Nearby' />
                 </Tabs>
             </Paper>
         </Box>

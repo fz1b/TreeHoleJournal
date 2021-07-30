@@ -11,8 +11,8 @@ const { Journal, PRIVACY } = require('../models/JournalSchema');
 const getExploreJournals = async (req, res) => {
     Journal.find(
         { $or: [{ privacy: PRIVACY.PUBLIC }, { privacy: PRIVACY.ANONYMOUS }] },
-        '-author_id'
-    )
+        ['-author_id', '-comments.author_id']
+    ).sort('-date')
         .then((journals) => {
             // console.log(journals);
             res.status(200).json(journals);
@@ -55,8 +55,8 @@ const searchExploreJournals = async (req, res) => {
                 },
             ],
         },
-        '-author_id'
-    )
+        ['-author_id', '-comments.author_id']
+    ).sort('-date')
         .then((journals) => {
             // console.log(journals);
             res.status(200).json(journals);
@@ -75,7 +75,9 @@ const getUserJournals = async (req, res) => {
     axios
         .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
         .then((user) => {
-            Journal.find({ author_id: user.data.userData._id }, '-author_id')
+            Journal.find({ author_id: user.data.userData._id },
+                ['-author_id', '-comments.author_id']
+            ).sort('-date')
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -121,8 +123,8 @@ const searchUserJournals = async (req, res) => {
                         },
                     ],
                 },
-                '-author_id'
-            )
+                ['-author_id', '-comments.author_id']
+            ).sort('-date')
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -137,6 +139,43 @@ const searchUserJournals = async (req, res) => {
             res.status(500).json(err);
         });
 };
+
+// get the user's journal filtered by a given date
+// req-param: user_token, stringified Date (YYYY-MM-DD)
+// req-body: void
+// response: list of Journals JSON obj
+const getUserJournalsByDate = async (req, res) => {
+    axios
+        .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
+        .then((user) => {
+            let start = new Date(req.params.date);
+            let end = new Date(req.params.date);
+            end.setDate(end.getDate()+1);
+            Journal.find(
+                {
+                    author_id: user.data.userData._id,
+                    date: {
+                        $gte:start,
+                        $lt: end
+                    }
+                },
+                ['-author_id', '-comments.author_id']
+            ).sort('-date')
+                .then((journals) => {
+                    // console.log(journals);
+                    res.status(200).json(journals);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    res.status(500).json(err);
+                });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+}
+
 
 // get the journal's author info
 // req-param: journal_id
@@ -161,6 +200,7 @@ const getJournalAuthor = async (req, res) => {
 // req-param: idToken
 // req-body: journal fields
 // response: list of Journals JSON obj
+
 const createNewJournal = async (req, res) => {
     axios
         .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
@@ -173,6 +213,7 @@ const createNewJournal = async (req, res) => {
                 image: req.body.image,
                 weather: req.body.weather,
                 content: req.body.content,
+                location: req.body.location,
                 privacy: req.body.privacy,
                 comments: [],
             });
@@ -193,6 +234,23 @@ const createNewJournal = async (req, res) => {
             res.status(500).json(err);
         });
 };
+
+// return true if the user has editing access to the journal  (is the author)
+// req-param: journal_id, user_token
+// req-body: null
+// response: true if the user is the author, false otherwise {editable: true/false}
+const verifyEditingAccess = async (req, res) => {
+    axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken)
+        .then(user=>{
+            Journal.findById(req.params.journal_id)
+                .then(journal => {
+                    res.status(200).json({editable: user.data.userData._id === journal.author_id});
+                })
+        })
+        .catch(err=>{
+            res.status(500).json(err)
+        });
+}
 
 // delete a journal
 // req-param: user_id, journal id,
@@ -371,8 +429,10 @@ exports.getExploreJournals = getExploreJournals;
 exports.searchExploreJournals = searchExploreJournals;
 exports.getUserJournals = getUserJournals;
 exports.searchUserJournals = searchUserJournals;
+exports.getUserJournalsByDate = getUserJournalsByDate;
 exports.getJournalAuthor = getJournalAuthor;
 exports.createNewJournal = createNewJournal;
+exports.verifyEditingAccess = verifyEditingAccess;
 exports.deleteJournal = deleteJournal;
 exports.editJournal = editJournal;
 exports.editJournalPrivacySetting = editJournalPrivacySetting;
