@@ -12,6 +12,7 @@ let serverHost = 'https://treehole-journals.herokuapp.com/';
 // response: void
 const setHost = async (host) => {
     serverHost = host;
+    // console.log(serverHost);
 }
 
 
