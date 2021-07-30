@@ -19,9 +19,12 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
 import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
+import JournalLocation from '../components/JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
-import JournalLocation from '../components/JournalLocation';
+import S3 from 'aws-s3';
+import sha256 from 'crypto-js/sha256';
+
 const styles = (theme) => ({
     root: {
         margin: 0,
@@ -58,23 +61,20 @@ const DialogContent = withStyles((theme) => ({
         padding: theme.spacing(2),
     },
 }))(MuiDialogContent);
-const DeleteImage = withStyles((theme) => ({
-    root: {
-        transform: 'translate(0, -8vh)',
-        background: 'white',
-    },
-}))(IconButton);
+
 const TitleInput = withStyles((theme) => ({
     root: {
         width: '90%',
     },
 }))(TextField);
+
 const DialogActions = withStyles((theme) => ({
     root: {
         margin: 0,
         padding: theme.spacing(1),
     },
 }))(MuiDialogActions);
+
 const Date = styled.span`
     position: absolute;
     right: 75%;
@@ -116,6 +116,15 @@ export default function CustomizedDialogs({
         setLocation(loc);
     }
     const [files, setFiles] = useState([]);
+    const [uploaded, setLoaded] = useState(false);
+    
+    const config = {
+        bucketName: 'treehole',
+        region: process.env.REACT_APP_REGION,
+        accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+        secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
+    };
+    const S3Client = new S3(config);
 
     const handlePrivacyChange = (event) => {
         setPrivacy(event.target.value);
@@ -179,12 +188,22 @@ export default function CustomizedDialogs({
         }
     };
 
+
+    const uploadFiles = () => {
+        S3Client.uploadFile(files[0], sha256(files[0].name))
+            .then((data) => {
+                console.log(data.location);
+                setLoaded(true);
+                setCoverImg(data.location);
+            })
+            .catch((err) => console.error(err));
+    };
+
     const thumbsContainer = {
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
         marginTop: 16,
-        marginBottom: 20,
         justifyContent: 'center',
     };
 
@@ -198,7 +217,6 @@ export default function CustomizedDialogs({
     };
 
     const thumbInner = {
-
         minWidth: 0,
     };
 
@@ -207,6 +225,11 @@ export default function CustomizedDialogs({
         maxHeight: 500,
         borderRadius: 5,
         border: '5px solid #eaeaea',
+        boxSizing: 'border-box',
+    };
+
+    const buttonStyle = {
+        margin: 10,
     };
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -222,17 +245,12 @@ export default function CustomizedDialogs({
         },
     });
 
-    function changeBackground(e) {
-        e.target.style.opacity = '0.3';
-      }
-
     const thumbs = files.map((file) => (
-            <div style={thumb} key={file.name}>
-                <div style={thumbInner}>
-                    <img onMouseOver={changeBackground} src={file.preview} style={img} alt={file.size} />
-                </div>
-
+        <div style={thumb} key={file.name}>
+            <div style={thumbInner}>
+                <img src={file.preview} style={img} alt={file.size} />
             </div>
+        </div>
     ));
 
     useEffect(
@@ -243,12 +261,6 @@ export default function CustomizedDialogs({
         [files]
     );
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            // console.log('Latitude is :', position.coords.latitude);
-            // console.log('Longitude is :', position.coords.longitude);
-        });
-    }, []);
 
     return (
         <div>
@@ -280,6 +292,37 @@ export default function CustomizedDialogs({
                             </Dropzone>
                         )}
                         <aside style={thumbsContainer}>{thumbs}</aside>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: 20,
+                            }}
+                        >
+                            {files.length !== 0 && (
+                                <div>
+                                    <Button
+                                        onClick={() => setFiles([])}
+                                        style={buttonStyle}
+                                        variant='contained'
+                                        color='secondary'
+                                        disabled={uploaded}
+                                    >
+                                        Remove Upload
+                                    </Button>
+                                    <Button
+                                        onClick={() => uploadFiles()}
+                                        style={buttonStyle}
+                                        variant='contained'
+                                        color='primary'
+                                        disabled={uploaded}
+                                    >
+                                        Upload Picture
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
                     </section>
 
                     <Typography component={'span'} gutterBottom>
@@ -297,7 +340,7 @@ export default function CustomizedDialogs({
                 </DialogContent>
                 <JournalLocation handleLocation={handleLocation}/>
                 <DialogActions>
-                    <Date>{journal.date.toDateString()}</Date>
+                    <Date>{journal.date}</Date>
                     {authorMode && (
                         <>
                             <Select
