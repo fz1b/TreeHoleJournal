@@ -120,7 +120,7 @@ export default function CustomizedDialogs({
     
     const config = {
         bucketName: 'treehole',
-        region: process.env.REACT_APP_REGION,
+        region: 'us-west-1',
         accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
         secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
     };
