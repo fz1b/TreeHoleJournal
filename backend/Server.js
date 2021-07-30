@@ -26,13 +26,6 @@ let server = app.listen(PORT, function () {
             useCreateIndex: true,
         })
         .then((res) => {
-            if (port === 5000){
-                // development mode
-                journalController.setHost('http://localhost:5000/');
-            } else {
-                // deployment
-                journalController.setHost('https://treehole-journals.herokuapp.com/');
-            }
             console.log('server started on port: %s', port);
         })
         .catch((err) => {

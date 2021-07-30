@@ -6,16 +6,6 @@ const { Journal, PRIVACY } = require('../models/JournalSchema');
 let serverHost = 'https://treehole-journals.herokuapp.com/';
 
 
-// set the server host to the given address
-// req-param: void
-// req-body: void
-// response: void
-const setHost = async (host) => {
-    serverHost = host;
-    // console.log(serverHost);
-}
-
-
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // req-param: null
 // req-body: null
