@@ -73,7 +73,7 @@ const searchExploreJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const getUserJournals = async (req, res) => {
     axios
-        .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
+        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
         .then((user) => {
             Journal.find({ author_id: user.data.userData._id },
                 ['-author_id', '-comments.author_id']
@@ -99,7 +99,7 @@ const getUserJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const searchUserJournals = async (req, res) => {
     axios
-        .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
+        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
         .then((user) => {
             Journal.find(
                 {
@@ -146,7 +146,7 @@ const searchUserJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const getUserJournalsByDate = async (req, res) => {
     axios
-        .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
+        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
         .then((user) => {
             let start = new Date(req.params.date);
             let end = new Date(req.params.date);
@@ -185,7 +185,7 @@ const getJournalAuthor = async (req, res) => {
     Journal.findById(req.params.journal_id).then((journal) => {
         let user_id = journal.author_id;
         axios
-            .get('http://localhost:5000/users/info/id/' + user_id)
+            .get('https://treehole-journals.herokuapp.com/users/info/id/' + user_id)
             .then((author) => {
                 // console.log(author.data);
                 res.status(200).json(author.data);
@@ -203,7 +203,7 @@ const getJournalAuthor = async (req, res) => {
 
 const createNewJournal = async (req, res) => {
     axios
-        .get('http://localhost:5000/users/info/secure/' + req.params.idToken)
+        .get('https://treehole-journals.herokuapp.com/users/info/secure/' + req.params.idToken)
         .then((user) => {
             const journal = new Journal({
                 _id: new mongoose.Types.ObjectId(),
@@ -240,7 +240,7 @@ const createNewJournal = async (req, res) => {
 // req-body: null
 // response: true if the user is the author, false otherwise {editable: true/false}
 const verifyEditingAccess = async (req, res) => {
-    axios.get('http://localhost:5000/users/info/secure/'+req.params.idToken)
+    axios.get('https://treehole-journals.herokuapp.com/users/info/secure/'+req.params.idToken)
         .then(user=>{
             Journal.findById(req.params.journal_id)
                 .then(journal => {
@@ -319,7 +319,7 @@ const getCommentAuthor = async (req, res) => {
     Journal.findById(req.params.journal_id).then((journal) => {
         let user_id = journal.comments.id(req.params.comment_id).author_id;
         axios
-            .get('http://localhost:5000/users/info/id/' + user_id)
+            .get('https://treehole-journals.herokuapp.com/users/info/id/' + user_id)
             .then((author) => {
                 // console.log(author.data);
                 res.status(200).json(author.data);
@@ -338,7 +338,7 @@ const createComment = async (req, res) => {
     try {
         axios
             .get(
-                'http://localhost:5000/users/info/secure/' +
+                'https://treehole-journals.herokuapp.com/users/info/secure/' +
                     req.params.commenter_token
             )
             .then((response) => {
