@@ -1,6 +1,7 @@
 import Me from './screens/Me';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
+import SavedJournals from './screens/SavedJournals'
 import {
     BrowserRouter as Router,
     Switch,
@@ -43,6 +44,8 @@ function App() {
                 {!isLoggedIn && (
                     <Route exact path='/signUp' component={SignUp} />
                 )}
+
+                <Route exact path='/saved' component={SavedJournals} />
 
                 <Route path='*'>
                     <Redirect to='/' />
