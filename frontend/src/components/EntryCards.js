@@ -16,7 +16,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/Edit';
 import { red, grey } from '@material-ui/core/colors';
-import {getJournalAuthor, verifyEditingAccess} from '../services/JournalServices';
+import { getJournalAuthor, getJournalLikeStatus, verifyEditingAccess } from '../services/JournalServices';
 import AuthContext from '../authAPI/auth-context';
 
 const useStyles = makeStyles({
@@ -36,33 +36,41 @@ export default function EntryCards(props) {
     const auth = useContext(AuthContext);
 
     const [showModal, setshowModal] = useState(false);
-    const [isPublic, setVisibility] = useState(
-        props.content.privacy === 'PUBLIC'
-    );
     const [authorName, setAuthorName] = useState('');
     const [isEditable, setEditable] = useState(false);
-
+    const [isLiked, setIsLiked] = useState(false);
     const toggleModal = () => {
         setshowModal(!showModal);
     };
 
     const isAnonymous = props.content.privacy === 'ANONYMOUS';
-    const isMe = props.context === 'me';
+    const isPrivate = props.content.privacy === 'PRIVATE';
 
+    // loads up slowly. 
+    // If the user goes to login before useEffect finish fetching the data
+    // Will run the cleanup function
     useEffect(() => {
+        let isMounted = true;
         getJournalAuthor(props.content._id)
             .then((res) => {
-                setAuthorName(res.name);
+                if (isMounted) setAuthorName(res.name);
             })
             .catch((err) => {
                 // do nothing and use empty author
             });
 
         verifyEditingAccess(props.content._id, auth.token).then(res => {
-            setEditable(res);
+            if (isMounted) setEditable(res);
         }).catch(err => {
-            setEditable(false);
-        })
+            if (isMounted) setEditable(false);
+        });
+        getJournalLikeStatus(auth.token, props.content._id)
+            .then((res) => {
+                if (isMounted) setIsLiked(res);
+            }).catch((err) => {
+                if (isMounted) setIsLiked(false);
+            });
+        return () => { isMounted = false };
     }, [auth.token, props.content._id]);
 
     return (
@@ -82,10 +90,12 @@ export default function EntryCards(props) {
                     }
                     title={
                         isAnonymous
-                            ? isMe
+                            ? isEditable
                                 ? authorName + ' (Anonymous)'
                                 : 'Anonymous'
-                            : authorName
+                            : (isPrivate
+                                ? authorName+' (private)'
+                                : authorName)
                     }
                     subheader={props.content.date.toDateString()}
                 />
@@ -122,13 +132,16 @@ export default function EntryCards(props) {
                 </CardActionArea>
                 <CardActions>
                     <IconButton aria-label='add to favorites'>
-                        <FavoriteIcon className = {classes.heart_red}/>
+                        {isLiked && <FavoriteIcon className={classes.heart_red} />}
+                        {!isLiked && <FavoriteIcon />}
                     </IconButton>
-                    <IconButton aria-label='edit'>
-                        {!isPublic && <EditIcon />}
-                    </IconButton>
+                    {isEditable &&
+                        <IconButton aria-label='edit'>
+                            <EditIcon />
+                        </IconButton>
+                    }
                     <IconButton aria-label='share'>
-                        {isPublic && <ShareIcon />}
+                        <ShareIcon />
                     </IconButton>
                 </CardActions>
             </Card>

@@ -12,7 +12,7 @@ import {
 import ExploreTabs from '../components/ExploreTabs';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
-import {getDistance} from 'geolib';
+
 const useStyles = makeStyles((theme) => ({
     explore_bg: {
         backgroundImage: `url(${bgImg})`,

@@ -429,7 +429,7 @@ const deleteComment = async (req, res) => {
 // get like status of the journal when given user token and journal id
 // req-param: idToken, journal_id
 // response: true or false
-const getJournalLikeStatus = async (req, res) => {
+const getJournalLike = async (req, res) => {
     const idToken = req.params.idToken;
     const journalId = req.params.journalId;
     if (!idToken || !journalId) {
@@ -475,4 +475,4 @@ exports.getCommentAuthor = getCommentAuthor;
 exports.createComment = createComment;
 exports.editComment = editComment;
 exports.deleteComment = deleteComment;
-exports.getJournalLikeStatus = getJournalLikeStatus;
+exports.getJournalLike = getJournalLike;
