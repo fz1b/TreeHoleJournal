@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles, ThemeProvider } from '@material-ui/core';
 import { MdAddCircleOutline } from 'react-icons/md';
 import journalImg from '../assets/myjournals_bg.svg';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import JounalModal from '../components/JournalModal';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
@@ -43,8 +43,8 @@ const newJournal = {
     date: new Date(),
     coverImage: '',
     content: '',
-    location:null,
-    privacy_setting: 'PRIVATE',
+    location: null,
+    privacy: 'PRIVATE',
 };
 
 export default function Me() {
@@ -80,17 +80,17 @@ export default function Me() {
     const handleSave = () => {
         setShowModal(false);
     };
-    const handleDateSelection = (date) =>{
-      console.log(date);
-      if(!date){
-        fetchJournals();
-      }else{
-        getUserJournalsByDate(auth.token,date).then((res)=>{
-          setJournals(res);
-        })
-      }
+    const handleDateSelection = (date) => {
+        console.log(date);
+        if (!date) {
+            fetchJournals();
+        } else {
+            getUserJournalsByDate(auth.token, date).then((res) => {
+                setJournals(res);
+            })
+        }
     }
-    const fetchJournals = () => {
+    const fetchJournals = useCallback(() => {
         getUserJournals(auth.token)
             .then((res) => {
                 setJournals(res);
@@ -99,10 +99,10 @@ export default function Me() {
                 setJournals([]);
                 console.error(err);
             });
-    };
+    }, [auth.token]);
     useEffect(() => {
         fetchJournals();
-    }, [auth.token]);
+    }, [auth.token, fetchJournals]);
 
     const updateJournals = () => {
         // refresh the page to re-render CardHolder
@@ -151,10 +151,10 @@ export default function Me() {
                         handleSave={handleSave}{' '}
                     </JounalModal>
                 )}
-                {showSearchTag && (
+                {showSearchTag && searchContent&&(
                     <SearchTag
                         content={searchContent}
-                        count={2}
+                        count={journals.length}
                         clearSearch={handleClearSearch}
                     />
                 )}

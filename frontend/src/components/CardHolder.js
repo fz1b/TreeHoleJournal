@@ -9,7 +9,7 @@ export function CardHolder({ handleDateSelection,showCalendar, journals, updateJ
                 <Grid
                     container
                     direction='row'
-                    justify='center'
+                    justifyContent='center'
                     alignItems='center'
                     spacing={3}
                 >

@@ -26,6 +26,8 @@ function JournalModal(props) {
                     handleClose={props.handleClose}
                     authorMode={props.authorMode}
                     updateJournals={props.updateJournals}
+                    like={props.like}
+                    onLike={props.onLike}
                 />
             )}
         </>

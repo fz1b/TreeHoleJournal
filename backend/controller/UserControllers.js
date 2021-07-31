@@ -363,7 +363,7 @@ const likeJournalHelper = async (req, res, type) => {
             .json({ status: 400, message: 'Invalid request body' });
     }
     try {
-        userResponse = await axios.get('http://localhost:5000/users/info/secure/' + idToken);
+        userResponse = await axios.get(process.env.BACKEND_URL + 'users/info/secure/' + idToken);
     } catch (err) {
         return res.status(500).json({ status: 500, message: 'Server Error' });
     }
@@ -424,7 +424,7 @@ const getLikedJournalsByUserToken = async (req, res) => {
             .json({ status: 400, message: 'Invalid request body' });
     }
     try {
-        userResponse = await axios.get('http://localhost:5000/users/info/secure/' + idToken);
+        userResponse = await axios.get(process.env.BACKEND_URL + 'users/info/secure/' + idToken);
     } catch (err) {
         return res.status(500).json({ status: 500, message: 'Server Error' });
     }

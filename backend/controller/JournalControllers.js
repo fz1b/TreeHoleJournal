@@ -3,8 +3,7 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
-let serverHost = 'https://treehole-journals.herokuapp.com/';
-
+const User = require('../models/UserSchema');
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
 // req-param: null
@@ -75,7 +74,7 @@ const searchExploreJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const getUserJournals = async (req, res) => {
     axios
-        .get(serverHost + 'users/info/secure/' + req.params.idToken)
+        .get(process.env.BACKEND_URL + 'users/info/secure/' + req.params.idToken)
         .then((user) => {
             Journal.find({ author_id: user.data.userData._id },
                 ['-author_id', '-comments.author_id']
@@ -101,7 +100,7 @@ const getUserJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const searchUserJournals = async (req, res) => {
     axios
-        .get(serverHost + 'users/info/secure/' + req.params.idToken)
+        .get(process.env.BACKEND_URL + 'users/info/secure/' + req.params.idToken)
         .then((user) => {
             Journal.find(
                 {
@@ -148,7 +147,7 @@ const searchUserJournals = async (req, res) => {
 // response: list of Journals JSON obj
 const getUserJournalsByDate = async (req, res) => {
     axios
-        .get(serverHost+'users/info/secure/' + req.params.idToken)
+        .get(process.env.BACKEND_URL+'users/info/secure/' + req.params.idToken)
         .then((user) => {
             let start = new Date(req.params.date);
             let end = new Date(req.params.date);
@@ -187,7 +186,7 @@ const getJournalAuthor = async (req, res) => {
     Journal.findById(req.params.journal_id).then((journal) => {
         let user_id = journal.author_id;
         axios
-            .get(serverHost+'users/info/id/' + user_id)
+            .get(process.env.BACKEND_URL+'users/info/id/' + user_id)
             .then((author) => {
                 // console.log(author.data);
                 res.status(200).json(author.data);
@@ -205,7 +204,7 @@ const getJournalAuthor = async (req, res) => {
 
 const createNewJournal = async (req, res) => {
     axios
-        .get(serverHost+'users/info/secure/' + req.params.idToken)
+        .get(process.env.BACKEND_URL+'users/info/secure/' + req.params.idToken)
         .then((user) => {
             const journal = new Journal({
                 _id: new mongoose.Types.ObjectId(),
@@ -242,7 +241,7 @@ const createNewJournal = async (req, res) => {
 // req-body: null
 // response: true if the user is the author, false otherwise {editable: true/false}
 const verifyEditingAccess = async (req, res) => {
-    axios.get(serverHost+'users/info/secure/'+req.params.idToken)
+    axios.get(process.env.BACKEND_URL+'users/info/secure/'+req.params.idToken)
         .then(user=>{
             Journal.findById(req.params.journal_id)
                 .then(journal => {
@@ -321,7 +320,7 @@ const getCommentAuthor = async (req, res) => {
     Journal.findById(req.params.journal_id).then((journal) => {
         let user_id = journal.comments.id(req.params.comment_id).author_id;
         axios
-            .get(serverHost+'users/info/id/' + user_id)
+            .get(process.env.BACKEND_URL+'users/info/id/' + user_id)
             .then((author) => {
                 // console.log(author.data);
                 res.status(200).json(author.data);
@@ -340,7 +339,7 @@ const createComment = async (req, res) => {
     try {
         axios
             .get(
-              serverHost+'users/info/secure/' +
+                process.env.BACKEND_URL+'users/info/secure/' +
                     req.params.commenter_token
             )
             .then((response) => {
@@ -427,6 +426,39 @@ const deleteComment = async (req, res) => {
         });
 };
 
+// get like status of the journal when given user token and journal id
+// req-param: idToken, journal_id
+// response: true or false
+const getJournalLike = async (req, res) => {
+    const idToken = req.params.idToken;
+    const journalId = req.params.journalId;
+    if (!idToken || !journalId) {
+        return res
+            .status(400)
+            .json({ status: 400, message: 'Invalid request body' });
+    }
+    try {
+        userResponse = await axios.get(process.env.BACKEND_URL + 'users/info/secure/' + idToken);
+    } catch (err) {
+        return res.status(200).json({ status: 200, like: false });
+    }
+    const userid = userResponse.data.userData._id;
+    let foundUser;
+    try {
+        foundUser = await User.findById(userid);
+        if (!foundUser) {
+            return res.status(500).json({ status: 500, message: 'Database Error1' });
+        }
+    } catch(err) {
+        return res.status(500).json({ status: 500, message: 'Database Error2' });
+    }
+    if (foundUser.likes.includes(journalId)) {
+        return res.status(200).json({status: 200, like: true});
+    } else {
+        return res.status(200).json({status: 200, like: false});
+    }
+}
+
 
 exports.getExploreJournals = getExploreJournals;
 exports.searchExploreJournals = searchExploreJournals;
@@ -443,3 +475,4 @@ exports.getCommentAuthor = getCommentAuthor;
 exports.createComment = createComment;
 exports.editComment = editComment;
 exports.deleteComment = deleteComment;
+exports.getJournalLike = getJournalLike;

@@ -44,3 +44,17 @@ export async function refreshService(request) {
     const tokenData = await userService(request, 'refresh');
     return tokenData;
 }
+
+export async function likeJournal(request) {
+    try {
+        await axios.post('/users/like/add', request, {
+            headers: { 'Content-Type': 'application/json' }});
+    } catch(err) {}
+}
+
+export async function unlikeJournal(request) {
+    try {
+        await axios.post('/users/like/remove', request, {
+            headers: { 'Content-Type': 'application/json' }});
+    } catch(err) {}
+}

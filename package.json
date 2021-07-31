@@ -45,7 +45,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ui": "react-scripts start",
-    "server": "nodemon frontend/src/Backend/Server.js",
+    "server": "nodemon backend/Server.js",
     "dev": "concurrently \\\"cd frontend && react-scripts start\\\" \\\"nodemon backend/Server.js\\\"",
     "heroku-postbuild": "cd frontend && npm install && npm run build"
   },

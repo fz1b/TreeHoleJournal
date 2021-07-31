@@ -23,6 +23,7 @@ import {
     deleteJournal,
     editJournal,
 } from '../services/JournalServices';
+import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
@@ -110,14 +111,13 @@ export default function CustomizedDialogs({
     handleClose,
     authorMode,
     updateJournals,
-    handleEdit,
+    handleEdit
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
     const [location, setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
-    const [liked, setLiked] = useState(false);
     const auth = useContext(AuthContext);
 
     const handleLocation = (loc) => {
@@ -145,24 +145,14 @@ export default function CustomizedDialogs({
     };
     const handleDelete = () => {
         handleClose();
-        deleteJournal(auth.token, journal._id)
-            .then(updateJournals())
-            .catch((err) => {
-                console.log(err);
-            });
-    };
-    const handleLike = () => {
-        setLiked((state) => !state);
-    };
-    const handleSave = (
-        title,
-        date,
-        image,
-        weather,
-        content,
-        location,
-        privacy
-    ) => {
+        deleteJournal(auth.token, journal._id).then(
+            updateJournals()
+        ).catch(err => {
+            console.log(err);
+        });
+    }
+
+    const handleSave = (title, date, image, weather, content, location, privacy) => {
         if (!journal._id) {
             // create a new journal
             createJournal(
@@ -372,25 +362,6 @@ export default function CustomizedDialogs({
                         </>
                     )}
                     <>
-                        <span onClick={handleLike}>
-                            {!liked && (
-                                <IconButton>
-                                    <FaRegHeart />
-                                </IconButton>
-                            )}
-                            {liked && (
-                                <IconContext.Provider
-                                    value={{ color: '#b95050' }}
-                                >
-                                    <IconButton>
-                                        <FaHeart />
-                                    </IconButton>
-                                </IconContext.Provider>
-                            )}
-                        </span>
-                        <IconButton>
-                            <BsFillChatSquareDotsFill />
-                        </IconButton>
                         {authorMode && (
                             <>
                                 <span onClick={handleDelete}>
