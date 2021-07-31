@@ -45,7 +45,7 @@ export function getNearbyJournals(lat, lng) {
     return axios
         .get('/explore')
         .then((res) => {
-            let journals=res.data.filter((j)=>j.location);
+            let journals=processJournals(res.data).filter((j)=>j.location);
             journals.sort(function(a,b){
                 const distA = getDistance(
                     {latitude: lat, longitude: lng},
