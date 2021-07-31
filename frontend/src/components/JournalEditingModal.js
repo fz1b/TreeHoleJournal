@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -15,6 +15,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { BootstrapInput } from './CustomizedComponents';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { BsFillChatSquareDotsFill } from 'react-icons/bs';
+import { IconContext } from 'react-icons';
+import {
+    createJournal,
+    deleteJournal,
+    editJournal,
+} from '../services/JournalServices';
 import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
@@ -75,7 +83,6 @@ const DialogActions = withStyles((theme) => ({
 const Date = styled.span`
     position: absolute;
     right: 75%;
-
 `;
 
 const Dropzone = styled.div`
@@ -94,6 +101,11 @@ const Dropzone = styled.div`
     transition: border 0.24s ease-in-out;
 `;
 
+const Image = styled.img`
+    width: 100%;
+    border-radius: 10px;
+`;
+
 export default function CustomizedDialogs({
     journal,
     handleClose,
@@ -103,17 +115,17 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
-    const [location,setLocation] = useState(null);
+    const [location, setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
     const auth = useContext(AuthContext);
 
-    const handleLocation = (loc)=>{
+    const handleLocation = (loc) => {
         setLocation(loc);
-    }
+    };
     const [files, setFiles] = useState([]);
     const [uploaded, setLoaded] = useState(false);
-    
+
     const config = {
         bucketName: 'treehole',
         region: 'us-west-1',
@@ -181,7 +193,6 @@ export default function CustomizedDialogs({
             handleEdit(false);
         }
     };
-
 
     const uploadFiles = () => {
         S3Client.uploadFile(files[0], sha256(files[0].name))
@@ -255,7 +266,6 @@ export default function CustomizedDialogs({
         [files]
     );
 
-
     return (
         <div>
             <Dialog
@@ -276,8 +286,9 @@ export default function CustomizedDialogs({
                     />
                 </DialogTitle>
                 <DialogContent dividers>
+                <Image src={journal.image} alt='' />
                     <section className='container'>
-                        {files.length === 0 && (
+                        {(files.length !== 0 && !journal.image )&& (
                             <Dropzone
                                 {...getRootProps({ className: 'dropzone' })}
                             >
@@ -294,7 +305,7 @@ export default function CustomizedDialogs({
                                 marginBottom: 20,
                             }}
                         >
-                            {files.length !== 0 && (
+                            {(files.length !== 0 && !journal.image )&& (
                                 <div>
                                     <Button
                                         onClick={() => setFiles([])}
@@ -332,7 +343,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
-                <JournalLocation handleLocation={handleLocation}/>
+                <JournalLocation handleLocation={handleLocation} />
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
