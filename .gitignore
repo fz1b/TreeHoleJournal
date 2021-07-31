@@ -32,3 +32,4 @@ yarn-error.log*
 /httpRequests/
 
 .env
+nodemon.json
