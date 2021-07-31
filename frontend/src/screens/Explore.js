@@ -64,6 +64,9 @@ export default function Explore() {
         fetchJournals();
     }, [auth.token]);
     useEffect(() => {
+      if(tab==="Newest"){
+          fetchJournals();
+      }
       if(tab==="Nearby"){
         navigator.geolocation.getCurrentPosition(function (position) {
           const lat = position.coords.latitude;
