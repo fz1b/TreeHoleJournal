@@ -1,5 +1,4 @@
 import Me from './screens/Me';
-import TestPage from './screens/TestPage';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
 import SavedJournals from './screens/SavedJournals'
@@ -46,7 +45,6 @@ function App() {
                     <Route exact path='/signUp' component={SignUp} />
                 )}
 
-                <Route exact path='/test' component={TestPage} />
                 <Route exact path='/saved' component={SavedJournals} />
 
                 <Route path='*'>

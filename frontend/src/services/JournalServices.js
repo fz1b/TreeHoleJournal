@@ -335,3 +335,18 @@ export function getCommentAuthor(journal_id, comment_id) {
             return {};
         });
 }
+
+// get like status of the journal when given user token and journal id
+// req-param: idToken, journal_id
+// response: true or false
+export async function getJournalLikeStatus(idToken, journal_id) {
+    if(!idToken || !journal_id) {
+        return false;
+    }
+    try {
+        const response = await axios.get('/journal/likeinfo/'+idToken + '/' +journal_id);
+        return response.data.like;
+    } catch(err){
+        return false;
+    }
+}

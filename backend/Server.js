@@ -101,6 +101,8 @@ app.put(
     '/me/:user_id/:journal_id/privacy',
     journalController.editJournalPrivacySetting
 );
+// get if user has liked this post
+app.get('/journal/likeinfo/:idToken/:journalId', journalController.getJournalLike);
 
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
