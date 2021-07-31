@@ -298,7 +298,7 @@ export default function CustomizedDialogs({
                 <DialogContent dividers>
                 <Image src={journal.image} alt='' />
                     <section className='container'>
-                        {files.length === 0 && (
+                        {(files.length !== 0 && !journal.image )&& (
                             <Dropzone
                                 {...getRootProps({ className: 'dropzone' })}
                             >
@@ -315,7 +315,7 @@ export default function CustomizedDialogs({
                                 marginBottom: 20,
                             }}
                         >
-                            {files.length !== 0 && (
+                            {(files.length !== 0 && !journal.image )&& (
                                 <div>
                                     <Button
                                         onClick={() => setFiles([])}
