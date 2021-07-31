@@ -15,14 +15,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { BootstrapInput } from './CustomizedComponents';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import { BsFillChatSquareDotsFill } from 'react-icons/bs';
-import { IconContext } from 'react-icons';
-import {
-    createJournal,
-    deleteJournal,
-    editJournal,
-} from '../services/JournalServices';
 import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
