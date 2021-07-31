@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -18,7 +18,11 @@ import { BootstrapInput } from './CustomizedComponents';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
-import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
+import {
+    createJournal,
+    deleteJournal,
+    editJournal,
+} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
@@ -78,7 +82,6 @@ const DialogActions = withStyles((theme) => ({
 const Date = styled.span`
     position: absolute;
     right: 75%;
-
 `;
 
 const Dropzone = styled.div`
@@ -97,6 +100,11 @@ const Dropzone = styled.div`
     transition: border 0.24s ease-in-out;
 `;
 
+const Image = styled.img`
+    width: 100%;
+    border-radius: 10px;
+`;
+
 export default function CustomizedDialogs({
     journal,
     handleClose,
@@ -106,18 +114,18 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
-    const [location,setLocation] = useState(null);
+    const [location, setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
     const [liked, setLiked] = useState(false);
     const auth = useContext(AuthContext);
 
-    const handleLocation = (loc)=>{
+    const handleLocation = (loc) => {
         setLocation(loc);
-    }
+    };
     const [files, setFiles] = useState([]);
     const [uploaded, setLoaded] = useState(false);
-    
+
     const config = {
         bucketName: 'treehole',
         region: 'us-west-1',
@@ -137,16 +145,24 @@ export default function CustomizedDialogs({
     };
     const handleDelete = () => {
         handleClose();
-        deleteJournal(auth.token, journal._id).then(
-            updateJournals()
-        ).catch(err => {
-            console.log(err);
-        });
-    }
+        deleteJournal(auth.token, journal._id)
+            .then(updateJournals())
+            .catch((err) => {
+                console.log(err);
+            });
+    };
     const handleLike = () => {
         setLiked((state) => !state);
     };
-    const handleSave = (title, date, image, weather, content, location, privacy) => {
+    const handleSave = (
+        title,
+        date,
+        image,
+        weather,
+        content,
+        location,
+        privacy
+    ) => {
         if (!journal._id) {
             // create a new journal
             createJournal(
@@ -187,7 +203,6 @@ export default function CustomizedDialogs({
             handleEdit(false);
         }
     };
-
 
     const uploadFiles = () => {
         S3Client.uploadFile(files[0], sha256(files[0].name))
@@ -261,7 +276,6 @@ export default function CustomizedDialogs({
         [files]
     );
 
-
     return (
         <div>
             <Dialog
@@ -282,6 +296,7 @@ export default function CustomizedDialogs({
                     />
                 </DialogTitle>
                 <DialogContent dividers>
+                <Image src={journal.image} alt='' />
                     <section className='container'>
                         {files.length === 0 && (
                             <Dropzone
@@ -338,7 +353,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
-                <JournalLocation handleLocation={handleLocation}/>
+                <JournalLocation handleLocation={handleLocation} />
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
