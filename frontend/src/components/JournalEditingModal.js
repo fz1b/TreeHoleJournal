@@ -103,13 +103,14 @@ export default function CustomizedDialogs({
     authorMode,
     updateJournals,
     handleEdit,
+    initLike
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
     const [location,setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
-    const [liked, setLiked] = useState(false);
+    const [liked, setLiked] = useState(initLike);
     const auth = useContext(AuthContext);
 
     const handleLocation = (loc)=>{

@@ -26,6 +26,9 @@ const useStyles = makeStyles({
     anonymous_avatar: {
         backgroundColor: grey[500],
     },
+    heart_red: {
+        color: '#b95050'
+    },
 });
 
 export default function EntryCards(props) {
@@ -119,7 +122,7 @@ export default function EntryCards(props) {
                 </CardActionArea>
                 <CardActions>
                     <IconButton aria-label='add to favorites'>
-                        <FavoriteIcon />
+                        <FavoriteIcon className = {classes.heart_red}/>
                     </IconButton>
                     <IconButton aria-label='edit'>
                         {!isPublic && <EditIcon />}
