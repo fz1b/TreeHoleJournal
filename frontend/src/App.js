@@ -1,5 +1,4 @@
 import Me from './screens/Me';
-import TestPage from './screens/TestPage';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
 import {
@@ -44,8 +43,6 @@ function App() {
                 {!isLoggedIn && (
                     <Route exact path='/signUp' component={SignUp} />
                 )}
-
-                <Route exact path='/test' component={TestPage} />
 
                 <Route path='*'>
                     <Redirect to='/' />

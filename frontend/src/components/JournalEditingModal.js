@@ -15,9 +15,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { BootstrapInput } from './CustomizedComponents';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import { BsFillChatSquareDotsFill } from 'react-icons/bs';
-import { IconContext } from 'react-icons';
 import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
@@ -102,15 +99,13 @@ export default function CustomizedDialogs({
     handleClose,
     authorMode,
     updateJournals,
-    handleEdit,
-    initLike
+    handleEdit
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
     const [location,setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
     const [coverImg, setCoverImg] = useState(journal.image);
-    const [liked, setLiked] = useState(initLike);
     const auth = useContext(AuthContext);
 
     const handleLocation = (loc)=>{
@@ -144,9 +139,7 @@ export default function CustomizedDialogs({
             console.log(err);
         });
     }
-    const handleLike = () => {
-        setLiked((state) => !state);
-    };
+
     const handleSave = (title, date, image, weather, content, location, privacy) => {
         if (!journal._id) {
             // create a new journal
@@ -358,25 +351,6 @@ export default function CustomizedDialogs({
                         </>
                     )}
                     <>
-                        <span onClick={handleLike}>
-                            {!liked && (
-                                <IconButton>
-                                    <FaRegHeart />
-                                </IconButton>
-                            )}
-                            {liked && (
-                                <IconContext.Provider
-                                    value={{ color: '#b95050' }}
-                                >
-                                    <IconButton>
-                                        <FaHeart />
-                                    </IconButton>
-                                </IconContext.Provider>
-                            )}
-                        </span>
-                        <IconButton>
-                            <BsFillChatSquareDotsFill />
-                        </IconButton>
                         {authorMode && (
                             <>
                                 <span onClick={handleDelete}>

@@ -13,11 +13,13 @@ import {
     IconButton,
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+// import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/Edit';
 import { red, grey } from '@material-ui/core/colors';
 import { getJournalAuthor, getJournalLikeStatus, verifyEditingAccess } from '../services/JournalServices';
+import { likeJournal, unlikeJournal } from '../services/UserServices';
 import AuthContext from '../authAPI/auth-context';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
     avatar: {
@@ -34,6 +36,7 @@ const useStyles = makeStyles({
 export default function EntryCards(props) {
     const classes = useStyles();
     const auth = useContext(AuthContext);
+    const history = useHistory();
 
     const [showModal, setshowModal] = useState(false);
     const [authorName, setAuthorName] = useState('');
@@ -45,6 +48,24 @@ export default function EntryCards(props) {
 
     const isAnonymous = props.content.privacy === 'ANONYMOUS';
     const isPrivate = props.content.privacy === 'PRIVATE';
+
+    const likeHandler = async () => {
+        if (auth.isLoggedIn){
+            let likePrev;
+            setIsLiked((prev) => {
+                likePrev = prev;
+                return !prev;
+            });
+            const req = {
+                journalId: props.content._id,
+                idToken: auth.token
+            }
+            if (likePrev) {await unlikeJournal(req);}
+            else {await likeJournal(req);}
+        } else {
+            history.push('/login');
+        }
+    }
 
     // loads up slowly. 
     // If the user goes to login before useEffect finish fetching the data
@@ -131,7 +152,7 @@ export default function EntryCards(props) {
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
-                    <IconButton aria-label='add to favorites'>
+                    <IconButton aria-label='add to favorites' onClick={likeHandler}>
                         {isLiked && <FavoriteIcon className={classes.heart_red} />}
                         {!isLiked && <FavoriteIcon />}
                     </IconButton>
@@ -140,9 +161,9 @@ export default function EntryCards(props) {
                             <EditIcon />
                         </IconButton>
                     }
-                    <IconButton aria-label='share'>
+                    {/* <IconButton aria-label='share'>
                         <ShareIcon />
-                    </IconButton>
+                    </IconButton> */}
                 </CardActions>
             </Card>
 
@@ -153,6 +174,8 @@ export default function EntryCards(props) {
                     handleClose={toggleModal}
                     authorMode={isEditable}
                     updateJournals={props.updateJournals}
+                    like = {isLiked}
+                    onLike = {likeHandler}
                 />
             )}
         </>

@@ -1,22 +1,12 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import JournalEditingModal from './JournalEditingModal';
 import JournalViewingModal from './JournalViewingModal';
-import { getJournalLikeStatus } from '../services/JournalServices';
-import AuthContext from '../authAPI/auth-context';
 
 function JournalModal(props) {
     const [editing, setEditing] = useState(props.editing);
     const handleEdit = (edit) => {
         setEditing(edit);
     };
-    // const auth = useContext(AuthContext);
-    // let initLikeStatus = false;
-    // console.log(props.journal);
-    // if (auth.token) {
-    //     initLikeStatus = await getJournalLikeStatus(auth.token, props.journal._id);
-    // }
-    // console.log(initLikeStatus);
-
 
     return (
         <>
@@ -27,7 +17,6 @@ function JournalModal(props) {
                     handleEdit={handleEdit}
                     authorMode={props.authorMode}
                     updateJournals={props.updateJournals}
-                    initLike={false}
                 />
             )}
             {!editing && (
@@ -37,7 +26,8 @@ function JournalModal(props) {
                     handleClose={props.handleClose}
                     authorMode={props.authorMode}
                     updateJournals={props.updateJournals}
-                    initLike={false}
+                    like={props.like}
+                    onLike={props.onLike}
                 />
             )}
         </>
