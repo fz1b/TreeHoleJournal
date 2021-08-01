@@ -23,7 +23,7 @@ import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
     avatar: {
-        backgroundColor: red[500],
+        backgroundColor: '#50A9C1',
     },
     anonymous_avatar: {
         backgroundColor: grey[500],
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
     heart_red: {
         color: '#b95050'
     },
-});
+})
 
 export default function EntryCards(props) {
     const classes = useStyles();
