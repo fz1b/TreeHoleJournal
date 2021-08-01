@@ -8,22 +8,30 @@ import MenuItem from '@material-ui/core/MenuItem';
 import styled from 'styled-components';
 import { getCommentAuthor } from '../services/JournalServices';
 
+const Name = styled.span`
+    font-size: 0.9rem;
+    font-weight: bolder;
+`;
+const Date = styled.span`
+    font-size: 0.8rem;
+    color: grey;
+`;
+
+const DeletedName = styled.span`
+    font-size: 0.9rem;
+    font-weight: bolder;
+    color: grey;
+`;
+
 function Comment(props) {
     const [name, setName] = useState('');
     const [initial, setInitial] = useState('');
-
-    const Name = styled.span`
-        font-size: 0.9rem;
-        font-weight: bolder;
-    `;
-    const Date = styled.span`
-        font-size: 0.8rem;
-        color: grey;
-    `;
+    const [isDeleted, setDeleted] = useState(true);
 
     getCommentAuthor(props.journalID, props.comment._id)
         .then((res) => {
             setName(res.name);
+            setDeleted(name.length === 0);
             setInitial(name.charAt(0));
         })
         .catch((err) => {
@@ -32,7 +40,8 @@ function Comment(props) {
 
     return (
         <Box display='flex' mb={2}>
-            <Avatar>{initial}</Avatar>
+            {!isDeleted && <Avatar>{initial} </Avatar>}
+            {isDeleted && <Avatar></Avatar>}
             <Box
                 mx={3}
                 display='flex'
@@ -41,7 +50,8 @@ function Comment(props) {
                 width={'80%'}
             >
                 <Box px={1}>
-                    <Name>{name}</Name>
+                    {!isDeleted && <Name>{name}</Name>}
+                    {isDeleted && <DeletedName>Deleted</DeletedName>}
                 </Box>
                 <Box px={1}>{props.comment.content}</Box>
                 <Box px={1}>
