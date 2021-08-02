@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'
 import { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -122,6 +123,7 @@ export default function CustomizedDialogs({
     const [title, setTitle] = useState(journal.title);
     const [isSaving, setIsSaving] = useState(false);
     const auth = useContext(AuthContext);
+    const route = useLocation();
 
     const handleLocation = (loc) => {
         setLocation(loc);
@@ -196,7 +198,7 @@ export default function CustomizedDialogs({
                 );
                 await updateJournals();
                 setIsSaving(false);
-                if (privacy==="PRIVATE") {
+                if (privacy==="PRIVATE" && route.pathname==='/') {
                     handleClose();
                 } else {
                     // instead of close the modal, switch to viewing mode
