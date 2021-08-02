@@ -196,7 +196,12 @@ export default function CustomizedDialogs({
                 );
                 await updateJournals();
                 setIsSaving(false);
-                handleEdit(false);
+                if (privacy==="PRIVATE") {
+                    handleClose();
+                } else {
+                    // instead of close the modal, switch to viewing mode
+                    handleEdit(false);
+                }
             }
         } catch (err) {
             setIsSaving(false);
