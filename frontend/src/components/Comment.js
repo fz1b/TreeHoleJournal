@@ -8,18 +8,24 @@ import MenuItem from '@material-ui/core/MenuItem';
 import styled from 'styled-components';
 import { getCommentAuthor } from '../services/JournalServices';
 
+const Name = styled.span`
+    font-size: 0.9rem;
+    font-weight: bolder;
+`;
+const Date = styled.span`
+    font-size: 0.8rem;
+    color: grey;
+`;
+
+const DeletedName = styled.span`
+    font-size: 0.9rem;
+    font-weight: bolder;
+    color: grey;
+`;
+
 function Comment(props) {
     const [name, setName] = useState('');
     const [initial, setInitial] = useState('');
-
-    const Name = styled.span`
-        font-size: 0.9rem;
-        font-weight: bolder;
-    `;
-    const Date = styled.span`
-        font-size: 0.8rem;
-        color: grey;
-    `;
 
     getCommentAuthor(props.journalID, props.comment._id)
         .then((res) => {
@@ -32,7 +38,8 @@ function Comment(props) {
 
     return (
         <Box display='flex' mb={2}>
-            <Avatar>{initial}</Avatar>
+            {name && <Avatar>{initial} </Avatar>}
+            {!name && <Avatar></Avatar>}
             <Box
                 mx={3}
                 display='flex'
@@ -41,7 +48,8 @@ function Comment(props) {
                 width={'80%'}
             >
                 <Box px={1}>
-                    <Name>{name}</Name>
+                    {name && <Name>{name}</Name>}
+                    {!name && <DeletedName>Deleted</DeletedName>}
                 </Box>
                 <Box px={1}>{props.comment.content}</Box>
                 <Box px={1}>
