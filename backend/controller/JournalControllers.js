@@ -183,18 +183,22 @@ const getUserJournalsByDate = async (req, res) => {
 // req-body: null
 // response: the User JSON without user_id
 const getJournalAuthor = async (req, res) => {
-    Journal.findById(req.params.journal_id).then((journal) => {
-        let user_id = journal.author_id;
-        axios
-            .get(process.env.BACKEND_URL+'users/info/id/' + user_id)
-            .then((author) => {
-                // console.log(author.data);
-                res.status(200).json(author.data);
-            })
-            .catch((err) => {
-                res.status(500).json(err);
-            });
-    });
+    let journal;
+    let userName;
+    try {
+        journal = await Journal.findById(req.params.journal_id);
+        if (journal.privacy===PRIVACY.ANONYMOUS) {
+            userName = "Anonymous";
+        } else if (journal.privacy===PRIVACY.PRIVATE) {
+            userName = "Private";
+        } else {
+            let user = await User.findById(journal.author_id);
+            userName = user.name;
+        }
+    } catch(err) {
+        return res.status(500).json(err)
+    }
+    return res.status(200).json({status:200, name:userName});
 };
 
 // create a journal for the given user
