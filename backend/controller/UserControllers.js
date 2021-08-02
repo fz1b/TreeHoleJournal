@@ -355,6 +355,7 @@ const refreshUserIdToken = async (req, res) => {
 // }
 const likeJournalHelper = async (req, res, type) => {
     const { journalId, idToken } = req.body;
+    let userResponse;
     if (!journalId || !idToken) {
         return res
             .status(400)
@@ -416,6 +417,7 @@ const unlikeJournal = async (req, res) => {
 
 const getLikedJournalsByUserToken = async (req, res) => {
     const idToken = req.params.idToken;
+    let userResponse;
     if (!idToken) {
         return res
             .status(400)
