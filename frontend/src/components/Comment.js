@@ -26,12 +26,10 @@ const DeletedName = styled.span`
 function Comment(props) {
     const [name, setName] = useState('');
     const [initial, setInitial] = useState('');
-    const [isDeleted, setDeleted] = useState(true);
 
     getCommentAuthor(props.journalID, props.comment._id)
         .then((res) => {
             setName(res.name);
-            setDeleted(name.length === 0);
             setInitial(name.charAt(0));
         })
         .catch((err) => {
@@ -40,8 +38,8 @@ function Comment(props) {
 
     return (
         <Box display='flex' mb={2}>
-            {!isDeleted && <Avatar>{initial} </Avatar>}
-            {isDeleted && <Avatar></Avatar>}
+            {name && <Avatar>{initial} </Avatar>}
+            {!name && <Avatar></Avatar>}
             <Box
                 mx={3}
                 display='flex'
@@ -50,8 +48,8 @@ function Comment(props) {
                 width={'80%'}
             >
                 <Box px={1}>
-                    {!isDeleted && <Name>{name}</Name>}
-                    {isDeleted && <DeletedName>Deleted</DeletedName>}
+                    {name && <Name>{name}</Name>}
+                    {!name && <DeletedName>Deleted</DeletedName>}
                 </Box>
                 <Box px={1}>{props.comment.content}</Box>
                 <Box px={1}>
