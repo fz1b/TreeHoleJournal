@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const User = require('../models/UserSchema');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
 
-// const FIREBASE_KEY = 'AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs';
-
 // Request Body Format
 // {
 //  'name': 'name',
