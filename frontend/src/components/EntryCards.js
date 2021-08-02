@@ -15,7 +15,7 @@ import {
 import FavoriteIcon from '@material-ui/icons/Favorite';
 // import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/Edit';
-import { red, grey } from '@material-ui/core/colors';
+import { grey } from '@material-ui/core/colors';
 import { getJournalAuthor, getJournalLikeStatus, verifyEditingAccess } from '../services/JournalServices';
 import { likeJournal, unlikeJournal } from '../services/UserServices';
 import AuthContext from '../authAPI/auth-context';

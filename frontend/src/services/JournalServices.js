@@ -142,7 +142,7 @@ export function getJournalAuthor(journal_id) {
         .get('/journals/author/' + journal_id)
         .then((res) => {
             // console.log(res.data);
-            return res.data.data;
+            return res.data;
         })
         .catch((err) => {
             console.error(err);
