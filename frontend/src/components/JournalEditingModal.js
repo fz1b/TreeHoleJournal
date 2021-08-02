@@ -15,7 +15,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { BootstrapInput } from './CustomizedComponents';
-import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
+import {
+    createJournal,
+    deleteJournal,
+    editJournal,
+} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
@@ -116,6 +120,7 @@ export default function CustomizedDialogs({
     const [content, setContent] = useState(journal.content);
     const [location, setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
+    const [isSaving, setIsSaving] = useState(false);
     const auth = useContext(AuthContext);
 
     const handleLocation = (loc) => {
@@ -144,7 +149,7 @@ export default function CustomizedDialogs({
             });
     };
 
-    const handleSave = (
+    const handleSave = async (
         title,
         date,
         weather,
@@ -152,52 +157,50 @@ export default function CustomizedDialogs({
         location,
         privacy
     ) => {
-        S3Client.uploadFile(files[0], sha256(files[0].name))
-            .then((data) => {
+        try {
+            setIsSaving(true);
+            if (files.length > 0) {
+                const data = await S3Client.uploadFile(
+                    files[0],
+                    sha256(files[0].name)
+                );
                 setLoaded(true);
                 imageURL = data.location;
-            })
-            .then(() => {
-                if (!journal._id) {
-                    // create a new journal
-                    createJournal(
-                        auth.token,
-                        title,
-                        date,
-                        imageURL,
-                        weather,
-                        content,
-                        location,
-                        privacy
-                    )
-                        .then((res) => {
-                            updateJournals();
-                        }).then(() => handleClose())
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                    
-                } else {
-                    // edit an existing journal
-                    editJournal(
-                        journal.author_id,
-                        journal._id,
-                        title,
-                        date,
-                        imageURL,
-                        weather,
-                        content,
-                        privacy
-                    )
-                        .then((res) => {
-                            updateJournals();
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                    handleEdit(false);
-                }
-            });
+            }else{
+                imageURL = journal.image
+            }
+
+            if (!journal._id) {
+                await createJournal(
+                    auth.token,
+                    title,
+                    date,
+                    imageURL,
+                    weather,
+                    content,
+                    location,
+                    privacy
+                );
+                await updateJournals();
+                handleClose();
+            } else {
+                await editJournal(
+                    journal.author_id,
+                    journal._id,
+                    title,
+                    date,
+                    imageURL,
+                    weather,
+                    content,
+                    privacy
+                );
+                await updateJournals();
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        handleEdit(false);
+        setIsSaving(false);
     };
 
     const thumbsContainer = {
@@ -282,14 +285,24 @@ export default function CustomizedDialogs({
                     />
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Image src={journal.image} alt='' />
+                    {files.length === 0 && <Image src={journal.image} alt='' />}
                     <section className='container'>
-                        {(files.length === 0 )&& (
+                        {files.length === 0 && (
                             <Dropzone
                                 {...getRootProps({ className: 'dropzone' })}
                             >
                                 <input {...getInputProps()} />
-                                <p>Drag the cover image, or click to upload</p>
+                                {!journal.image && (
+                                    <p>
+                                        Drag the cover image, or click to upload
+                                    </p>
+                                )}
+                                {journal.image && (
+                                    <p>
+                                        Drag the cover image, or click to
+                                        replace current
+                                    </p>
+                                )}
                             </Dropzone>
                         )}
                         <aside style={thumbsContainer}>{thumbs}</aside>
@@ -301,7 +314,7 @@ export default function CustomizedDialogs({
                                 marginBottom: 20,
                             }}
                         >
-                             {(files.length !== 0)&& (
+                            {files.length !== 0 && (
                                 <div>
                                     <Button
                                         onClick={() => setFiles([])}
@@ -359,6 +372,7 @@ export default function CustomizedDialogs({
                                 <Button
                                     variant='contained'
                                     color='primary'
+                                    disabled={isSaving}
                                     onClick={() =>
                                         handleSave(
                                             title,
