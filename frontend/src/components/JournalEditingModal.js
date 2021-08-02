@@ -195,12 +195,13 @@ export default function CustomizedDialogs({
                     privacy
                 );
                 await updateJournals();
+                setIsSaving(false);
+                handleEdit(false);
             }
         } catch (err) {
+            setIsSaving(false);
             console.log(err);
         }
-        handleEdit(false);
-        setIsSaving(false);
     };
 
     const thumbsContainer = {
