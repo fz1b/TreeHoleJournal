@@ -13,9 +13,8 @@ import {
     IconButton,
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-// import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/Edit';
-import { red, grey } from '@material-ui/core/colors';
+import { grey } from '@material-ui/core/colors';
 import { getJournalAuthor, getJournalLikeStatus, verifyEditingAccess } from '../services/JournalServices';
 import { likeJournal, unlikeJournal } from '../services/UserServices';
 import AuthContext from '../authAPI/auth-context';
@@ -42,12 +41,22 @@ export default function EntryCards(props) {
     const [authorName, setAuthorName] = useState('');
     const [isEditable, setEditable] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
-    const toggleModal = () => {
-        setshowModal(!showModal);
-    };
-
+    const [editing, setEditing] = useState(false);
     const isAnonymous = props.content.privacy === 'ANONYMOUS';
     const isPrivate = props.content.privacy === 'PRIVATE';
+
+    const toggleModal = () => {
+        setshowModal(prev => {
+            if (prev) {
+                editHandler(false);
+            }
+            return !prev;
+        });
+    };
+
+    const editHandler = (inEditMode) => {
+        setEditing(inEditMode);
+    }
 
     const likeHandler = async () => {
         if (auth.isLoggedIn){
@@ -157,7 +166,7 @@ export default function EntryCards(props) {
                         {!isLiked && <FavoriteIcon />}
                     </IconButton>
                     {isEditable &&
-                        <IconButton aria-label='edit'>
+                        <IconButton aria-label='edit' onClick={()=>{toggleModal();editHandler(true);}}>
                             <EditIcon />
                         </IconButton>
                     }
@@ -170,7 +179,8 @@ export default function EntryCards(props) {
             {showModal && (
                 <JournalModal
                     journal={props.content}
-                    editing={false}
+                    editing={editing}
+                    onEdit={editHandler}
                     handleClose={toggleModal}
                     authorMode={isEditable}
                     updateJournals={props.updateJournals}
