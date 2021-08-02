@@ -8,11 +8,6 @@ app.use(cors());
 
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
-const DB_NAME = 'TreeHole';
-const mongoURL =
-    'mongodb+srv://CallbackKarma:treehole2021@cluster0.uyjr5.mongodb.net/' +
-    DB_NAME +
-    '?retryWrites=true&w=majority';
 const userController = require('./controller/UserControllers');
 const journalController = require('./controller/JournalControllers');
 const path = require("path");
@@ -20,7 +15,7 @@ const path = require("path");
 let server = app.listen(PORT, function () {
     let port = server.address().port;
     mongoose
-        .connect(mongoURL, {
+        .connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,

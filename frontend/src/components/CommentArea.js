@@ -91,33 +91,35 @@ function CommentArea(props) {
                 </Box>
             )}
 
-            <MuiDialogContent dividers>
-                <Typography component={'span'}>
-                    <Box display='flex'>
-                        <Avatar>ME</Avatar>
-                        <Box mx={3} width={'70%'}>
-                            <TextField
-                                size='small'
-                                multiline
-                                fullWidth
-                                id='outlined-basic'
-                                placeholder='write your comment'
-                                variant='outlined'
-                                onChange={handleCommentChange}
-                                value={comment}
-                            />
+            {auth.isLoggedIn &&
+                <MuiDialogContent dividers>
+                    <Typography component={'span'}>
+                        <Box display='flex'>
+                            <Avatar>ME</Avatar>
+                            <Box mx={3} width={'70%'}>
+                                <TextField
+                                    size='small'
+                                    multiline
+                                    fullWidth
+                                    id='outlined-basic'
+                                    placeholder='write your comment'
+                                    variant='outlined'
+                                    onChange={handleCommentChange}
+                                    value={comment}
+                                />
+                            </Box>
+                            <Button
+                                variant='contained'
+                                color='primary'
+                                onClick={handlePost}
+                            >
+                                {' '}
+                                post
+                            </Button>
                         </Box>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            onClick={handlePost}
-                        >
-                            {' '}
-                            post
-                        </Button>
-                    </Box>
-                </Typography>
-            </MuiDialogContent>
+                    </Typography>
+                </MuiDialogContent>
+            }
         </>
     );
 }
