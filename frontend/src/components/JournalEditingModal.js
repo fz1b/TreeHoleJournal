@@ -113,7 +113,7 @@ export default function CustomizedDialogs({
     journal,
     handleClose,
     authorMode,
-    updateJournals,
+    refreshJournals,
     handleEdit,
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
@@ -140,10 +140,14 @@ export default function CustomizedDialogs({
     const handleContentChange = (e) => {
         setContent(e.target.value);
     };
+
     const handleDelete = () => {
         handleClose();
         deleteJournal(auth.token, journal._id)
-            .then(updateJournals())
+            .then(() => {
+                S3Client.deleteFile(journal.image.split('/')[3]);
+            })
+            .then(refreshJournals())
             .catch((err) => {
                 console.log(err);
             });
@@ -166,8 +170,8 @@ export default function CustomizedDialogs({
                 );
                 setLoaded(true);
                 imageURL = data.location;
-            }else{
-                imageURL = journal.image
+            } else {
+                imageURL = journal.image;
             }
 
             if (!journal._id) {
@@ -181,7 +185,7 @@ export default function CustomizedDialogs({
                     location,
                     privacy
                 );
-                await updateJournals();
+                await refreshJournals();
                 handleClose();
             } else {
                 await editJournal(
@@ -194,7 +198,7 @@ export default function CustomizedDialogs({
                     content,
                     privacy
                 );
-                await updateJournals();
+                await refreshJournals();
                 setIsSaving(false);
                 handleEdit(false);
             }

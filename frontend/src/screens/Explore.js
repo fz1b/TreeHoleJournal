@@ -97,7 +97,7 @@ export default function Explore() {
                         clearSearch={handleClearSearch}
                     />
                 )}
-                <CardHolder journals={journals} showCalendar={false} updateJournals={fetchJournals}/>
+                <CardHolder journals={journals} showCalendar={false} refreshJournals={fetchJournals}/>
             </div>
         </ThemeProvider>
     );

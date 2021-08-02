@@ -11,7 +11,7 @@ function JournalModal(props) {
                     handleClose={props.handleClose}
                     handleEdit={props.onEdit}
                     authorMode={props.authorMode}
-                    updateJournals={props.updateJournals}
+                    refreshJournals={props.refreshJournals}
                 />
             )}
             {!props.editing && (
@@ -20,7 +20,7 @@ function JournalModal(props) {
                     handleEdit={props.onEdit}
                     handleClose={props.handleClose}
                     authorMode={props.authorMode}
-                    updateJournals={props.updateJournals}
+                    refreshJournals={props.refreshJournals}
                     like={props.like}
                     onLike={props.onLike}
                 />

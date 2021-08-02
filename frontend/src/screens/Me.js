@@ -106,7 +106,7 @@ export default function Me() {
         fetchJournals();
     }, [auth.token, fetchJournals]);
 
-    const updateJournals = () => {
+    const refreshJournals = () => {
         // refresh the page to re-render CardHolder
         // window.location.reload();
         getUserJournals(auth.token)
@@ -147,7 +147,7 @@ export default function Me() {
                         editing={true}
                         handleClose={handleModalClose}
                         authorMode={true}
-                        updateJournals={updateJournals}
+                        refreshJournals={refreshJournals}
                     >
                         {' '}
                         handleSave={handleSave}{' '}
@@ -164,7 +164,7 @@ export default function Me() {
                     handleDateSelection={handleDateSelection}
                     journals={journals}
                     showCalendar={true}
-                    updateJournals={updateJournals}
+                    refreshJournals={refreshJournals}
                 />
             </div>
         </ThemeProvider>
