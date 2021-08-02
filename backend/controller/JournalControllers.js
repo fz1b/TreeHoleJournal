@@ -432,6 +432,7 @@ const deleteComment = async (req, res) => {
 const getJournalLike = async (req, res) => {
     const idToken = req.params.idToken;
     const journalId = req.params.journalId;
+    let userResponse;
     if (!idToken || !journalId) {
         return res
             .status(400)
