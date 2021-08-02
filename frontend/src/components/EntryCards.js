@@ -43,7 +43,6 @@ export default function EntryCards(props) {
     const [isLiked, setIsLiked] = useState(false);
     const [editing, setEditing] = useState(false);
     const isAnonymous = props.content.privacy === 'ANONYMOUS';
-    const isPrivate = props.content.privacy === 'PRIVATE';
 
     const toggleModal = () => {
         setshowModal(prev => {
@@ -101,7 +100,7 @@ export default function EntryCards(props) {
                 if (isMounted) setIsLiked(false);
             });
         return () => { isMounted = false };
-    }, [auth.token, props.content._id]);
+    }, [auth.token, props.content._id, props.content.privacy]);
 
     return (
         <>
@@ -118,15 +117,7 @@ export default function EntryCards(props) {
                             {props.content.avatar}
                         </Avatar>
                     }
-                    title={
-                        isAnonymous
-                            ? isEditable
-                                ? authorName + ' (Anonymous)'
-                                : 'Anonymous'
-                            : (isPrivate
-                                ? authorName+' (private)'
-                                : authorName)
-                    }
+                    title={authorName}
                     subheader={props.content.date.toDateString()}
                 />
                 <CardActionArea style={{ display: 'block' }}>
