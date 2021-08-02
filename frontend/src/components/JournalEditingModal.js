@@ -15,11 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { BootstrapInput } from './CustomizedComponents';
-import {
-    createJournal,
-    deleteJournal,
-    editJournal,
-} from '../services/JournalServices';
+import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
@@ -190,57 +186,14 @@ export default function CustomizedDialogs({
         }
     };
 
-    const handleSave = async (
-        title,
-        date,
-        weather,
-        content,
-        location,
-        privacy
-    ) => {
-        try {
-            if (files.length > 0) {
-                const data = await S3Client.uploadFile(
-                    files[0],
-                    sha256(files[0].name)
-                );
+    const uploadFiles = () => {
+        S3Client.uploadFile(files[0], sha256(files[0].name))
+            .then((data) => {
+                console.log(data.location);
                 setLoaded(true);
-                imageURL = data.location;
-            }else{
-                imageURL = journal.image
-            }
-
-            if (!journal._id) {
-                await createJournal(
-                    auth.token,
-                    title,
-                    date,
-                    imageURL,
-                    weather,
-                    content,
-                    location,
-                    privacy
-                );
-                await updateJournals();
-                await handleClose();
-            } else {
-                await editJournal(
-                    journal.author_id,
-                    journal._id,
-                    title,
-                    date,
-                    imageURL,
-                    weather,
-                    content,
-                    privacy
-                );
-                await updateJournals();
-                await handleClose();
-            }
-        } catch (err) {
-            console.log(err);
-        }
-        handleEdit(false);
+                setCoverImg(data.location);
+            })
+            .catch((err) => console.error(err));
     };
 
     const thumbsContainer = {
@@ -325,24 +278,14 @@ export default function CustomizedDialogs({
                     />
                 </DialogTitle>
                 <DialogContent dividers>
-                    {files.length === 0 && <Image src={journal.image} alt='' />}
+                <Image src={journal.image} alt='' />
                     <section className='container'>
-                        {files.length === 0 && (
+                        {(files.length === 0 && !journal.image )&& (
                             <Dropzone
                                 {...getRootProps({ className: 'dropzone' })}
                             >
                                 <input {...getInputProps()} />
-                                {!journal.image && (
-                                    <p>
-                                        Drag the cover image, or click to upload
-                                    </p>
-                                )}
-                                {journal.image && (
-                                    <p>
-                                        Drag the cover image, or click to
-                                        replace current
-                                    </p>
-                                )}
+                                <p>Drag the cover image, or click to upload</p>
                             </Dropzone>
                         )}
                         <aside style={thumbsContainer}>{thumbs}</aside>
@@ -354,7 +297,7 @@ export default function CustomizedDialogs({
                                 marginBottom: 20,
                             }}
                         >
-                            {files.length !== 0 && (
+                            {(files.length !== 0 && !journal.image )&& (
                                 <div>
                                     <Button
                                         onClick={() => setFiles([])}
