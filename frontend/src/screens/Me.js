@@ -64,10 +64,12 @@ export default function Me() {
         setSearchContent(content);
     };
     const handleSearch = () => {
-        searchUserJournals(auth.token, searchContent).then((res) => {
-            setJournals(res);
-        });
-        setShowSearchTag(true);
+        if(searchContent){
+            searchUserJournals(auth.token, searchContent).then((res) => {
+                setJournals(res);
+            });
+            setShowSearchTag(true);
+        }
     };
 
     const handleCompose = () => {

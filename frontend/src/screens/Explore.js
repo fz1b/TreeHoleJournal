@@ -44,10 +44,12 @@ export default function Explore() {
         setSearchContent(content);
     };
     const handleSearch = () => {
-        searchExploreJournals(searchContent).then((res) => {
-            setJournals(res);
-        });
-        setShowSearchTag(true);
+        if(searchContent){
+            searchExploreJournals(searchContent).then((res) => {
+                setJournals(res);
+            });
+            setShowSearchTag(true);
+        }
     };
     const fetchJournals = () => {
         getExploreJournals()
