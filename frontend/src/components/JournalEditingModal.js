@@ -120,6 +120,7 @@ export default function CustomizedDialogs({
     const [content, setContent] = useState(journal.content);
     const [location, setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
+    const [isSaving, setIsSaving] = useState(false);
     const auth = useContext(AuthContext);
 
     const handleLocation = (loc) => {
@@ -157,6 +158,7 @@ export default function CustomizedDialogs({
         privacy
     ) => {
         try {
+            setIsSaving(true);
             if (files.length > 0) {
                 const data = await S3Client.uploadFile(
                     files[0],
@@ -180,7 +182,7 @@ export default function CustomizedDialogs({
                     privacy
                 );
                 await updateJournals();
-                await handleClose();
+                handleClose();
             } else {
                 await editJournal(
                     journal.author_id,
@@ -193,12 +195,12 @@ export default function CustomizedDialogs({
                     privacy
                 );
                 await updateJournals();
-                await handleClose();
             }
         } catch (err) {
             console.log(err);
         }
         handleEdit(false);
+        setIsSaving(false);
     };
 
     const thumbsContainer = {
@@ -370,6 +372,7 @@ export default function CustomizedDialogs({
                                 <Button
                                     variant='contained'
                                     color='primary'
+                                    disabled={isSaving}
                                     onClick={() =>
                                         handleSave(
                                             title,
