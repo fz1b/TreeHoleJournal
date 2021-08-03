@@ -38,9 +38,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const newJournal = {
+let newJournal = {
     title: '',
-    date: new Date(),
+    date: '',
     coverImage: '',
     content: '',
     location: null,
@@ -73,6 +73,7 @@ export default function Me() {
     };
 
     const handleCompose = () => {
+        newJournal.date = new Date();
         setShowModal(true);
     };
     const handleModalClose = () => {
