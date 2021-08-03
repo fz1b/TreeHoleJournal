@@ -159,7 +159,6 @@ export default function CustomizedDialogs({
         location,
         privacy
     ) => {
-        console.log(location);
         try {
             setIsSaving(true);
             if (files.length > 0) {
