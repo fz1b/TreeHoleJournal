@@ -52,7 +52,7 @@ function Comment(props) {
         .catch((err) => {
             // do nothing, display empty profile pic
         });
-    },[props.journalID, props.comment._id, props.myName])
+    },[props.journalID, props.comment._id, props.myName, props.authorMode])
 
     return (
         <Box display='flex' mb={2}>
