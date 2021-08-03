@@ -24,9 +24,10 @@ const Date = styled.span`
 // `;
 
 function Comment(props) {
-    const [name, setName] = useState('');
+    const [name, setName] = useState('name');
     const [initial, setInitial] = useState('');
     const [anchorEl,setAnchorEl] = useState(null);
+    const [isEditable, setIsEditable] = useState(false);
 
     const handleCommentEdit = (event) => {
         setAnchorEl(event.currentTarget);
@@ -42,11 +43,16 @@ function Comment(props) {
         .then((res) => {
             setName(res.name);
             setInitial(res.name.charAt(0));
+            if (res.name=== props.myName) {
+                setIsEditable(true);
+            } else {
+                setIsEditable(false);
+            }
         })
         .catch((err) => {
             // do nothing, display empty profile pic
         });
-    },[props.journalID, props.comment._id])
+    },[props.journalID, props.comment._id, props.myName])
 
     return (
         <Box display='flex' mb={2}>
@@ -68,8 +74,7 @@ function Comment(props) {
                     <Date>{props.comment.date.toDateString()}</Date>
                 </Box>
             </Box>
-            {/* TODO: determine edit on the backend */}
-            {true && (
+            {isEditable && (
                 <span onClick={handleCommentEdit}>
                     <IconButton size='small'>
                         <FiMoreVertical />

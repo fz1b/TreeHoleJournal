@@ -11,7 +11,7 @@ import AuthContext from '../authAPI/auth-context';
 
 function CommentArea(props) {
     const [comment, setComment] = useState('');
-    const [comments, setComments] = useState([]);
+    const [comments, setComments] = useState(props.comments);
     // const [anchorEl, setAnchorEl] = useState(null);
     const auth = useContext(AuthContext);
 
@@ -61,6 +61,7 @@ function CommentArea(props) {
                                 comment={c}
                                 journalID={props.journalID}
                                 handleDeleteComment={handleDeleteComment}
+                                myName={auth.userName}
                             />
                             )
                             

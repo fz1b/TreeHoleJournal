@@ -26,6 +26,7 @@ async function userService(request, type) {
         token: response.data.idToken,
         expirationTime: expirationTime.toISOString(),
         refreshToken: response.data.refreshToken,
+        userName: response.data.userData.name
     };
     return tokenData;
 }
@@ -57,4 +58,14 @@ export async function unlikeJournal(request) {
         await axios.post('/users/like/remove', request, {
             headers: { 'Content-Type': 'application/json' }});
     } catch(err) {}
+}
+
+export async function getUserInfo(request) {
+    try {
+        let response = await axios.get('users/info/'+ request.idToken, request, {
+            headers: {'Content-Type': 'application/json'}});
+        return response.data.userData.name;
+    } catch(err) {
+        return null;
+    }
 }

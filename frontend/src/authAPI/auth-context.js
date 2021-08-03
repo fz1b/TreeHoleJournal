@@ -7,6 +7,7 @@ const AuthContext = React.createContext({
     token: '',
     isLoggedIn: false,
     refreshToken: '',
+    userName: '',
     loginHandler: (tokenData) => {},
     logoutHandler: () => {},
 });
@@ -16,6 +17,7 @@ export const AuthContextProvider = (props) => {
         token: localStorage.getItem('token'),
         expirationTime: localStorage.getItem('expirationTime'),
         refreshToken: localStorage.getItem('refreshToken'),
+        userName: localStorage.getItem('userName')
     };
     if (initData.expirationTime !== '') {
         const overTime =
@@ -26,6 +28,7 @@ export const AuthContextProvider = (props) => {
                 token: '',
                 expirationTime: '',
                 refreshToken: '',
+                userName: ''
             };
         }
     }
@@ -35,6 +38,7 @@ export const AuthContextProvider = (props) => {
         initData.expirationTime
     );
     const [refreshToken, setRefreshToken] = useState(initData.refreshToken);
+    const [userName, setUserName] = useState(initData.userName);
     const isLoggedIn = !!token;
 
     const loginHandler = (tokenData) => {
@@ -44,6 +48,8 @@ export const AuthContextProvider = (props) => {
         localStorage.setItem('expirationTime', tokenData.expirationTime);
         setRefreshToken(tokenData.refreshToken);
         localStorage.setItem('refreshToken', tokenData.refreshToken);
+        setUserName(tokenData.userName);
+        localStorage.setItem('userName', tokenData.userName);
     };
 
     const logoutHandler = () => {
@@ -53,6 +59,8 @@ export const AuthContextProvider = (props) => {
         localStorage.removeItem('expirationTime');
         setRefreshToken('');
         localStorage.removeItem('refreshToken');
+        setUserName('');
+        localStorage.removeItem('userName');
     };
 
     const refreshHandler = useCallback(async () => {
@@ -95,6 +103,7 @@ export const AuthContextProvider = (props) => {
         token: token,
         isLoggedIn: isLoggedIn,
         refreshToken: refreshToken,
+        userName: userName,
         loginHandler: loginHandler,
         logoutHandler: logoutHandler,
     };
