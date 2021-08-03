@@ -59,13 +59,3 @@ export async function unlikeJournal(request) {
             headers: { 'Content-Type': 'application/json' }});
     } catch(err) {}
 }
-
-export async function getUserInfo(request) {
-    try {
-        let response = await axios.get('users/info/'+ request.idToken, request, {
-            headers: {'Content-Type': 'application/json'}});
-        return response.data.userData.name;
-    } catch(err) {
-        return null;
-    }
-}
