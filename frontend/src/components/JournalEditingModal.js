@@ -159,6 +159,7 @@ export default function CustomizedDialogs({
         location,
         privacy
     ) => {
+        console.log(location);
         try {
             setIsSaving(true);
             if (files.length > 0) {
@@ -194,6 +195,7 @@ export default function CustomizedDialogs({
                     imageURL,
                     weather,
                     content,
+                    location,
                     privacy
                 );
                 await updateJournals();
@@ -351,7 +353,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
-                <JournalLocation handleLocation={handleLocation} />
+                <JournalLocation handleLocation={handleLocation} address={journal.location?journal.location.address:""} editing={true}/>
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (

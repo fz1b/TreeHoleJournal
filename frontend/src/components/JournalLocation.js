@@ -3,7 +3,7 @@ import {HiOutlineLocationMarker} from 'react-icons/hi';
 import { IconContext } from "react-icons";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import PlacesAutocomplete, {
@@ -13,12 +13,13 @@ import PlacesAutocomplete, {
 
 const LocationContent = withStyles((theme) => ({
     root: {
-        padding:"10px"
+        padding:"10px",
+        minHeight:"40px"
     },
 }))(MuiDialogContent);
-function JournalLocation({handleLocation, address}){
+function JournalLocation({handleLocation, address, editing}){
     const[showInput,setShowInput] = useState(false);
-    const [location, setLocation] = useState("");
+    const [location, setLocation] = useState(address);
     const handleLocationAdd = ()=>{
         setShowInput(true);
     }
@@ -30,6 +31,9 @@ function JournalLocation({handleLocation, address}){
                         lng:latLng.lng})
         setLocation(value);
     }
+    useEffect(()=>{
+        setLocation(address)
+    },[address])
 return(
     <>
     <LocationContent dividers={true}>
@@ -45,17 +49,17 @@ return(
         <HiOutlineLocationMarker size={30}/>
          </IconContext.Provider>
         </Box>
-        {address && <div style={{color:"gray"}}>
+        {address&&!editing&& <div style={{color:"gray"}}>
                             {address}
                         </div>}
         {!showInput&&!address &&<Button color="primary" size="small" style={{fontSize: 'medium'}} onClick={handleLocationAdd}>Add a Location</Button>} 
-        {showInput&&
+        {(showInput||editing) &&
         <TextField 
                         id='outlined-basic'
                         variant='outlined'
                         size='small'
                         fullWidth
-                        value={""}
+                        value={address}
                         {...getInputProps({ placeholder: "Type location..." })}
                     />}
             </Box>
