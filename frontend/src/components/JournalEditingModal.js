@@ -119,7 +119,7 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState(journal.location);
     const [title, setTitle] = useState(journal.title);
     const [isSaving, setIsSaving] = useState(false);
     const auth = useContext(AuthContext);
