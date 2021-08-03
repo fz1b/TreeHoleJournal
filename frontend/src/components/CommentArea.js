@@ -62,6 +62,7 @@ function CommentArea(props) {
                                 journalID={props.journalID}
                                 handleDeleteComment={handleDeleteComment}
                                 myName={auth.userName}
+                                authorMode={props.authorMode}
                             />
                             )
                             

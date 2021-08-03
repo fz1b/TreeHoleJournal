@@ -43,7 +43,7 @@ function Comment(props) {
         .then((res) => {
             setName(res.name);
             setInitial(res.name.charAt(0));
-            if (res.name=== props.myName) {
+            if (res.name=== props.myName || props.authorMode) {
                 setIsEditable(true);
             } else {
                 setIsEditable(false);
