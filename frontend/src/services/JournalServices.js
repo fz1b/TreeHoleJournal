@@ -224,6 +224,7 @@ export function editJournal(
     image,
     weather,
     content,
+    location,
     privacy
 ) {
     return axios
@@ -233,6 +234,7 @@ export function editJournal(
             image: image,
             weather: weather,
             content: content,
+            location:location,
             privacy: privacy,
         })
         .then((res) => {
