@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -11,9 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import { FiEdit } from 'react-icons/fi';
 import Badge from '@material-ui/core/Badge';
 import styled from 'styled-components';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { BootstrapInput } from './CustomizedComponents';
 import imgPlaceholder from '../assets/photo_placeholder.svg';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
@@ -93,20 +90,23 @@ export default function CustomizedDialogs({
     handleClose,
     authorMode,
     updateJournals,
+    like,
+    onLike
 }) {
-    const [visibility, setVisibility] = useState(journal.privacy);
-    const [liked, setLiked] = useState(false);
+    const [liked, setLiked] = useState(like);
     const [showComments, setShowComments] = useState(false);
 
-    const handleVisibilityChange = (event) => {
-        setVisibility(event.target.value);
-    };
     const handleLike = () => {
         setLiked((state) => !state);
+        onLike();
     };
     const handleShowComments = () => {
         setShowComments((prev) => !prev);
     };
+
+    useEffect(() => {
+        setLiked(like);
+    }, [like])
 
     return (
         <div>
@@ -131,23 +131,13 @@ export default function CustomizedDialogs({
                         {journal.content}
                     </Typography>
                 </DialogContent>
-               {journal.location&& <JournalLocation address={journal.location.address}/>}
+                {journal.location && <JournalLocation address={journal.location.address} />}
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
-                        <>
-                            <Select
-                                labelId='demo-customized-select-label'
-                                id='demo-customized-select'
-                                value={visibility}
-                                onChange={handleVisibilityChange}
-                                input={<BootstrapInput />}
-                            >
-                                <MenuItem value='PUBLIC'>public</MenuItem>
-                                <MenuItem value='ANONYMOUS'>anonymous</MenuItem>
-                                <MenuItem value='PRIVATE'>private</MenuItem>
-                            </Select>
-                        </>
+                        <Typography component={'span'} gutterBottom>
+                            {journal.privacy}
+                        </Typography>
                     )}
                     <>
                         <span onClick={handleLike}>

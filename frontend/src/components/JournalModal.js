@@ -1,31 +1,28 @@
-import { useState } from 'react';
 import JournalEditingModal from './JournalEditingModal';
 import JournalViewingModal from './JournalViewingModal';
 
 function JournalModal(props) {
-    const [editing, setEditing] = useState(props.editing);
-    const handleEdit = (edit) => {
-        setEditing(edit);
-    };
 
     return (
         <>
-            {editing && (
+            {props.editing && (
                 <JournalEditingModal
                     journal={props.journal}
                     handleClose={props.handleClose}
-                    handleEdit={handleEdit}
+                    handleEdit={props.onEdit}
                     authorMode={props.authorMode}
                     updateJournals={props.updateJournals}
                 />
             )}
-            {!editing && (
+            {!props.editing && (
                 <JournalViewingModal
                     journal={props.journal}
-                    handleEdit={handleEdit}
+                    handleEdit={props.onEdit}
                     handleClose={props.handleClose}
                     authorMode={props.authorMode}
                     updateJournals={props.updateJournals}
+                    like={props.like}
+                    onLike={props.onLike}
                 />
             )}
         </>

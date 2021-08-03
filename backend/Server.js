@@ -8,11 +8,6 @@ app.use(cors());
 
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
-const DB_NAME = 'TreeHole';
-const mongoURL =
-    'mongodb+srv://CallbackKarma:treehole2021@cluster0.uyjr5.mongodb.net/' +
-    DB_NAME +
-    '?retryWrites=true&w=majority';
 const userController = require('./controller/UserControllers');
 const journalController = require('./controller/JournalControllers');
 const path = require("path");
@@ -20,7 +15,7 @@ const path = require("path");
 let server = app.listen(PORT, function () {
     let port = server.address().port;
     mongoose
-        .connect(mongoURL, {
+        .connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
@@ -101,6 +96,8 @@ app.put(
     '/me/:user_id/:journal_id/privacy',
     journalController.editJournalPrivacySetting
 );
+// get if user has liked this post
+app.get('/journal/likeinfo/:idToken/:journalId', journalController.getJournalLike);
 
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));

@@ -13,54 +13,94 @@ import {
     IconButton,
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/Edit';
-import { red, grey } from '@material-ui/core/colors';
-import {getJournalAuthor, verifyEditingAccess} from '../services/JournalServices';
+import { grey } from '@material-ui/core/colors';
+import { getJournalAuthor, getJournalLikeStatus, verifyEditingAccess } from '../services/JournalServices';
+import { likeJournal, unlikeJournal } from '../services/UserServices';
 import AuthContext from '../authAPI/auth-context';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
     avatar: {
-        backgroundColor: red[500],
+        backgroundColor: '#50A9C1',
     },
     anonymous_avatar: {
         backgroundColor: grey[500],
     },
-});
+    heart_red: {
+        color: '#b95050'
+    },
+})
 
 export default function EntryCards(props) {
     const classes = useStyles();
     const auth = useContext(AuthContext);
+    const history = useHistory();
 
     const [showModal, setshowModal] = useState(false);
-    const [isPublic, setVisibility] = useState(
-        props.content.privacy === 'PUBLIC'
-    );
     const [authorName, setAuthorName] = useState('');
     const [isEditable, setEditable] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const isAnonymous = props.content.privacy === 'ANONYMOUS';
 
     const toggleModal = () => {
-        setshowModal(!showModal);
+        setshowModal(prev => {
+            if (prev) {
+                editHandler(false);
+            }
+            return !prev;
+        });
     };
 
-    const isAnonymous = props.content.privacy === 'ANONYMOUS';
-    const isMe = props.context === 'me';
+    const editHandler = (inEditMode) => {
+        setEditing(inEditMode);
+    }
 
+    const likeHandler = async () => {
+        if (auth.isLoggedIn){
+            let likePrev;
+            setIsLiked((prev) => {
+                likePrev = prev;
+                return !prev;
+            });
+            const req = {
+                journalId: props.content._id,
+                idToken: auth.token
+            }
+            if (likePrev) {await unlikeJournal(req);}
+            else {await likeJournal(req);}
+        } else {
+            history.push('/login');
+        }
+    }
+
+    // loads up slowly. 
+    // If the user goes to login before useEffect finish fetching the data
+    // Will run the cleanup function
     useEffect(() => {
+        let isMounted = true;
         getJournalAuthor(props.content._id)
             .then((res) => {
-                setAuthorName(res.name);
+                if (isMounted) setAuthorName(res.name);
             })
             .catch((err) => {
                 // do nothing and use empty author
             });
 
         verifyEditingAccess(props.content._id, auth.token).then(res => {
-            setEditable(res);
+            if (isMounted) setEditable(res);
         }).catch(err => {
-            setEditable(false);
-        })
-    }, [auth.token, props.content._id]);
+            if (isMounted) setEditable(false);
+        });
+        getJournalLikeStatus(auth.token, props.content._id)
+            .then((res) => {
+                if (isMounted) setIsLiked(res);
+            }).catch((err) => {
+                if (isMounted) setIsLiked(false);
+            });
+        return () => { isMounted = false };
+    }, [auth.token, props.content._id, props.content.privacy]);
 
     return (
         <>
@@ -77,13 +117,7 @@ export default function EntryCards(props) {
                             {props.content.avatar}
                         </Avatar>
                     }
-                    title={
-                        isAnonymous
-                            ? isMe
-                                ? authorName + ' (Anonymous)'
-                                : 'Anonymous'
-                            : authorName
-                    }
+                    title={authorName}
                     subheader={props.content.date.toDateString()}
                 />
                 <CardActionArea style={{ display: 'block' }}>
@@ -118,25 +152,31 @@ export default function EntryCards(props) {
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
-                    <IconButton aria-label='add to favorites'>
-                        <FavoriteIcon />
+                    <IconButton aria-label='add to favorites' onClick={likeHandler}>
+                        {isLiked && <FavoriteIcon className={classes.heart_red} />}
+                        {!isLiked && <FavoriteIcon />}
                     </IconButton>
-                    <IconButton aria-label='edit'>
-                        {!isPublic && <EditIcon />}
-                    </IconButton>
-                    <IconButton aria-label='share'>
-                        {isPublic && <ShareIcon />}
-                    </IconButton>
+                    {isEditable &&
+                        <IconButton aria-label='edit' onClick={()=>{toggleModal();editHandler(true);}}>
+                            <EditIcon />
+                        </IconButton>
+                    }
+                    {/* <IconButton aria-label='share'>
+                        <ShareIcon />
+                    </IconButton> */}
                 </CardActions>
             </Card>
 
             {showModal && (
                 <JournalModal
                     journal={props.content}
-                    editing={false}
+                    editing={editing}
+                    onEdit={editHandler}
                     handleClose={toggleModal}
                     authorMode={isEditable}
                     updateJournals={props.updateJournals}
+                    like = {isLiked}
+                    onLike = {likeHandler}
                 />
             )}
         </>

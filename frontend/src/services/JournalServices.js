@@ -45,7 +45,7 @@ export function getNearbyJournals(lat, lng) {
     return axios
         .get('/explore')
         .then((res) => {
-            let journals=res.data.filter((j)=>j.location);
+            let journals=processJournals(res.data).filter((j)=>j.location);
             journals.sort(function(a,b){
                 const distA = getDistance(
                     {latitude: lat, longitude: lng},
@@ -142,7 +142,7 @@ export function getJournalAuthor(journal_id) {
         .get('/journals/author/' + journal_id)
         .then((res) => {
             // console.log(res.data);
-            return res.data.data;
+            return res.data;
         })
         .catch((err) => {
             console.error(err);
@@ -334,4 +334,19 @@ export function getCommentAuthor(journal_id, comment_id) {
             console.error(err);
             return {};
         });
+}
+
+// get like status of the journal when given user token and journal id
+// req-param: idToken, journal_id
+// response: true or false
+export async function getJournalLikeStatus(idToken, journal_id) {
+    if(!idToken || !journal_id) {
+        return false;
+    }
+    try {
+        const response = await axios.get('/journal/likeinfo/'+idToken + '/' +journal_id);
+        return response.data.like;
+    } catch(err){
+        return false;
+    }
 }

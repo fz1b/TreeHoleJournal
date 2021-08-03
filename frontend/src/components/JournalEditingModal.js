@@ -1,4 +1,5 @@
-import React, {useContext, useEffect} from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'
 import { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -15,10 +16,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { BootstrapInput } from './CustomizedComponents';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import { BsFillChatSquareDotsFill } from 'react-icons/bs';
-import { IconContext } from 'react-icons';
-import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
+import {
+    createJournal,
+    deleteJournal,
+    editJournal,
+} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
 import { useDropzone } from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
@@ -78,7 +80,6 @@ const DialogActions = withStyles((theme) => ({
 const Date = styled.span`
     position: absolute;
     right: 75%;
-
 `;
 
 const Dropzone = styled.div`
@@ -97,6 +98,18 @@ const Dropzone = styled.div`
     transition: border 0.24s ease-in-out;
 `;
 
+const Image = styled.img`
+    width: 100%;
+    border-radius: 10px;
+`;
+
+const config = {
+    bucketName: 'treehole',
+    region: 'us-west-1',
+    accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+    secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
+};
+
 export default function CustomizedDialogs({
     journal,
     handleClose,
@@ -106,25 +119,19 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
-    const [location,setLocation] = useState(null);
+    const [location, setLocation] = useState(null);
     const [title, setTitle] = useState(journal.title);
-    const [coverImg, setCoverImg] = useState(journal.image);
-    const [liked, setLiked] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const auth = useContext(AuthContext);
+    const route = useLocation();
 
-    const handleLocation = (loc)=>{
+    const handleLocation = (loc) => {
         setLocation(loc);
-    }
+    };
     const [files, setFiles] = useState([]);
     const [uploaded, setLoaded] = useState(false);
-    
-    const config = {
-        bucketName: 'treehole',
-        region: 'us-west-1',
-        accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
-        secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
-    };
     const S3Client = new S3(config);
+    let imageURL = '';
 
     const handlePrivacyChange = (event) => {
         setPrivacy(event.target.value);
@@ -137,66 +144,71 @@ export default function CustomizedDialogs({
     };
     const handleDelete = () => {
         handleClose();
-        deleteJournal(auth.token, journal._id).then(
-            updateJournals()
-        ).catch(err => {
-            console.log(err);
-        });
-    }
-    const handleLike = () => {
-        setLiked((state) => !state);
-    };
-    const handleSave = (title, date, image, weather, content, location, privacy) => {
-        if (!journal._id) {
-            // create a new journal
-            createJournal(
-                auth.token,
-                title,
-                date,
-                image,
-                weather,
-                content,
-                location,
-                privacy
-            )
-                .then((res) => {
-                    updateJournals();
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            handleClose();
-        } else {
-            // edit an existing journal
-            editJournal(
-                journal.author_id,
-                journal._id,
-                title,
-                date,
-                image,
-                weather,
-                content,
-                privacy
-            )
-                .then((res) => {
-                    updateJournals();
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            handleEdit(false);
-        }
+        deleteJournal(auth.token, journal._id)
+            .then(updateJournals())
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
-
-    const uploadFiles = () => {
-        S3Client.uploadFile(files[0], sha256(files[0].name))
-            .then((data) => {
-                console.log(data.location);
+    const handleSave = async (
+        title,
+        date,
+        weather,
+        content,
+        location,
+        privacy
+    ) => {
+        try {
+            setIsSaving(true);
+            if (files.length > 0) {
+                const data = await S3Client.uploadFile(
+                    files[0],
+                    sha256(files[0].name)
+                );
                 setLoaded(true);
-                setCoverImg(data.location);
-            })
-            .catch((err) => console.error(err));
+                imageURL = data.location;
+            }else{
+                imageURL = journal.image
+            }
+
+            if (!journal._id) {
+                await createJournal(
+                    auth.token,
+                    title,
+                    date,
+                    imageURL,
+                    weather,
+                    content,
+                    location,
+                    privacy
+                );
+                await updateJournals();
+                handleClose();
+            } else {
+                await editJournal(
+                    journal.author_id,
+                    journal._id,
+                    title,
+                    date,
+                    imageURL,
+                    weather,
+                    content,
+                    privacy
+                );
+                await updateJournals();
+                setIsSaving(false);
+                if (privacy==="PRIVATE" && route.pathname==='/') {
+                    handleClose();
+                } else {
+                    // instead of close the modal, switch to viewing mode
+                    handleEdit(false);
+                }
+            }
+        } catch (err) {
+            setIsSaving(false);
+            console.log(err);
+        }
     };
 
     const thumbsContainer = {
@@ -261,7 +273,6 @@ export default function CustomizedDialogs({
         [files]
     );
 
-
     return (
         <div>
             <Dialog
@@ -282,13 +293,24 @@ export default function CustomizedDialogs({
                     />
                 </DialogTitle>
                 <DialogContent dividers>
+                    {files.length === 0 && <Image src={journal.image} alt='' />}
                     <section className='container'>
                         {files.length === 0 && (
                             <Dropzone
                                 {...getRootProps({ className: 'dropzone' })}
                             >
                                 <input {...getInputProps()} />
-                                <p>Drag the cover image, or click to upload</p>
+                                {!journal.image && (
+                                    <p>
+                                        Drag the cover image, or click to upload
+                                    </p>
+                                )}
+                                {journal.image && (
+                                    <p>
+                                        Drag the cover image, or click to
+                                        replace current
+                                    </p>
+                                )}
                             </Dropzone>
                         )}
                         <aside style={thumbsContainer}>{thumbs}</aside>
@@ -311,15 +333,6 @@ export default function CustomizedDialogs({
                                     >
                                         Remove Upload
                                     </Button>
-                                    <Button
-                                        onClick={() => uploadFiles()}
-                                        style={buttonStyle}
-                                        variant='contained'
-                                        color='primary'
-                                        disabled={uploaded}
-                                    >
-                                        Upload Picture
-                                    </Button>
                                 </div>
                             )}
                         </div>
@@ -338,7 +351,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
-                <JournalLocation handleLocation={handleLocation}/>
+                <JournalLocation handleLocation={handleLocation} />
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
@@ -357,25 +370,6 @@ export default function CustomizedDialogs({
                         </>
                     )}
                     <>
-                        <span onClick={handleLike}>
-                            {!liked && (
-                                <IconButton>
-                                    <FaRegHeart />
-                                </IconButton>
-                            )}
-                            {liked && (
-                                <IconContext.Provider
-                                    value={{ color: '#b95050' }}
-                                >
-                                    <IconButton>
-                                        <FaHeart />
-                                    </IconButton>
-                                </IconContext.Provider>
-                            )}
-                        </span>
-                        <IconButton>
-                            <BsFillChatSquareDotsFill />
-                        </IconButton>
                         {authorMode && (
                             <>
                                 <span onClick={handleDelete}>
@@ -386,11 +380,11 @@ export default function CustomizedDialogs({
                                 <Button
                                     variant='contained'
                                     color='primary'
+                                    disabled={isSaving}
                                     onClick={() =>
                                         handleSave(
                                             title,
                                             journal.date,
-                                            coverImg,
                                             journal.weather,
                                             content,
                                             location,

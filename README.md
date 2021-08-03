@@ -34,14 +34,14 @@ Add registered professional therapist access.
 
 ### 3-7 "standard" requirements (will most likely complete)
 
-- Allow users to include images and locations in their posts
+- Allow users to include images in their posts
 - Enable other users to comment on public posts
 - Find a journal written on a specific date from the calendar
 - Control privacy settings
 - like someone's journals and include them in user's favourites folder
 
 ### 2-3 stretch requirements (plan to complete at least 1!)
-
+- Allow users to include location in their posts
 - Explore other posts by location
 - Direct messages
 - Report abuse

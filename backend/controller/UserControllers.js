@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const User = require('../models/UserSchema');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
 
-const firebaseAPIKey = 'AIzaSyDaKTAclgtccZACOapwTXYEudrvGfqNrGs';
-
 // Request Body Format
 // {
 //  'name': 'name',
@@ -60,7 +58,7 @@ const signUp = async (req, res) => {
                 returnSecureToken: true,
             },
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_KEY },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
@@ -160,7 +158,7 @@ const login = async (req, res) => {
                 returnSecureToken: true,
             },
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_KEY },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
@@ -228,7 +226,7 @@ const getUserInfoHelper = async (req, res, isSecure) => {
                 idToken: idtoken,
             },
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_KEY },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
@@ -324,7 +322,7 @@ const refreshUserIdToken = async (req, res) => {
             'https://securetoken.googleapis.com/v1/token',
             req.body,
             {
-                params: { key: firebaseAPIKey },
+                params: { key: process.env.FIREBASE_KEY },
                 headers: { 'Content-Type': 'application/json' },
             }
         );
@@ -357,13 +355,14 @@ const refreshUserIdToken = async (req, res) => {
 // }
 const likeJournalHelper = async (req, res, type) => {
     const { journalId, idToken } = req.body;
+    let userResponse;
     if (!journalId || !idToken) {
         return res
             .status(400)
             .json({ status: 400, message: 'Invalid request body' });
     }
     try {
-        userResponse = await axios.get('http://localhost:5000/users/info/secure/' + idToken);
+        userResponse = await axios.get(process.env.BACKEND_URL + 'users/info/secure/' + idToken);
     } catch (err) {
         return res.status(500).json({ status: 500, message: 'Server Error' });
     }
@@ -418,13 +417,14 @@ const unlikeJournal = async (req, res) => {
 
 const getLikedJournalsByUserToken = async (req, res) => {
     const idToken = req.params.idToken;
+    let userResponse;
     if (!idToken) {
         return res
             .status(400)
             .json({ status: 400, message: 'Invalid request body' });
     }
     try {
-        userResponse = await axios.get('http://localhost:5000/users/info/secure/' + idToken);
+        userResponse = await axios.get(process.env.BACKEND_URL + 'users/info/secure/' + idToken);
     } catch (err) {
         return res.status(500).json({ status: 500, message: 'Server Error' });
     }
