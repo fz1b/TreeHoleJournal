@@ -52,10 +52,9 @@ return(
         {address&&!editing&& <div style={{color:"gray"}}>
                             {address}
                         </div>}
-        {!showInput&&!address &&<Button color="primary" size="small" style={{fontSize: 'medium'}} onClick={handleLocationAdd}>Add a Location</Button>} 
+        {!showInput&&!editing&&!address &&<Button color="primary" size="small" style={{fontSize: 'medium'}} onClick={handleLocationAdd}>Add a Location</Button>} 
         {(showInput||editing) &&
         <TextField 
-                        id='outlined-basic'
                         variant='outlined'
                         size='small'
                         fullWidth
