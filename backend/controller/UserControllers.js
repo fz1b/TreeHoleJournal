@@ -309,6 +309,7 @@ const getUserInfoById = async (req, res) => {
 const refreshUserIdToken = async (req, res) => {
     let firebaseResponse = {};
     let response = {};
+    let userData;
 
     if (!req.body.grant_type || !req.body.refresh_token) {
         return res
@@ -338,12 +339,19 @@ const refreshUserIdToken = async (req, res) => {
             .status(500)
             .json({ status: 500, message: 'Firebase Server Error' });
     }
-
+    try {
+        userData = await User.findById(firebaseResponse.data.user_id, '-_id');
+    } catch(err) {
+        return res
+            .status(500)
+            .json({ status: 500, message: 'Internal Server Error' });
+    }
     response = {
         status: 200,
         idToken: firebaseResponse.data.id_token,
         refreshToken: firebaseResponse.data.refresh_token,
         expiresIn: firebaseResponse.data.expires_in,
+        userData: userData
     };
     return res.status(200).json(response);
 };

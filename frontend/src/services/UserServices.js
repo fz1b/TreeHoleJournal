@@ -26,6 +26,7 @@ async function userService(request, type) {
         token: response.data.idToken,
         expirationTime: expirationTime.toISOString(),
         refreshToken: response.data.refreshToken,
+        userName: response.data.userData.name
     };
     return tokenData;
 }
