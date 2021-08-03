@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,24 +17,17 @@ const Date = styled.span`
     color: grey;
 `;
 
-const DeletedName = styled.span`
-    font-size: 0.9rem;
-    font-weight: bolder;
-    color: grey;
-`;
+// const DeletedName = styled.span`
+//     font-size: 0.9rem;
+//     font-weight: bolder;
+//     color: grey;
+// `;
 
 function Comment(props) {
     const [name, setName] = useState('');
     const [initial, setInitial] = useState('');
     const [anchorEl,setAnchorEl] = useState(null);
-    const Name = styled.span`
-        font-size: 0.9rem;
-        font-weight: bolder;
-    `;
-    const Date = styled.span`
-        font-size: 0.8rem;
-        color: grey;
-    `;
+
     const handleCommentEdit = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -44,14 +37,16 @@ function Comment(props) {
     const handleDelete  = () =>{
         props.handleDeleteComment(props.comment._id)
     }
-    getCommentAuthor(props.journalID, props.comment._id)
+    useEffect(()=>{
+        getCommentAuthor(props.journalID, props.comment._id)
         .then((res) => {
             setName(res.name);
-            setInitial(name.charAt(0));
+            setInitial(res.name.charAt(0));
         })
         .catch((err) => {
             // do nothing, display empty profile pic
         });
+    },[props.journalID, props.comment._id])
 
     return (
         <Box display='flex' mb={2}>
@@ -65,8 +60,8 @@ function Comment(props) {
                 width={'80%'}
             >
                 <Box px={1}>
-                    {name && <Name>{name}</Name>}
-                    {!name && <DeletedName>Deleted</DeletedName>}
+                    <Name>{name}</Name>
+                    {/* {!name && <DeletedName>Deleted</DeletedName>} */}
                 </Box>
                 <Box px={1}>{props.comment.content}</Box>
                 <Box px={1}>
@@ -89,7 +84,7 @@ function Comment(props) {
                 onClose={handleCommentEditClose}
             >
                 <MenuItem
-                    onClick={handleDelete}
+                    onClick={()=>{handleDelete();handleCommentEditClose();}}
                 >
                     Delete
                 </MenuItem>

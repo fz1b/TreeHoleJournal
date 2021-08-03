@@ -4,14 +4,14 @@ import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { useContext, useState } from 'react';
+import { useContext, useState,useEffect } from 'react';
 import Comment from './Comment';
 import { createComment,deleteComment } from '../services/JournalServices';
 import AuthContext from '../authAPI/auth-context';
 
 function CommentArea(props) {
     const [comment, setComment] = useState('');
-    const [comments, setComments] = useState(props.comments);
+    const [comments, setComments] = useState([]);
     // const [anchorEl, setAnchorEl] = useState(null);
     const auth = useContext(AuthContext);
 
@@ -37,14 +37,16 @@ function CommentArea(props) {
                 console.log(err);
             });
     };
-    const handleDeleteComment = (commentId) => {
-        console.log(commentId);
-        deleteComment(props.journalID,commentId).then((res)=>{
-            console.log(res);
-        })
+    const handleDeleteComment = async (commentId) => {
+        await deleteComment(props.journalID,commentId);
+        await props.updateJournals();
     };
 
     const areCommentsEmpty = props.comments.length === 0;
+
+    useEffect(()=>{
+        setComments(props.comments);
+    },[props.comments])
 
     return (
         <>
