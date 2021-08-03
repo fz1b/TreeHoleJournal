@@ -4,16 +4,33 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
 const User = require('../models/UserSchema');
+const loadBatchSize = 2;
 
-// get all journals with PUBLIC or ANONYMOUS privacy setting
+// get #loadBatchSize journals with PUBLIC or ANONYMOUS setting ordered by date,
+// if a journal_id and date is provided in the query, return only the journals
+// created before the given journal (for pagination)
 // req-param: null
+// req-query: last_id (id of the last loaded journal), last_date
 // req-body: null
 // response: list of Journals JSON obj
 const getExploreJournals = async (req, res) => {
+    let filter = {
+        $or: [
+                { privacy: PRIVACY.PUBLIC },
+                { privacy: PRIVACY.ANONYMOUS }
+        ]
+    }
+    // get only the journals created before the last journal
+    if (req.query.last_id && req.query.last_date ) {
+        filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+    }
+
     Journal.find(
-        { $or: [{ privacy: PRIVACY.PUBLIC }, { privacy: PRIVACY.ANONYMOUS }] },
+        filter,
         ['-author_id', '-comments.author_id']
-    ).sort('-date')
+    )
+        .sort({ date:-1, _id:-1 })
+        .limit(loadBatchSize)
         .then((journals) => {
             // console.log(journals);
             res.status(200).json(journals);
@@ -24,40 +41,53 @@ const getExploreJournals = async (req, res) => {
         });
 };
 
-// get PUBLIC and ANONYMOUS journals that contain the criteria string in title or content
+// get #loadBatchSize journals with PUBLIC or ANONYMOUS setting
+// that contain the criteria string in title or content,
+// if a journal_id and date is provided in the query, return only the journals
+// created before the given journal (for pagination)
 // req-param: criteria
+// req-query: last_id (id of the last loaded journal), last_date
 // req-body: null
 // response: list of Journals JSON obj
 const searchExploreJournals = async (req, res) => {
+    let filter = {
+        $and: [
+            {
+                $or: [
+                    { privacy: PRIVACY.PUBLIC },
+                    { privacy: PRIVACY.ANONYMOUS },
+                ],
+            },
+            {
+                $or: [
+                    {
+                        title: {
+                            $regex: req.params.criteria,
+                            $options: '-i',
+                        },
+                    },
+                    {
+                        content: {
+                            $regex: req.params.criteria,
+                            $options: '-i',
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+
+    // get only the journals created before the last journal
+    if (req.query.last_id && req.query.last_date ) {
+        filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+    }
+
     Journal.find(
-        {
-            $and: [
-                {
-                    $or: [
-                        { privacy: PRIVACY.PUBLIC },
-                        { privacy: PRIVACY.ANONYMOUS },
-                    ],
-                },
-                {
-                    $or: [
-                        {
-                            title: {
-                                $regex: req.params.criteria,
-                                $options: '-i',
-                            },
-                        },
-                        {
-                            content: {
-                                $regex: req.params.criteria,
-                                $options: '-i',
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
+        filter,
         ['-author_id', '-comments.author_id']
-    ).sort('-date')
+    )
+        .sort({ date:-1, _id:-1 })
+        .limit(loadBatchSize)
         .then((journals) => {
             // console.log(journals);
             res.status(200).json(journals);
@@ -68,17 +98,27 @@ const searchExploreJournals = async (req, res) => {
         });
 };
 
-// get all journals from a specific user
+// get #loadBatchSize journals from a specific user
+// if a journal_id and date is provided in the query, return only the journals
+// created before the given journal (for pagination)
 // req-param: idToken
+// req-query: last_id (id of the last loaded journal), last_date
 // req-body: null
 // response: list of Journals JSON obj
 const getUserJournals = async (req, res) => {
     axios
         .get(process.env.BACKEND_URL + 'users/info/secure/' + req.params.idToken)
         .then((user) => {
-            Journal.find({ author_id: user.data.userData._id },
+            let filter = { author_id: user.data.userData._id };
+            // get only the journals created before the last journal
+            if (req.query.last_id && req.query.last_date ) {
+                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+            }
+            Journal.find(filter,
                 ['-author_id', '-comments.author_id']
-            ).sort('-date')
+            )
+                .sort({ date:-1, _id:-1 })
+                .limit(loadBatchSize)
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -94,38 +134,47 @@ const getUserJournals = async (req, res) => {
         });
 };
 
-// get the user's journals that contain the criteria string in title or content
+// get #loadBatchSize user's journals that contain the criteria string in title or content
+// if a journal_id and date is provided in the query, return only the journals
+// created before the given journal (for pagination)
 // req-param: idToken, criteria
+// req-query: last_id (id of the last loaded journal), last_date
 // req-body: null
 // response: list of Journals JSON obj
 const searchUserJournals = async (req, res) => {
     axios
         .get(process.env.BACKEND_URL + 'users/info/secure/' + req.params.idToken)
         .then((user) => {
+            let filter = {
+                $and: [
+                    { author_id: user.data.userData._id },
+                    {
+                        $or: [
+                            {
+                                title: {
+                                    $regex: req.params.criteria,
+                                    $options: '-i',
+                                },
+                            },
+                            {
+                                content: {
+                                    $regex: req.params.criteria,
+                                    $options: '-i',
+                                },
+                            },
+                        ],
+                    },
+                ],
+            };
+            if (req.query.last_id && req.query.last_date ) {
+                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+            }
             Journal.find(
-                {
-                    $and: [
-                        { author_id: user.data.userData._id },
-                        {
-                            $or: [
-                                {
-                                    title: {
-                                        $regex: req.params.criteria,
-                                        $options: '-i',
-                                    },
-                                },
-                                {
-                                    content: {
-                                        $regex: req.params.criteria,
-                                        $options: '-i',
-                                    },
-                                },
-                            ],
-                        },
-                    ],
-                },
+                filter,
                 ['-author_id', '-comments.author_id']
-            ).sort('-date')
+            )
+                .sort({ date:-1, _id:-1 })
+                .limit(loadBatchSize)
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -142,7 +191,10 @@ const searchUserJournals = async (req, res) => {
 };
 
 // get the user's journal filtered by a given date
+// if a journal_id and date is provided in the query, return only the journals
+// created before the given journal (for pagination)
 // req-param: user_token, stringified Date (YYYY-MM-DD)
+// req-query: last_id (id of the last loaded journal), last_date
 // req-body: void
 // response: list of Journals JSON obj
 const getUserJournalsByDate = async (req, res) => {
@@ -152,16 +204,22 @@ const getUserJournalsByDate = async (req, res) => {
             let start = new Date(req.params.date);
             let end = new Date(req.params.date);
             end.setDate(end.getDate()+1);
+            let filter = {
+                author_id: user.data.userData._id,
+                date: {
+                    $gte:start,
+                    $lt: end
+                }
+            }
+            if (req.query.last_id && req.query.last_date ) {
+                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+            }
             Journal.find(
-                {
-                    author_id: user.data.userData._id,
-                    date: {
-                        $gte:start,
-                        $lt: end
-                    }
-                },
+                filter,
                 ['-author_id', '-comments.author_id']
-            ).sort('-date')
+            )
+                .sort({ date:-1, _id:-1 })
+                .limit(loadBatchSize)
                 .then((journals) => {
                     // console.log(journals);
                     res.status(200).json(journals);
@@ -175,6 +233,22 @@ const getUserJournalsByDate = async (req, res) => {
             console.log(err);
             res.status(500).json(err);
         });
+}
+
+// modify the find filter so that DB load only the journals after the given journal (for pagination)
+// input: last_id (last loaded journal id), last date
+// return: the modified filter
+const modifyFilterToLoadAfter = (filter, last_id, last_date) => {
+    // get only the journals created before the last journal
+    let lastDate = new Date(last_date);
+    filter = {
+        $and: [
+            filter,
+            { date: { $lte: lastDate } },
+            { _id: { $lt: last_id}}
+        ]
+    }
+    return filter;
 }
 
 
