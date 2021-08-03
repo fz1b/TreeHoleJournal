@@ -51,7 +51,7 @@ function Comment(props) {
                     {name && <Name>{name}</Name>}
                     {!name && <DeletedName>Deleted</DeletedName>}
                 </Box>
-                <Box px={1}>{props.comment.content}</Box>
+                <Box px={1} style={{inlineSize:"100%",wordWrap:"break-word"}}>{props.comment.content}</Box>
                 <Box px={1}>
                     <Date>{props.comment.date.toDateString()}</Date>
                 </Box>
