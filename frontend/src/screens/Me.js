@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles, ThemeProvider } from '@material-ui/core';
 import { MdAddCircleOutline } from 'react-icons/md';
 import journalImg from '../assets/myjournals_bg.svg';
-import { useState, useEffect, useContext, useCallback, useRef } from "react";
+import { useState, useEffect, useContext, useCallback } from 'react';
 import JounalModal from '../components/JournalModal';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 let newJournal = {
     title: '',
-    date: '',
+    date: new Date(),
     coverImage: '',
     content: '',
     location: null,
@@ -202,8 +202,10 @@ export default function Me() {
         }
     };
 
-    const updateJournals = (last_id, last_date) => {
-        getUserJournals(auth.token, last_id, last_date)
+    const refreshJournals = () => {
+        // refresh the page to re-render CardHolder
+        // window.location.reload();
+        getUserJournals(auth.token)
             .then((res) => {
                 setJournals(res);
             })
@@ -241,7 +243,7 @@ export default function Me() {
                         editing={true}
                         handleClose={handleModalClose}
                         authorMode={true}
-                        updateJournals={updateJournals}
+                        refreshJournals={refreshJournals}
                     >
                         {' '}
                         handleSave={handleSave}{' '}
@@ -258,8 +260,7 @@ export default function Me() {
                     handleDateSelection={handleDateSelection}
                     journals={journals}
                     showCalendar={true}
-                    fetchJournals={fetchJournals}
-                    updateJournals={updateJournals}
+                    refreshJournals={refreshJournals}
                 />
                 {loading &&
                     <h1>Loading ...</h1>}

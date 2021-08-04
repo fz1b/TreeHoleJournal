@@ -182,6 +182,7 @@ export default function CustomizedDialogs({
                             journalID={journal._id}
                             comments={journal.comments}
                             updateJournals={updateJournals}
+                            authorMode={authorMode}
                         />
                     </CardContent>
                 </Collapse>

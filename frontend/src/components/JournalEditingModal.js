@@ -114,12 +114,12 @@ export default function CustomizedDialogs({
     journal,
     handleClose,
     authorMode,
-    updateJournals,
+    refreshJournals,
     handleEdit,
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState(journal.location);
     const [title, setTitle] = useState(journal.title);
     const [isSaving, setIsSaving] = useState(false);
     const auth = useContext(AuthContext);
@@ -142,14 +142,16 @@ export default function CustomizedDialogs({
     const handleContentChange = (e) => {
         setContent(e.target.value);
     };
-    const handleDelete = () => {
-        handleClose();
-        deleteJournal(auth.token, journal._id)
-            .then(updateJournals())
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+
+    const handleDelete = async () => {
+        try{
+            await S3Client.deleteFile(journal.image.split('/')[3]);
+            await deleteJournal(auth.token, journal._id);
+            refreshJournals()
+        }catch(err){
+            console.log(err)
+        }
+        };
 
     const handleSave = async (
         title,
@@ -168,8 +170,8 @@ export default function CustomizedDialogs({
                 );
                 setLoaded(true);
                 imageURL = data.location;
-            }else{
-                imageURL = journal.image
+            } else {
+                imageURL = journal.image;
             }
 
             if (!journal._id) {
@@ -183,7 +185,7 @@ export default function CustomizedDialogs({
                     location,
                     privacy
                 );
-                await updateJournals();
+                await refreshJournals();
                 handleClose();
             } else {
                 await editJournal(
@@ -194,9 +196,10 @@ export default function CustomizedDialogs({
                     imageURL,
                     weather,
                     content,
+                    location,
                     privacy
                 );
-                await updateJournals();
+                await refreshJournals();
                 setIsSaving(false);
                 if (privacy==="PRIVATE" && route.pathname==='/') {
                     handleClose();
@@ -351,7 +354,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
-                <JournalLocation handleLocation={handleLocation} />
+                <JournalLocation handleLocation={handleLocation} address={journal.location?journal.location.address:""} editing={true}/>
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (

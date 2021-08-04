@@ -174,7 +174,7 @@ export default function EntryCards(props) {
                     onEdit={editHandler}
                     handleClose={toggleModal}
                     authorMode={isEditable}
-                    updateJournals={props.updateJournals}
+                    refreshJournals={props.refreshJournals}
                     like = {isLiked}
                     onLike = {likeHandler}
                 />

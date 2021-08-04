@@ -229,6 +229,7 @@ export function editJournal(
     image,
     weather,
     content,
+    location,
     privacy
 ) {
     return axios
@@ -238,6 +239,7 @@ export function editJournal(
             image: image,
             weather: weather,
             content: content,
+            location:location,
             privacy: privacy,
         })
         .then((res) => {
@@ -296,7 +298,7 @@ export function createComment(
 // response: the journal JSON with comments added
 export function editComment(journal_id, comment_id, content, anonymous) {
     return axios
-        .put('/explore/' + journal_id + '/comments/' + comment_id, {
+        .put('/explore/comments/' + journal_id + '/' + comment_id, {
             content: content,
             anonymous: anonymous,
         })
@@ -314,7 +316,7 @@ export function editComment(journal_id, comment_id, content, anonymous) {
 // response: the journal JSON with comments deleted
 export function deleteComment(journal_id, comment_id) {
     return axios
-        .delete('/explore/' + journal_id + '/comments/' + comment_id)
+        .delete('/explore/comments/' + journal_id + '/' + comment_id)
         .then((res) => {
             return processJournal(res.data);
         })
