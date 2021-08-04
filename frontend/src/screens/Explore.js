@@ -77,7 +77,6 @@ export default function Explore() {
         getExploreJournals(last_id, last_date)
             .then((res) => {
                 setJournals(res);
-                console.log('???');
                 setLoading(false);
             })
             .catch((err) => {
@@ -89,8 +88,7 @@ export default function Explore() {
 
     useEffect(() => {
         fetchJournals(null, null);
-        console.log(loading);
-    });
+    },[auth.token]);
 
     // useEffect(() => {
     //     let isMounted = true;
