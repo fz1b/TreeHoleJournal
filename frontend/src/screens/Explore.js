@@ -99,6 +99,13 @@ export default function Explore() {
         }
         return () => { isMounted = false };
     }, [tab]);
+
+    const deleteJournalHandler = (deletedJournalId) => {
+        const newData = journals.filter((journal) => {
+            return journal._id !== deletedJournalId;
+        });
+        setJournals(newData);
+    }
     return (
         <ThemeProvider theme={customizedTheme}>
             <div className='explore'>
@@ -117,7 +124,12 @@ export default function Explore() {
                         clearSearch={handleClearSearch}
                     />
                 )}
-                <CardHolder journals={journals} showCalendar={false} updateJournals={fetchJournals} />
+                <CardHolder 
+                    journals={journals} 
+                    showCalendar={false} 
+                    refreshJournals={fetchJournals}
+                    onDelete={deleteJournalHandler}
+                />
             </div>
         </ThemeProvider>
     );

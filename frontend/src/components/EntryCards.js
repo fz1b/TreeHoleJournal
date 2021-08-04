@@ -76,6 +76,10 @@ export default function EntryCards(props) {
         }
     }
 
+    const refreshOneJournal = (journal) => {
+        setJournalContent(journal);
+    }
+
     const initializeEntryCard = useCallback(async (isMounted) => {
         try {
             const authorResponse = await getJournalAuthor(journalContent._id);
@@ -119,25 +123,23 @@ export default function EntryCards(props) {
                                     ? classes.anonymous_avatar
                                     : classes.avatar
                             }
-                        >
-                            {props.content.avatar}
-                        </Avatar>
+                        />
                     }
                     title={authorName}
-                    subheader={props.content.date.toDateString()}
+                    subheader={journalContent.date.toDateString()}
                 />
                 <CardActionArea style={{ display: 'block' }}>
                     <CardMedia
                         component='img'
-                        alt='props.content.title'
+                        alt='journalContent.title'
                         height='200'
-                        image={props.content.image}
+                        image={journalContent.image}
                         className={classes.coverImage}
                         onClick={toggleModal}
                     />
                     <CardContent onClick={toggleModal}>
                         <Typography gutterBottom variant='h5' component='h2'>
-                            {props.content.title}
+                            {journalContent.title}
                         </Typography>
                         <div
                             style={{
@@ -152,7 +154,7 @@ export default function EntryCards(props) {
                                 component='p'
                                 noWrap
                             >
-                                {props.content.content}
+                                {journalContent.content}
                             </Typography>
                         </div>
                     </CardContent>
@@ -167,15 +169,12 @@ export default function EntryCards(props) {
                             <EditIcon />
                         </IconButton>
                     }
-                    {/* <IconButton aria-label='share'>
-                        <ShareIcon />
-                    </IconButton> */}
                 </CardActions>
             </Card>
 
             {showModal && (
                 <JournalModal
-                    journal={props.content}
+                    journal={journalContent}
                     editing={editing}
                     onEdit={editHandler}
                     handleClose={toggleModal}
@@ -183,6 +182,9 @@ export default function EntryCards(props) {
                     refreshJournals={props.refreshJournals}
                     like = {isLiked}
                     onLike = {likeHandler}
+                    onDelete = {props.onDelete}
+                    isCompose = {false}
+                    onRefreshOneJournal = {refreshOneJournal}
                 />
             )}
         </>

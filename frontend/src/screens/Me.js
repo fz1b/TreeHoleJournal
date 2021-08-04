@@ -115,18 +115,19 @@ export default function Me() {
         return () => { isMounted = false };
     }, [auth.token, fetchJournals]);
 
-    const refreshJournals = () => {
-        // refresh the page to re-render CardHolder
-        // window.location.reload();
-        getUserJournals(auth.token)
-            .then((res) => {
-                setJournals(res);
-            })
-            .catch((err) => {
-                setJournals([]);
-                console.error(err);
-            });
-    };
+    const createJournalHandler = (newJournal) => {
+        setJournals((prev)=>{
+            let newArr = prev;
+            newArr.unshift(newJournal);
+            return newArr;
+        })
+    }
+    const deleteJournalHandler = (deletedJournalId) => {
+        const newData = journals.filter((journal) => {
+            return journal._id !== deletedJournalId;
+        });
+        setJournals(newData);
+    }
 
     return (
         <ThemeProvider theme={customizedTheme}>
@@ -156,7 +157,9 @@ export default function Me() {
                         editing={true}
                         handleClose={handleModalClose}
                         authorMode={true}
-                        refreshJournals={refreshJournals}
+                        refreshJournals={fetchJournals}
+                        isCompose={true}
+                        onCreateJournal = {createJournalHandler}
                     >
                         {' '}
                         handleSave={handleSave}{' '}
@@ -173,7 +176,8 @@ export default function Me() {
                     handleDateSelection={handleDateSelection}
                     journals={journals}
                     showCalendar={true}
-                    refreshJournals={refreshJournals}
+                    refreshJournals={fetchJournals}
+                    onDelete={deleteJournalHandler}
                 />
             </div>
         </ThemeProvider>

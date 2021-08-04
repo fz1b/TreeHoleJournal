@@ -18,7 +18,7 @@ function CommentArea(props) {
     const handleCommentChange = (e) => {
         setComment(e.target.value);
     };
-    const handlePost = () => {
+    const handlePost = async () => {
         createComment(
             props.journalID,
             auth.token,
@@ -26,10 +26,10 @@ function CommentArea(props) {
             comment,
             false
         )
-            .then((res) => {
-                setComments(res.comments);
+            .then((updatedJournal) => {
+                setComments(updatedJournal.comments);
                 // update the list of journals so that the new comment renders when users close and open the modal again
-                props.refreshJournals();
+                props.onRefreshOneJournal(updatedJournal);
                 setComment('');
             })
             .catch((err) => {
@@ -38,8 +38,8 @@ function CommentArea(props) {
             });
     };
     const handleDeleteComment = async (commentId) => {
-        await deleteComment(props.journalID,commentId);
-        await props.updateJournals();
+        const updatedJournal = await deleteComment(props.journalID,commentId);
+        props.onRefreshOneJournal(updatedJournal);
     };
 
     const areCommentsEmpty = props.comments.length === 0;
