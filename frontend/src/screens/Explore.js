@@ -90,7 +90,7 @@ export default function Explore() {
     useEffect(() => {
         fetchJournals(null, null);
         console.log(loading);
-    }, [auth.token]);
+    });
 
     // useEffect(() => {
     //     let isMounted = true;
