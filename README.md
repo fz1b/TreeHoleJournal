@@ -48,6 +48,7 @@ Add registered professional therapist access.
 - Search functionality
 - Filter through existing journals by date/location
 - Add music/video support
+- Infinite scrolling
 
 ### Breakdown of requirements
 

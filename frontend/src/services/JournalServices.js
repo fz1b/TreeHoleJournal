@@ -26,11 +26,12 @@ function processJournals(journals) {
 }
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
-// input: void
+// input: last_id id of the last loaded journal, last_date
 // response: list of journals JSON obj
-export function getExploreJournals() {
+export function getExploreJournals(last_id, last_date) {
     return axios
-        .get('/explore')
+        .get('/explore',
+            { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
             // console.log(res.data);
             return processJournals(res.data);
@@ -67,11 +68,12 @@ export function getNearbyJournals(lat, lng) {
 
 
 // get all journals with PUBLIC or ANONYMOUS privacy setting
-// input: search criteria String
+// input: search criteria String, last_id id of the last loaded journal, last_date
 // response: list of Journals JSON obj that satisfy the criteria
-export function searchExploreJournals(criteria) {
+export function searchExploreJournals(criteria, last_id, last_date) {
     return axios
-        .get('/explore/search/' + criteria)
+        .get('/explore/search/' + criteria,
+            { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
             // console.log(res.data);
             return processJournals(res.data);
@@ -83,11 +85,12 @@ export function searchExploreJournals(criteria) {
 }
 
 // get all journals from a specific user
-// input: user_token
+// input: user_token, last_id id of the last loaded journal, last_date
 // return: list of journal obj
-export function getUserJournals(idToken) {
+export function getUserJournals(idToken, last_id, last_date) {
     return axios
-        .get('/me/' + idToken)
+        .get('/me/' + idToken,
+            { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
             // convert date from string to Date
             return processJournals(res.data);
@@ -99,11 +102,12 @@ export function getUserJournals(idToken) {
 }
 
 // get the user's journals that contain the criteria string in title or content
-// input: user_token, search criteria String
+// input: user_token, search criteria String, last_id id of the last loaded journal, last_date
 // response: list of Journals JSON obj that satisfy the criteria
-export function searchUserJournals(idToken, criteria) {
+export function searchUserJournals(idToken, criteria, last_id, last_date) {
     return axios
-        .get('/me/search/' + idToken + '/' + criteria)
+        .get('/me/search/' + idToken + '/' + criteria,
+            { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
             // console.log(res.data);
             return processJournals(res.data);
@@ -115,14 +119,15 @@ export function searchUserJournals(idToken, criteria) {
 }
 
 // get the user's journal filtered by a given date
-// input: user_token, Date
+// input: user_token, Date, last_id id of the last loaded journal, last_date
 // req-body: void
 // response: list of Journals JSON obj
-export function getUserJournalsByDate(idToken, date) {
+export function getUserJournalsByDate(idToken, date, last_id, last_date) {
     if (!date) date = new Date();
     let dateYYYY_MM_DD = date.toISOString().substring(0, 10);
     return axios
-        .get('/me/date/' + idToken + '/' + dateYYYY_MM_DD)
+        .get('/me/date/' + idToken + '/' + dateYYYY_MM_DD,
+            { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
             // console.log(res.data);
             return processJournals(res.data);
