@@ -5,8 +5,9 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
-import axios from 'axios';
 import AuthContext from '../authAPI/auth-context';
+import Box from '@material-ui/core/Box';
+import {fetchUserInfo, resetPassword} from '../services/UserServices'
 import {
     Grid,
     Avatar,
@@ -67,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(10),
         margin: theme.spacing(5),
         fontSize: 40,
+        backgroundColor: '#50A9C1',
     },
     password: {
         margin: theme.spacing(2),
@@ -81,19 +83,13 @@ export default function AccountInfo(props) {
     const [accountName, setAccountName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setpassword] = React.useState('');
+    const [confirmPassword, setConfirmPassword] = React.useState('');
 
-    useEffect(() => {
-        const setName = () => {
-            axios
-                .get(`http://localhost:5000/users/info/${auth.token}`)
-                .then((response) => {
-                    setAccountName(response.data.userData.name);
-                    setEmail(response.data.userData.email);
-                    // handleAccountName(response.data)
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+    useEffect( () => {
+        const setName = async() => {
+            const userData = await fetchUserInfo(auth.token)
+            setAccountName(userData.name);
+            setEmail(userData.email);
         };
         setName();
     }, [auth.token]);
@@ -103,22 +99,13 @@ export default function AccountInfo(props) {
         props.handleInfoClose(false);
     };
 
-    const handleSave = async () => {
-        const reqBody = JSON.stringify({
-            email: email,
-            accountName: accountName,
-            password: password,
-        });
-
+    const handleReset = async () => {
+        const request = {
+            token: auth.token,
+            password : password
+        }
         try {
-            const response = await axios.post(
-                'http://localhost:5000/users/reset/',
-                reqBody,
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-            auth.loginHandler(response.data.idToken);
+            await resetPassword(request)
         } catch (err) {
             console.log(err);
         }
@@ -135,32 +122,35 @@ export default function AccountInfo(props) {
                     Account Information
                 </DialogTitle>
                 <DialogContent dividers>
+                    <Box m={2}>
                     <DialogContentText>
                         In this page you can change your email as well as
                         username. You can also reset your password. Changing the
                         avatar image will be coming soon in a later release.
                     </DialogContentText>
+                    </Box>
                     <Grid
                         container
                         alignItems='center'
-                        justify='center'
+                        justifyContent='center'
                         direction='row'
                     >
                         <Avatar className={classes.avatar}>
-                            {accountName.charAt(0)}
+                            
                         </Avatar>
                     </Grid>
                     <form noValidate autoComplete='off'>
                         <Grid
                             container
                             direction='row'
-                            justify='center'
+                            justifyContent='center'
                             alignItems='center'
                             spacing={1}
                         >
                             <Grid item sm={5}>
                                 <TextField
                                     autoFocus
+                                    disabled
                                     variant='outlined'
                                     margin='normal'
                                     id='accountName'
@@ -176,6 +166,7 @@ export default function AccountInfo(props) {
                             </Grid>
                             <Grid item sm={5}>
                                 <TextField
+                                    disabled
                                     variant='outlined'
                                     autoFocus
                                     margin='normal'
@@ -205,12 +196,26 @@ export default function AccountInfo(props) {
                                     fullWidth
                                     required
                                 />
+                                <TextField
+                                    variant='outlined'
+                                    autoFocus
+                                    margin='normal'
+                                    id='email'
+                                    label='Confirm Password'
+                                    type='password'
+                                    value={password}
+                                    onChange={(event) => {
+                                        setConfirmPassword(event.target.value);
+                                    }}
+                                    fullWidth
+                                    required
+                                />
                             </Grid>
                         </Grid>
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button disabled onClick={handleSave} color='primary'>
+                    <Button disabled={password === confirmPassword} onClick={handleReset} color='primary'>
                         Save changes
                     </Button>
                 </DialogActions>
