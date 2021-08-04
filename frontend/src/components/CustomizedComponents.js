@@ -35,7 +35,6 @@ export const BootstrapInput = withStyles((theme) => ({
         },
     },
     input: {
-        width: 60,
         borderRadius: 4,
         position: 'relative',
         backgroundColor: theme.palette.background.paper,

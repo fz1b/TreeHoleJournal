@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,24 +17,42 @@ const Date = styled.span`
     color: grey;
 `;
 
-const DeletedName = styled.span`
-    font-size: 0.9rem;
-    font-weight: bolder;
-    color: grey;
-`;
+// const DeletedName = styled.span`
+//     font-size: 0.9rem;
+//     font-weight: bolder;
+//     color: grey;
+// `;
 
 function Comment(props) {
-    const [name, setName] = useState('');
+    const [name, setName] = useState('name');
     const [initial, setInitial] = useState('');
+    const [anchorEl,setAnchorEl] = useState(null);
+    const [isEditable, setIsEditable] = useState(false);
 
-    getCommentAuthor(props.journalID, props.comment._id)
+    const handleCommentEdit = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCommentEditClose = () => {
+        setAnchorEl(null);
+    };
+    const handleDelete  = () =>{
+        props.handleDeleteComment(props.comment._id)
+    }
+    useEffect(()=>{
+        getCommentAuthor(props.journalID, props.comment._id)
         .then((res) => {
             setName(res.name);
-            setInitial(name.charAt(0));
+            setInitial(res.name.charAt(0));
+            if (res.name=== props.myName || props.authorMode) {
+                setIsEditable(true);
+            } else {
+                setIsEditable(false);
+            }
         })
         .catch((err) => {
             // do nothing, display empty profile pic
         });
+    },[props.journalID, props.comment._id, props.myName, props.authorMode])
 
     return (
         <Box display='flex' mb={2}>
@@ -48,17 +66,16 @@ function Comment(props) {
                 width={'80%'}
             >
                 <Box px={1}>
-                    {name && <Name>{name}</Name>}
-                    {!name && <DeletedName>Deleted</DeletedName>}
+                    <Name>{name}</Name>
+                    {/* {!name && <DeletedName>Deleted</DeletedName>} */}
                 </Box>
-                <Box px={1}>{props.comment.content}</Box>
+                <Box px={1} style={{inlineSize:"100%",wordWrap:"break-word"}}>{props.comment.content}</Box>
                 <Box px={1}>
                     <Date>{props.comment.date.toDateString()}</Date>
                 </Box>
             </Box>
-            {/* TODO: determine edit on the backend */}
-            {true && (
-                <span onClick={props.handleCommentEdit}>
+            {isEditable && (
+                <span onClick={handleCommentEdit}>
                     <IconButton size='small'>
                         <FiMoreVertical />
                     </IconButton>
@@ -66,14 +83,13 @@ function Comment(props) {
             )}
             <Menu
                 id='simple-menu'
-                anchorEl={props.anchorEl}
+                anchorEl={anchorEl}
                 keepMounted
-                open={Boolean(props.anchorEl)}
-                onClose={props.handleCommentEditClose}
+                open={Boolean(anchorEl)}
+                onClose={handleCommentEditClose}
             >
                 <MenuItem
-                    id={props.comment._id}
-                    onClick={props.handleDeleteComment}
+                    onClick={()=>{handleDelete();handleCommentEditClose();}}
                 >
                     Delete
                 </MenuItem>

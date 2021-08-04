@@ -31,9 +31,10 @@ export default function Explore() {
     const [journals, setJournals] = useState([]);
     const [searchContent, setSearchContent] = useState('');
     const [showSearchTag, setShowSearchTag] = useState(false);
-    const [tab,setTab] = useState("");
-    const handleTab = (value)=>{
-      setTab(value);
+    const [tab, setTab] = useState("");
+
+    const handleTab = (value) => {
+        setTab(value);
     }
     const handleClearSearch = () => {
         fetchJournals();
@@ -44,7 +45,7 @@ export default function Explore() {
         setSearchContent(content);
     };
     const handleSearch = () => {
-        if(searchContent){
+        if (searchContent) {
             searchExploreJournals(searchContent).then((res) => {
                 setJournals(res);
             });
@@ -63,22 +64,41 @@ export default function Explore() {
     };
 
     useEffect(() => {
-        fetchJournals();
+        let isMounted = true;
+        getExploreJournals()
+        .then((res) => {
+            if (isMounted) setJournals(res);
+        })
+        .catch((err) => {
+            if (isMounted) setJournals([]);
+            console.error(err);
+        });
+        return () => { isMounted = false };
     }, [auth.token]);
+
     useEffect(() => {
-      if(tab==="Newest"){
-          fetchJournals();
-      }
-      if(tab==="Nearby"){
-        navigator.geolocation.getCurrentPosition(function (position) {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude
-          getNearbyJournals(lat,lng).then(res=>{
-            setJournals(res);
-          })
-      });
-      }
-  }, [tab]);
+        let isMounted = true;
+        if (tab === "Newest") {
+            getExploreJournals()
+            .then((res) => {
+                if (isMounted) setJournals(res);
+            })
+            .catch((err) => {
+                if (isMounted) setJournals([]);
+                console.error(err);
+            });
+        }
+        if (tab === "Nearby") {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude
+                getNearbyJournals(lat, lng).then(res => {
+                    if (isMounted) setJournals(res);
+                })
+            });
+        }
+        return () => { isMounted = false };
+    }, [tab]);
     return (
         <ThemeProvider theme={customizedTheme}>
             <div className='explore'>
@@ -89,15 +109,15 @@ export default function Explore() {
                     handleSearch={handleSearch}
                 />
                 <div className={classes.explore_bg} />
-                <ExploreTabs handleTab={handleTab}/>
-                {showSearchTag && searchContent&&(
+                <ExploreTabs handleTab={handleTab} />
+                {showSearchTag && searchContent && (
                     <SearchTag
                         content={searchContent}
                         count={journals.length}
                         clearSearch={handleClearSearch}
                     />
                 )}
-                <CardHolder journals={journals} showCalendar={false} refreshJournals={fetchJournals}/>
+                <CardHolder journals={journals} showCalendar={false} updateJournals={fetchJournals} />
             </div>
         </ThemeProvider>
     );

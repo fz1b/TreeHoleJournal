@@ -103,7 +103,16 @@ export default function Me() {
             });
     }, [auth.token]);
     useEffect(() => {
-        fetchJournals();
+        let isMounted = true;
+        getUserJournals(auth.token)
+            .then((res) => {
+                if (isMounted) setJournals(res);
+            })
+            .catch((err) => {
+                if (isMounted) setJournals([]);
+                console.error(err);
+            });
+        return () => { isMounted = false };
     }, [auth.token, fetchJournals]);
 
     const refreshJournals = () => {

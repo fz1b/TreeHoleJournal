@@ -74,7 +74,7 @@ app.post(
 );
 // edit an existing comment
 app.put(
-    '/explore/:journal_id/comments/:comment_id',
+    '/explore/comments/:journal_id/:comment_id',
     journalController.editComment
 );
 // delete a comment

@@ -181,7 +181,8 @@ export default function CustomizedDialogs({
                         <CommentArea
                             journalID={journal._id}
                             comments={journal.comments}
-                            refreshJournals={refreshJournals}
+                            updateJournals={updateJournals}
+                            authorMode={authorMode}
                         />
                     </CardContent>
                 </Collapse>

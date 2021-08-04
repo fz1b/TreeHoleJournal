@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'
 import { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -118,10 +119,11 @@ export default function CustomizedDialogs({
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState(journal.location);
     const [title, setTitle] = useState(journal.title);
     const [isSaving, setIsSaving] = useState(false);
     const auth = useContext(AuthContext);
+    const route = useLocation();
 
     const handleLocation = (loc) => {
         setLocation(loc);
@@ -196,11 +198,17 @@ export default function CustomizedDialogs({
                     imageURL,
                     weather,
                     content,
+                    location,
                     privacy
                 );
                 await refreshJournals();
                 setIsSaving(false);
-                handleEdit(false);
+                if (privacy==="PRIVATE" && route.pathname==='/') {
+                    handleClose();
+                } else {
+                    // instead of close the modal, switch to viewing mode
+                    handleEdit(false);
+                }
             }
         } catch (err) {
             setIsSaving(false);
@@ -348,7 +356,7 @@ export default function CustomizedDialogs({
                         />
                     </Typography>
                 </DialogContent>
-                <JournalLocation handleLocation={handleLocation} />
+                <JournalLocation handleLocation={handleLocation} address={journal.location?journal.location.address:""} editing={true}/>
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
