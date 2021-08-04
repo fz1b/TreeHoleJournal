@@ -89,7 +89,7 @@ export default function CustomizedDialogs({
     handleEdit,
     handleClose,
     authorMode,
-    refreshJournals,
+    updateJournals,
     like,
     onLike
 }) {

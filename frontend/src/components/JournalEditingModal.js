@@ -143,17 +143,15 @@ export default function CustomizedDialogs({
         setContent(e.target.value);
     };
 
-    const handleDelete = () => {
-        handleClose();
-        deleteJournal(auth.token, journal._id)
-            .then(() => {
-                S3Client.deleteFile(journal.image.split('/')[3]);
-            })
-            .then(refreshJournals())
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+    const handleDelete = async () => {
+        try{
+            await S3Client.deleteFile(journal.image.split('/')[3]);
+            await deleteJournal(auth.token, journal._id);
+            refreshJournals()
+        }catch(err){
+            console.log(err)
+        }
+        };
 
     const handleSave = async (
         title,
