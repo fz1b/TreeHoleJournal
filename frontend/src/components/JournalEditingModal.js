@@ -145,7 +145,9 @@ export default function CustomizedDialogs({
 
     const handleDelete = async () => {
         try{
-            await S3Client.deleteFile(journal.image.split('/')[3]);
+            if (journal.image){
+                await S3Client.deleteFile(journal.image.split('/')[3]);
+            }
             await deleteJournal(auth.token, journal._id);
             refreshJournals()
         }catch(err){
