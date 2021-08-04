@@ -100,7 +100,6 @@ export default function CustomizedDialogs({
                 onClose={handleClose}
                 aria-labelledby='customized-dialog-title'
                 open={true}
-                minHeight='60vh'
                 maxWidth='sm'
                 fullWidth
             >
