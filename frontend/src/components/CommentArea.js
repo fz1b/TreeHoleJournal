@@ -29,7 +29,7 @@ function CommentArea(props) {
             .then((res) => {
                 setComments(res.comments);
                 // update the list of journals so that the new comment renders when users close and open the modal again
-                props.updateJournals();
+                props.refreshJournals();
                 setComment('');
             })
             .catch((err) => {

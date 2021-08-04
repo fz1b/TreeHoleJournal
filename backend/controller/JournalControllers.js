@@ -261,10 +261,10 @@ const verifyEditingAccess = async (req, res) => {
 // req-param: user_id, journal id,
 // req-body: null
 // response: null
-const deleteJournal = async (req, res) => {
-    Journal.findByIdAndDelete(req.params.journal_id)
+const deleteJournal = (req, res) => {
+    return Journal.findByIdAndDelete(req.params.journal_id)
         .then((result) => {
-            res.status(200);
+            return res.status(200).json(result);
         })
         .catch((err) => {
             console.error(err);
