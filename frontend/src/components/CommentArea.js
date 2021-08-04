@@ -39,7 +39,7 @@ function CommentArea(props) {
     };
     const handleDeleteComment = async (commentId) => {
         await deleteComment(props.journalID,commentId);
-        await props.updateJournals();
+        await props.refreshJournals();
     };
 
     const areCommentsEmpty = props.comments.length === 0;

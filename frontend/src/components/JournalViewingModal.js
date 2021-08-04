@@ -89,7 +89,7 @@ export default function CustomizedDialogs({
     handleEdit,
     handleClose,
     authorMode,
-    updateJournals,
+    refreshJournals,
     like,
     onLike
 }) {
@@ -181,7 +181,7 @@ export default function CustomizedDialogs({
                         <CommentArea
                             journalID={journal._id}
                             comments={journal.comments}
-                            updateJournals={updateJournals}
+                            refreshJournals={refreshJournals}
                             authorMode={authorMode}
                         />
                     </CardContent>
