@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
 const User = require('../models/UserSchema');
-const loadBatchSize = 2;
+const loadBatchSize = 3;
 
 // get #loadBatchSize journals with PUBLIC or ANONYMOUS setting ordered by date,
 // if a journal_id and date is provided in the query, return only the journals
@@ -167,6 +167,7 @@ const searchUserJournals = async (req, res) => {
                 ],
             };
             if (req.query.last_id && req.query.last_date ) {
+                console.log(req.query.last_id);
                 filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(
@@ -176,7 +177,7 @@ const searchUserJournals = async (req, res) => {
                 .sort({ date:-1, _id:-1 })
                 .limit(loadBatchSize)
                 .then((journals) => {
-                    // console.log(journals);
+                    console.log(journals);
                     res.status(200).json(journals);
                 })
                 .catch((err) => {
@@ -202,8 +203,12 @@ const getUserJournalsByDate = async (req, res) => {
         .get(process.env.BACKEND_URL+'users/info/secure/' + req.params.idToken)
         .then((user) => {
             let start = new Date(req.params.date);
+            start.setHours(0,0,0,0);
             let end = new Date(req.params.date);
             end.setDate(end.getDate()+1);
+            end.setHours(0,0,0,0);
+            // console.log('start: ' + start);
+            // console.log('end: ' + end);
             let filter = {
                 author_id: user.data.userData._id,
                 date: {

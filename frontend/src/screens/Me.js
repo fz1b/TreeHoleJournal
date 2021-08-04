@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles, ThemeProvider } from '@material-ui/core';
 import { MdAddCircleOutline } from 'react-icons/md';
 import journalImg from '../assets/myjournals_bg.svg';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import JounalModal from '../components/JournalModal';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
@@ -47,16 +47,28 @@ let newJournal = {
     privacy: 'PRIVATE',
 };
 
+const fetchMode = {
+    GENERAL: 'general',
+    SEARCH: 'search',
+    DATE: 'date'
+}
+
 export default function Me() {
     const auth = useContext(AuthContext);
     const classes = useStyles();
     const [showModal, setShowModal] = useState(false);
     const [journals, setJournals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [hasMore, setHasMore] = useState(true);
     const [searchContent, setSearchContent] = useState('');
+    const [dateFilter, setDateFilter] = useState(null);
     const [showSearchTag, setShowSearchTag] = useState(false);
+    const [mode, setMode] = useState(fetchMode.GENERAL);
 
     const handleClearSearch = () => {
-        fetchJournals();
+        setMode(fetchMode.GENERAL);
+        setJournals([]);
+        fetchJournals(null, null);
         setSearchContent('');
         setShowSearchTag(false);
     };
@@ -64,10 +76,18 @@ export default function Me() {
         setSearchContent(content);
     };
     const handleSearch = () => {
+        setLoading(true);
         if(searchContent){
-            searchUserJournals(auth.token, searchContent).then((res) => {
-                setJournals(res);
-            });
+            setMode(fetchMode.SEARCH);
+            searchUserJournals(auth.token, searchContent)
+                .then((res) => {
+                    setJournals(res);
+                    setLoading(false);
+                })
+                .catch(err=>{
+                    // do nothing
+                    setLoading(false);
+                });
             setShowSearchTag(true);
         }
     };
@@ -84,33 +104,106 @@ export default function Me() {
         setShowModal(false);
     };
     const handleDateSelection = (date) => {
-        console.log(date);
+        // console.log(date);
         if (!date) {
-            fetchJournals();
+            setMode(fetchMode.GENERAL);
+            setJournals([]);
+            setDateFilter(null);
+            fetchJournals(null, null);
         } else {
-            getUserJournalsByDate(auth.token, date).then((res) => {
-                setJournals(res);
-            })
+            setMode(fetchMode.DATE);
+            setJournals([]);
+            setLoading(true);
+            setDateFilter(date);
+            getUserJournalsByDate(auth.token, dateFilter)
+                .then((res) => {
+                    setJournals(res);
+                    setLoading(false);
+                })
+                .catch(err=>{
+                    // do nothing
+                    setLoading(false);
+                })
         }
     }
-    const fetchJournals = useCallback(() => {
-        getUserJournals(auth.token)
+
+    const fetchJournals = useCallback((last_id, last_date) => {
+        setLoading(true);
+        getUserJournals(auth.token, last_id, last_date)
             .then((res) => {
                 setJournals(res);
+                setLoading(false);
             })
             .catch((err) => {
-                setJournals([]);
+                // setJournals([]);
                 console.error(err);
+                setLoading(false);
             });
     }, [auth.token]);
+
     useEffect(() => {
-        fetchJournals();
+        setJournals([]);
+        fetchJournals(null, null);
     }, [auth.token, fetchJournals]);
 
-    const updateJournals = () => {
-        // refresh the page to re-render CardHolder
-        // window.location.reload();
-        getUserJournals(auth.token)
+    // load more journals when scrolled to the bottom
+    window.onscroll = function() {
+        let d = document.documentElement;
+        let offset = d.scrollTop + window.innerHeight;
+        let height = d.offsetHeight;
+
+        if (offset >= height-5 && !loading && hasMore) {
+            setLoading(true);
+            let last_id, last_date = null;
+            if (journals.length>0){
+                last_id = journals[journals.length-1]._id;
+                last_date = journals[journals.length-1].date;
+            }
+
+            let fetchFunction = () =>{
+                return getUserJournals(auth.token, last_id, last_date);
+            }
+            switch (mode) {
+                case fetchMode.SEARCH:
+                    setLoading(true);
+                    fetchFunction = () =>{
+                        return searchUserJournals(auth.token,searchContent, last_id, last_date);
+                    }
+                    break;
+                case fetchMode.DATE:
+                    fetchFunction = () =>{
+                        return getUserJournalsByDate(auth.token, dateFilter, last_id, last_date);
+                    }
+                    break;
+                default:
+                    fetchFunction = () =>{
+                        return getUserJournals(auth.token, last_id, last_date);
+                    }
+                    break;
+            }
+
+            fetchFunction()
+                .then(res=>{
+                    if (res.length > 0){
+                        setJournals(prev => {
+                            return [...prev, ...res]
+                        });
+                        setHasMore(true);
+                    } else {
+                        setHasMore(false);
+                    }
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    // setJournals([]);
+                    console.error(err);
+                    setLoading(false);
+                })
+        }
+    };
+
+    const updateJournals = (last_id, last_date) => {
+        getUserJournals(auth.token, last_id, last_date)
             .then((res) => {
                 setJournals(res);
             })
@@ -165,8 +258,13 @@ export default function Me() {
                     handleDateSelection={handleDateSelection}
                     journals={journals}
                     showCalendar={true}
+                    fetchJournals={fetchJournals}
                     updateJournals={updateJournals}
                 />
+                {loading &&
+                    <h1>Loading ...</h1>}
+                {!hasMore &&
+                    <h1>No More..</h1>}
             </div>
         </ThemeProvider>
     );
