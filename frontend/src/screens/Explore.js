@@ -12,7 +12,7 @@ import {
 import ExploreTabs from '../components/ExploreTabs';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
-
+import LoadingSpinner from '../components/LoadingSpinner';
 const useStyles = makeStyles((theme) => ({
     explore_bg: {
         backgroundImage: `url(${bgImg})`,
@@ -192,7 +192,7 @@ export default function Explore() {
                 <CardHolder journals={journals} showCalendar={false} updateJournals={fetchJournals} />
             </div>
             {loading &&
-            <h1>Loading ...</h1>}
+            <LoadingSpinner/>}       
             {!hasMore &&
             <h1>No More..</h1>}
         </ThemeProvider>

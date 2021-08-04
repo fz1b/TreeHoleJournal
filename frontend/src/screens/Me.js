@@ -14,7 +14,7 @@ import {
     searchUserJournals,
     getUserJournalsByDate
 } from '../services/JournalServices';
-
+import LoadingSpinner from '../components/LoadingSpinner';
 const useStyles = makeStyles((theme) => ({
     my_journals_bg: {
         backgroundImage: `url(${journalImg})`,
@@ -266,7 +266,7 @@ export default function Me() {
                     refreshJournals={refreshJournals}
                 />
                 {loading &&
-                    <h1>Loading ...</h1>}
+                    <LoadingSpinner/>}
                 {!hasMore &&
                     <h1>No More..</h1>}
             </div>
