@@ -31,5 +31,5 @@ yarn-error.log*
 # Editor-based HTTP Client requests
 /httpRequests/
 
-.env
+frontend/.env
 nodemon.json
