@@ -67,6 +67,7 @@ export default function Me() {
 
     const handleClearSearch = () => {
         setMode(fetchMode.GENERAL);
+        setHasMore(true);
         setJournals([]);
         fetchJournals(null, null);
         setSearchContent('');
@@ -79,6 +80,7 @@ export default function Me() {
         setLoading(true);
         if(searchContent){
             setMode(fetchMode.SEARCH);
+            setHasMore(true);
             searchUserJournals(auth.token, searchContent)
                 .then((res) => {
                     setJournals(res);
@@ -107,11 +109,13 @@ export default function Me() {
         // console.log(date);
         if (!date) {
             setMode(fetchMode.GENERAL);
+            setHasMore(true);
             setJournals([]);
             setDateFilter(null);
             fetchJournals(null, null);
         } else {
             setMode(fetchMode.DATE);
+            setHasMore(true);
             setJournals([]);
             setLoading(true);
             setDateFilter(date);
@@ -165,7 +169,6 @@ export default function Me() {
             }
             switch (mode) {
                 case fetchMode.SEARCH:
-                    setLoading(true);
                     fetchFunction = () =>{
                         return searchUserJournals(auth.token,searchContent, last_id, last_date);
                     }
