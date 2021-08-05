@@ -12,6 +12,9 @@ async function userService(request, type) {
         case 'refresh':
             url = '/users/refreshtoken';
             break;
+        case 'changePassword':
+            url = '/users/changePassword';
+            break;
         default:
             url = null;
             break;
@@ -46,6 +49,11 @@ export async function refreshService(request) {
     return tokenData;
 }
 
+export async function changePassword(request) {
+    const tokenData = await userService(request, 'changePassword');
+    return tokenData;
+}
+
 export async function likeJournal(request) {
     try {
         await axios.post('/users/like/add', request, {
@@ -66,19 +74,5 @@ export async function fetchUserInfo(idToken) {
     try {
         const response = await axios.get(`/users/info/${idToken}`);
         return response.data.userData;
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-export async function resetPassword(request) {
-    try {
-        const response = await axios.post(`users/reset/`, request, {
-            headers: { 'Content-Type': 'application/json' },
-        });
-        return response.status;
-        // TODO: handle response
-    } catch (err) {
-        console.log(err);
-    }
+    } catch (err) {}
 }

@@ -88,7 +88,7 @@ export default function Explore() {
 
     useEffect(() => {
         fetchJournals(null, null);
-    },[auth.token]);
+    },[]);
 
     // useEffect(() => {
     //     let isMounted = true;
