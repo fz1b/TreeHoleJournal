@@ -114,8 +114,11 @@ export default function CustomizedDialogs({
     journal,
     handleClose,
     authorMode,
-    refreshJournals,
     handleEdit,
+    isCompose,
+    onDelete,
+    onRefreshOneJournal,
+    onCreateJournal
 }) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
@@ -129,7 +132,7 @@ export default function CustomizedDialogs({
         setLocation(loc);
     };
     const [files, setFiles] = useState([]);
-    const [uploaded, setLoaded] = useState(false);
+    const [uploaded, setUpLoaded] = useState(false);
     const S3Client = new S3(config);
     let imageURL = '';
 
@@ -145,13 +148,16 @@ export default function CustomizedDialogs({
 
     const handleDelete = async () => {
         try{
-            await S3Client.deleteFile(journal.image.split('/')[3]);
+            handleClose();
+            if (journal.image){
+                await S3Client.deleteFile(journal.image.split('/')[3]);
+            }
             await deleteJournal(auth.token, journal._id);
-            refreshJournals()
+            onDelete(journal._id);
         }catch(err){
             console.log(err)
         }
-        };
+    };
 
     const handleSave = async (
         title,
@@ -168,14 +174,14 @@ export default function CustomizedDialogs({
                     files[0],
                     sha256(files[0].name)
                 );
-                setLoaded(true);
+                setUpLoaded(true);
                 imageURL = data.location;
             } else {
                 imageURL = journal.image;
             }
 
             if (!journal._id) {
-                await createJournal(
+                const newJournal = await createJournal(
                     auth.token,
                     title,
                     date,
@@ -185,10 +191,10 @@ export default function CustomizedDialogs({
                     location,
                     privacy
                 );
-                await refreshJournals();
+                onCreateJournal(newJournal);
                 handleClose();
             } else {
-                await editJournal(
+                const updatedJournal = await editJournal(
                     journal.author_id,
                     journal._id,
                     title,
@@ -199,10 +205,11 @@ export default function CustomizedDialogs({
                     location,
                     privacy
                 );
-                await refreshJournals();
+                onRefreshOneJournal(updatedJournal);
                 setIsSaving(false);
                 if (privacy==="PRIVATE" && route.pathname==='/') {
                     handleClose();
+                    onDelete(journal._id);
                 } else {
                     // instead of close the modal, switch to viewing mode
                     handleEdit(false);
@@ -375,11 +382,11 @@ export default function CustomizedDialogs({
                     <>
                         {authorMode && (
                             <>
-                                <span onClick={handleDelete}>
+                                {!isCompose && <span onClick={handleDelete}>
                                     <IconButton>
                                         <FaRegTrashAlt />
                                     </IconButton>
-                                </span>
+                                </span>}
                                 <Button
                                     variant='contained'
                                     color='primary'

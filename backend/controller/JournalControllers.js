@@ -283,7 +283,7 @@ const getJournalAuthor = async (req, res) => {
 // create a journal for the given user
 // req-param: idToken
 // req-body: journal fields
-// response: list of Journals JSON obj
+// response: newly created journal without author_id
 
 const createNewJournal = async (req, res) => {
     axios
@@ -304,7 +304,7 @@ const createNewJournal = async (req, res) => {
             journal
                 .save()
                 .then((result) => {
-                    Journal.findById(journal._id).then((response) =>
+                    Journal.findById(journal._id,'-author_id').then((response) =>
                         res.status(200).json(response)
                     );
                 })
@@ -364,7 +364,8 @@ const editJournal = async (req, res) => {
         { new: true }
     )
         .then((result) => {
-            res.status(200).json(result);
+            let { author_id, ...resultWithoutAuthor } = result.toObject();
+            res.status(200).json(resultWithoutAuthor);
         })
         .catch((err) => {
             console.error(err);
@@ -449,12 +450,13 @@ const createComment = async (req, res) => {
                     },
                     { new: true }
                 )
-                    .then((newJournals) => {
-                        return res.status(200).json(newJournals);
-                    })
-                    .catch((err) => {
-                        return res.status(500).json(err);
-                    });
+                .then((newJournal) => {
+                    let { author_id, ...journalWithoutAuthor } = newJournal.toObject();
+                    return res.status(200).json(journalWithoutAuthor);
+                })
+                .catch((err) => {
+                    return res.status(500).json(err);
+                });
             });
     } catch (e) {
         return res.status(500).json(e.data.message);
@@ -478,7 +480,8 @@ const editComment = async (req, res) => {
         { new: true }
     )
         .then((result) => {
-            res.status(200).json(result);
+            let { author_id, ...journalWithoutAuthor } = result.toObject();
+            return res.status(200).json(journalWithoutAuthor);
         })
         .catch((err) => {
             console.error(err);
@@ -500,13 +503,14 @@ const deleteComment = async (req, res) => {
         },
         { new: true }
     )
-        .then((result) => {
-            res.status(200).json(result);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json(err);
-        });
+    .then((result) => {
+        let { author_id, ...journalWithoutAuthor } = result.toObject();
+        return res.status(200).json(journalWithoutAuthor);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).json(err);
+    });
 };
 
 // get like status of the journal when given user token and journal id

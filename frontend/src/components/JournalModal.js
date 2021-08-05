@@ -12,6 +12,10 @@ function JournalModal(props) {
                     handleEdit={props.onEdit}
                     authorMode={props.authorMode}
                     refreshJournals={props.refreshJournals}
+                    onDelete = {props.onDelete}
+                    isCompose = {props.isCompose}
+                    onRefreshOneJournal = {props.onRefreshOneJournal}
+                    onCreateJournal = {props.onCreateJournal}
                 />
             )}
             {!props.editing && (
@@ -23,6 +27,7 @@ function JournalModal(props) {
                     refreshJournals={props.refreshJournals}
                     like={props.like}
                     onLike={props.onLike}
+                    onRefreshOneJournal = {props.onRefreshOneJournal}
                 />
             )}
         </>
