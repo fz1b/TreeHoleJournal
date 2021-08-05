@@ -98,8 +98,7 @@ const signUp = async (req, res) => {
         userData: {
             name: newUser.name,
             email: newUser.email,
-            likes: newUser.likes,
-            collections: newUser.collections,
+            likes: newUser.likes
         },
     };
     return res.status(200).json(response);
@@ -201,8 +200,7 @@ const login = async (req, res) => {
         userData: {
             name: foundUser.name,
             email: foundUser.email,
-            likes: foundUser.likes,
-            collections: foundUser.collections,
+            likes: foundUser.likes
         },
     };
     return res.status(200).json(response);
@@ -469,6 +467,67 @@ const getLikedJournalsByUserToken = async (req, res) => {
 
 };
 
+// request:
+// {
+//  token: firebase idToken,
+//  password: newpassword
+// }
+const changePassword = async (req, res) => {
+    let firebaseResponse = {};
+    let response = {};
+
+    const { token, password } = req.body;
+    if (!token || !password) {
+        return res.status(400).json({status:400, message: 'Invalid request body'});
+    }
+    try {
+        firebaseResponse = await axios.post(
+            'https://identitytoolkit.googleapis.com/v1/accounts:update',
+            {
+                idToken: token,
+                password: password,
+                returnSecureToken: true,
+            },
+            {
+                params: { key: process.env.FIREBASE_KEY },
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+    } catch (firebaseErr) {
+        if (firebaseErr.response.data.error.message) {
+            response = {
+                status: 400,
+                message: firebaseErr.response.data.error.message,
+            };
+            return res.status(400).json(response);
+        }
+        return res
+            .status(500)
+            .json({ status: 500, message: 'Firebase Server Error' });
+    }
+
+    let foundUser;
+    try {
+        foundUser = await User.findById(firebaseResponse.data.localId);
+        // email already signed up with firebase, not yet synced into our own DB.
+    } catch (err) {
+        return res.status(500).json({ status: 500, message: 'Database Error' });
+    }
+
+    response = {
+        status: 200,
+        idToken: firebaseResponse.data.idToken,
+        refreshToken: firebaseResponse.data.refreshToken,
+        expiresIn: firebaseResponse.data.expiresIn,
+        userData: {
+            name: foundUser.name,
+            email: foundUser.email,
+            likes: foundUser.likes
+        },
+    };
+    return res.status(200).json(response);
+};
+
 exports.getUserInfo = getUserInfo;
 exports.getUserInfoSecure = getUserInfoSecure;
 exports.signUp = signUp;
@@ -478,3 +537,4 @@ exports.refreshUserIdToken = refreshUserIdToken;
 exports.likeJournal = likeJournal;
 exports.unlikeJournal = unlikeJournal;
 exports.getLikedJournalsByUserToken = getLikedJournalsByUserToken;
+exports.changePassword = changePassword;

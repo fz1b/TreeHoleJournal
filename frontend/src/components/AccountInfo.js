@@ -1,13 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import customizedTheme from '../customizedTheme';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import AuthContext from '../authAPI/auth-context';
 import Box from '@material-ui/core/Box';
-import {fetchUserInfo, resetPassword} from '../services/UserServices'
+import { fetchUserInfo, changePassword } from '../services/UserServices'
 import {
     Grid,
     Avatar,
@@ -73,41 +75,84 @@ const useStyles = makeStyles((theme) => ({
     password: {
         margin: theme.spacing(2),
     },
+    signUp_error: {
+        verticalAlign: 'middle',
+        display: 'inline-flex',
+        minHeight: '5%',
+        maxHeight: '5%',
+        marginBottom: '0%',
+        [customizedTheme.breakpoints.down('xs')]: {
+            marginBottom: '5%',
+        },
+    },
 }));
 
 export default function AccountInfo(props) {
     const classes = useStyles();
     const auth = useContext(AuthContext);
 
-    const [open, setOpen] = React.useState(props.open);
     const [accountName, setAccountName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setpassword] = React.useState('');
     const [confirmPassword, setConfirmPassword] = React.useState('');
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [errMessage, setErrMessage] = React.useState('');
+    const hasError = !!errMessage;
 
-    useEffect( () => {
-        const setName = async() => {
+    useEffect(() => {
+        const setName = async () => {
             const userData = await fetchUserInfo(auth.token)
-            setAccountName(userData.name);
-            setEmail(userData.email);
+            if (userData) {
+                setAccountName(userData.name);
+                setEmail(userData.email);
+            }
         };
         setName();
     }, [auth.token]);
 
     const handleClose = () => {
-        setOpen(false);
         props.handleInfoClose(false);
     };
 
-    const handleReset = async () => {
+    const hideErrorMessage = () => {
+        setErrMessage('');
+    };
+
+    const displayErrorMessage = (errorMessage) => {
+        switch (errorMessage) {
+            case 'WEAK_PASSWORD : Password should be at least 6 characters':
+                setErrMessage('Password should be at least 6 characters');
+                break;
+            case 'INVALID_ID_TOKEN':
+                setErrMessage(
+                    'Your credential has expired. Please sign in again.'
+                );
+                break;
+            default:
+                setErrMessage(errorMessage);
+                break;
+        }
+    };
+
+    const handleChangePassword = async () => {
         const request = {
             token: auth.token,
-            password : password
+            password: password
         }
         try {
-            await resetPassword(request)
+            setIsLoading(true);
+            hideErrorMessage();
+            const tokenData = await changePassword(request);
+            auth.loginHandler(tokenData);
+            setIsLoading(false);
+            handleClose();
         } catch (err) {
-            console.log(err);
+            if (err.response.data.message) {
+                displayErrorMessage(err.response.data.message);
+            } else {
+                displayErrorMessage('Unable to change password. Please try again.');
+            }
+            setIsLoading(false);
         }
     };
 
@@ -116,18 +161,18 @@ export default function AccountInfo(props) {
             <Dialog
                 onClose={handleClose}
                 aria-labelledby='customized-dialog-title'
-                open={open}
+                open={props.open}
             >
                 <DialogTitle id='customized-dialog-title' onClose={handleClose}>
                     Account Information
                 </DialogTitle>
                 <DialogContent dividers>
                     <Box m={2}>
-                    <DialogContentText>
-                        In this page you can change your email as well as
-                        username. You can also reset your password. Changing the
-                        avatar image will be coming soon in a later release.
-                    </DialogContentText>
+                        <DialogContentText>
+                            In this page you can change your email as well as
+                            username. You can also reset your password. Changing the
+                            avatar image will be coming soon in a later release.
+                        </DialogContentText>
                     </Box>
                     <Grid
                         container
@@ -136,8 +181,27 @@ export default function AccountInfo(props) {
                         direction='row'
                     >
                         <Avatar className={classes.avatar}>
-                            
+
                         </Avatar>
+                    </Grid>
+                    <Grid 
+                        container
+                        alignItems='center'
+                        justifyContent='center'
+                        direction='row'
+                    >
+                        <Typography
+                            className={classes.signUp_error}
+                            variant='body1'
+                            color='error'
+                        >
+                            {hasError && (
+                                <>
+                                    <ErrorOutlineIcon color='error' />
+                                    {errMessage}
+                                </>
+                            )}
+                        </Typography>
                     </Grid>
                     <form noValidate autoComplete='off'>
                         <Grid
@@ -149,7 +213,6 @@ export default function AccountInfo(props) {
                         >
                             <Grid item sm={5}>
                                 <TextField
-                                    autoFocus
                                     disabled
                                     variant='outlined'
                                     margin='normal'
@@ -168,7 +231,6 @@ export default function AccountInfo(props) {
                                 <TextField
                                     disabled
                                     variant='outlined'
-                                    autoFocus
                                     margin='normal'
                                     id='email'
                                     label='Email Address'
@@ -186,27 +248,29 @@ export default function AccountInfo(props) {
                                     variant='outlined'
                                     autoFocus
                                     margin='normal'
-                                    id='email'
-                                    label='Password'
+                                    id='password'
+                                    label='Change your password'
                                     type='password'
                                     value={password}
                                     onChange={(event) => {
                                         setpassword(event.target.value);
                                     }}
+                                    autoComplete='new-password'
                                     fullWidth
                                     required
                                 />
                                 <TextField
+                                    disabled={!password}
                                     variant='outlined'
-                                    autoFocus
                                     margin='normal'
-                                    id='email'
-                                    label='Confirm Password'
+                                    id='confirm_password'
+                                    label='Confirm your password'
                                     type='password'
-                                    value={password}
+                                    value={confirmPassword}
                                     onChange={(event) => {
                                         setConfirmPassword(event.target.value);
                                     }}
+                                    autoComplete='new-password'
                                     fullWidth
                                     required
                                 />
@@ -215,7 +279,7 @@ export default function AccountInfo(props) {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button disabled={password === confirmPassword} onClick={handleReset} color='primary'>
+                    <Button disabled={(password !== confirmPassword) || isLoading || !password} onClick={handleChangePassword} color='primary'>
                         Save changes
                     </Button>
                 </DialogActions>
