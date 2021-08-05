@@ -82,23 +82,32 @@ export default function EntryCards(props) {
 
     const initializeEntryCard = useCallback(async (isMounted) => {
         try {
-            const authorResponse = await getJournalAuthor(journalContent._id);
-            if (isMounted) setAuthorName(authorResponse.name);
-        } catch(err) {
-            if (isMounted) setAuthorName('');
-        }
-        try {
-            const isEditableResponse = await verifyEditingAccess(journalContent._id, auth.token);
-            if (isMounted) setEditable(isEditableResponse);
+            if (auth.token==='') {
+                if (isMounted) setEditable(false);
+            } else {
+                const isEditableResponse = await verifyEditingAccess(journalContent._id, auth.token);
+                if (isMounted) setEditable(isEditableResponse);
+            }
         } catch(err) {
             if (isMounted) setEditable(false);
         }
 
         try {
-            const islikedResponse = await getJournalLikeStatus(auth.token, journalContent._id);
-            if (isMounted) setIsLiked(islikedResponse);
+            if (auth.token==='') {
+                if (isMounted) setIsLiked(false);
+            } else {
+                const islikedResponse = await getJournalLikeStatus(auth.token, journalContent._id);
+                if (isMounted) setIsLiked(islikedResponse);
+            }
         } catch(err) {
             if (isMounted) setIsLiked(false);
+        }
+
+        try {
+            const authorResponse = await getJournalAuthor(journalContent._id);
+            if (isMounted) setAuthorName(authorResponse.name);
+        } catch(err) {
+            if (isMounted) setAuthorName('');
         }
     },[journalContent, auth.token]);
 
