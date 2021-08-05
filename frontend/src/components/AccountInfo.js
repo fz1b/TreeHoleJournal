@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import customizedTheme from '../customizedTheme';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -99,16 +99,19 @@ export default function AccountInfo(props) {
     const [errMessage, setErrMessage] = React.useState('');
     const hasError = !!errMessage;
 
+    const fetchNameEmail = useCallback(async (isMounted) => {
+        const userData = await fetchUserInfo(auth.token)
+        if (userData) {
+            if (isMounted) setAccountName(userData.name);
+            if (isMounted) setEmail(userData.email);
+        }
+    },[auth.token]);
+
     useEffect(() => {
-        const setName = async () => {
-            const userData = await fetchUserInfo(auth.token)
-            if (userData) {
-                setAccountName(userData.name);
-                setEmail(userData.email);
-            }
-        };
-        setName();
-    }, [auth.token]);
+        let isMounted=true;
+        fetchNameEmail(isMounted);
+        return ()=>{isMounted=false};
+    }, [fetchNameEmail]);
 
     const handleClose = () => {
         props.handleInfoClose(false);
@@ -120,13 +123,16 @@ export default function AccountInfo(props) {
 
     const displayErrorMessage = (errorMessage) => {
         switch (errorMessage) {
-            case 'WEAK_PASSWORD : Password should be at least 6 characters':
+            case 'WEAK_PASSWORD : Password should be at least 6 characters.':
                 setErrMessage('Password should be at least 6 characters');
                 break;
             case 'INVALID_ID_TOKEN':
                 setErrMessage(
                     'Your credential has expired. Please sign in again.'
                 );
+                break;
+            case 'CREDENTIAL_TOO_OLD_LOGIN_AGAIN':
+                setErrMessage('Your credential has expired. Please sign in again.');
                 break;
             default:
                 setErrMessage(errorMessage);
@@ -143,9 +149,9 @@ export default function AccountInfo(props) {
             setIsLoading(true);
             hideErrorMessage();
             const tokenData = await changePassword(request);
-            auth.loginHandler(tokenData);
             setIsLoading(false);
             handleClose();
+            auth.loginHandler(tokenData);
         } catch (err) {
             if (err.response.data.message) {
                 displayErrorMessage(err.response.data.message);
