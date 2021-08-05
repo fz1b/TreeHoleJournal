@@ -196,18 +196,6 @@ export default function AccountInfo(props) {
                         justifyContent='center'
                         direction='row'
                     >
-                        <Typography
-                            className={classes.signUp_error}
-                            variant='body1'
-                            color='error'
-                        >
-                            {hasError && (
-                                <>
-                                    <ErrorOutlineIcon color='error' />
-                                    {errMessage}
-                                </>
-                            )}
-                        </Typography>
                     </Grid>
                     <form noValidate autoComplete='off'>
                         <Grid
@@ -281,6 +269,18 @@ export default function AccountInfo(props) {
                                     required
                                 />
                             </Grid>
+                            <Typography
+                            className={classes.signUp_error}
+                            variant='body1'
+                            color='error'
+                        >
+                            {hasError && (
+                                <>
+                                    <ErrorOutlineIcon color='error' />
+                                    {errMessage}
+                                </>
+                            )}
+                        </Typography>
                         </Grid>
                     </form>
                 </DialogContent>
