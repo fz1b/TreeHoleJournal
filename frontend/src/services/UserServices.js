@@ -12,6 +12,9 @@ async function userService(request, type) {
         case 'refresh':
             url = '/users/refreshtoken';
             break;
+        case 'changePassword':
+            url = '/users/changePassword';
+            break;
         default:
             url = null;
             break;
@@ -26,7 +29,7 @@ async function userService(request, type) {
         token: response.data.idToken,
         expirationTime: expirationTime.toISOString(),
         refreshToken: response.data.refreshToken,
-        userName: response.data.userData.name
+        userName: response.data.userData.name,
     };
     return tokenData;
 }
@@ -46,16 +49,30 @@ export async function refreshService(request) {
     return tokenData;
 }
 
+export async function changePassword(request) {
+    const tokenData = await userService(request, 'changePassword');
+    return tokenData;
+}
+
 export async function likeJournal(request) {
     try {
         await axios.post('/users/like/add', request, {
-            headers: { 'Content-Type': 'application/json' }});
-    } catch(err) {}
+            headers: { 'Content-Type': 'application/json' },
+        });
+    } catch (err) {}
 }
 
 export async function unlikeJournal(request) {
     try {
         await axios.post('/users/like/remove', request, {
-            headers: { 'Content-Type': 'application/json' }});
-    } catch(err) {}
+            headers: { 'Content-Type': 'application/json' },
+        });
+    } catch (err) {}
+}
+
+export async function fetchUserInfo(idToken) {
+    try {
+        const response = await axios.get(`/users/info/${idToken}`);
+        return response.data.userData;
+    } catch (err) {}
 }

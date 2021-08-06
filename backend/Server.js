@@ -38,6 +38,8 @@ app.post('/users/signup', userController.signUp);
 app.post('/users/login', userController.login);
 // refresh user idToken
 app.post('/users/refreshtoken', userController.refreshUserIdToken);
+// reset password
+app.post('/users/changepassword', userController.changePassword);
 // get user info (for FE use, hide userid)
 app.get('/users/info/:idToken', userController.getUserInfo);
 // get user info secure (for BE use, provide userid)

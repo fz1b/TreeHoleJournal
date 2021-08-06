@@ -75,9 +75,10 @@ export default function CustomizedDialogs({
     handleEdit,
     handleClose,
     authorMode,
-    updateJournals,
+    refreshJournals,
     like,
     onLike,
+    onRefreshOneJournal
 }) {
     const [liked, setLiked] = useState(like);
     const [showComments, setShowComments] = useState(false);
@@ -164,8 +165,9 @@ export default function CustomizedDialogs({
                         <CommentArea
                             journalID={journal._id}
                             comments={journal.comments}
-                            updateJournals={updateJournals}
+                            refreshJournals={refreshJournals}
                             authorMode={authorMode}
+                            onRefreshOneJournal={onRefreshOneJournal}
                         />
                     </CardContent>
                 </Collapse>

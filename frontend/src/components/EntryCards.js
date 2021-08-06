@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import JournalModal from './JournalModal';
 import {
@@ -42,7 +42,8 @@ export default function EntryCards(props) {
     const [isEditable, setEditable] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [editing, setEditing] = useState(false);
-    const isAnonymous = props.content.privacy === 'ANONYMOUS';
+    const [journalContent, setJournalContent] = useState(props.content);
+    const isAnonymous = journalContent.privacy === 'ANONYMOUS';
 
     const toggleModal = () => {
         setshowModal(prev => {
@@ -65,7 +66,7 @@ export default function EntryCards(props) {
                 return !prev;
             });
             const req = {
-                journalId: props.content._id,
+                journalId: journalContent._id,
                 idToken: auth.token
             }
             if (likePrev) {await unlikeJournal(req);}
@@ -75,32 +76,41 @@ export default function EntryCards(props) {
         }
     }
 
-    // loads up slowly. 
-    // If the user goes to login before useEffect finish fetching the data
-    // Will run the cleanup function
+    const refreshOneJournal = (journal) => {
+        setJournalContent(journal);
+    }
+
+    const initializeEntryCard = useCallback(async (isMounted) => {
+        try {
+            const authorResponse = await getJournalAuthor(journalContent._id);
+            if (isMounted) setAuthorName(authorResponse.name);
+        } catch(err) {
+            if (isMounted) setAuthorName('');
+        }
+        try {
+            const isEditableResponse = await verifyEditingAccess(journalContent._id, auth.token);
+            if (isMounted) setEditable(isEditableResponse);
+        } catch(err) {
+            if (isMounted) setEditable(false);
+        }
+
+        try {
+            const islikedResponse = await getJournalLikeStatus(auth.token, journalContent._id);
+            if (isMounted) setIsLiked(islikedResponse);
+        } catch(err) {
+            if (isMounted) setIsLiked(false);
+        }
+    },[journalContent, auth.token]);
+
+    useEffect(()=>{
+        setJournalContent(props.content);
+    },[props.content])
+
     useEffect(() => {
         let isMounted = true;
-        getJournalAuthor(props.content._id)
-            .then((res) => {
-                if (isMounted) setAuthorName(res.name);
-            })
-            .catch((err) => {
-                // do nothing and use empty author
-            });
-
-        verifyEditingAccess(props.content._id, auth.token).then(res => {
-            if (isMounted) setEditable(res);
-        }).catch(err => {
-            if (isMounted) setEditable(false);
-        });
-        getJournalLikeStatus(auth.token, props.content._id)
-            .then((res) => {
-                if (isMounted) setIsLiked(res);
-            }).catch((err) => {
-                if (isMounted) setIsLiked(false);
-            });
+        initializeEntryCard(isMounted);
         return () => { isMounted = false };
-    }, [auth.token, props.content._id, props.content.privacy]);
+    }, [initializeEntryCard]);
 
     return (
         <>
@@ -113,25 +123,23 @@ export default function EntryCards(props) {
                                     ? classes.anonymous_avatar
                                     : classes.avatar
                             }
-                        >
-                            {props.content.avatar}
-                        </Avatar>
+                        />
                     }
                     title={authorName}
-                    subheader={props.content.date.toDateString()}
+                    subheader={journalContent.date.toDateString()}
                 />
                 <CardActionArea style={{ display: 'block' }}>
                     {props.content.image && <CardMedia
                         component='img'
                         alt='props.content.image'
                         height='200'
-                        image={props.content.image}
+                        image={journalContent.image}
                         className={classes.coverImage}
                         onClick={toggleModal}
                     />}
                     <CardContent onClick={toggleModal}>
                         <Typography gutterBottom variant='h5' component='h2'>
-                            {props.content.title}
+                            {journalContent.title}
                         </Typography>
                         <div
                             style={{
@@ -146,7 +154,7 @@ export default function EntryCards(props) {
                                 component='p'
                                 noWrap
                             >
-                                {props.content.content}
+                                {journalContent.content}
                             </Typography>
                         </div>
                     </CardContent>
@@ -161,15 +169,12 @@ export default function EntryCards(props) {
                             <EditIcon />
                         </IconButton>
                     }
-                    {/* <IconButton aria-label='share'>
-                        <ShareIcon />
-                    </IconButton> */}
                 </CardActions>
             </Card>
 
             {showModal && (
                 <JournalModal
-                    journal={props.content}
+                    journal={journalContent}
                     editing={editing}
                     onEdit={editHandler}
                     handleClose={toggleModal}
@@ -177,6 +182,9 @@ export default function EntryCards(props) {
                     refreshJournals={props.refreshJournals}
                     like = {isLiked}
                     onLike = {likeHandler}
+                    onDelete = {props.onDelete}
+                    isCompose = {false}
+                    onRefreshOneJournal = {refreshOneJournal}
                 />
             )}
         </>

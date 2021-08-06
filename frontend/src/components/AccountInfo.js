@@ -1,12 +1,15 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useCallback } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import customizedTheme from '../customizedTheme';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
-import axios from 'axios';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import AuthContext from '../authAPI/auth-context';
+import Box from '@material-ui/core/Box';
+import { fetchUserInfo, changePassword } from '../services/UserServices'
 import {
     Grid,
     Avatar,
@@ -67,9 +70,20 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(10),
         margin: theme.spacing(5),
         fontSize: 40,
+        backgroundColor: '#50A9C1',
     },
     password: {
         margin: theme.spacing(2),
+    },
+    signUp_error: {
+        verticalAlign: 'middle',
+        display: 'inline-flex',
+        minHeight: '5%',
+        maxHeight: '5%',
+        marginBottom: '0%',
+        [customizedTheme.breakpoints.down('xs')]: {
+            marginBottom: '5%',
+        },
     },
 }));
 
@@ -77,50 +91,74 @@ export default function AccountInfo(props) {
     const classes = useStyles();
     const auth = useContext(AuthContext);
 
-    const [open, setOpen] = React.useState(props.open);
     const [accountName, setAccountName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setpassword] = React.useState('');
+    const [confirmPassword, setConfirmPassword] = React.useState('');
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [errMessage, setErrMessage] = React.useState('');
+    const hasError = !!errMessage;
+
+    const fetchNameEmail = useCallback(async (isMounted) => {
+        const userData = await fetchUserInfo(auth.token)
+        if (userData) {
+            if (isMounted) setAccountName(userData.name);
+            if (isMounted) setEmail(userData.email);
+        }
+    },[auth.token]);
 
     useEffect(() => {
-        const setName = () => {
-            axios
-                .get(`http://localhost:5000/users/info/${auth.token}`)
-                .then((response) => {
-                    setAccountName(response.data.userData.name);
-                    setEmail(response.data.userData.email);
-                    // handleAccountName(response.data)
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        };
-        setName();
-    }, [auth.token]);
+        let isMounted=true;
+        fetchNameEmail(isMounted);
+        return ()=>{isMounted=false};
+    }, [fetchNameEmail]);
 
     const handleClose = () => {
-        setOpen(false);
         props.handleInfoClose(false);
     };
 
-    const handleSave = async () => {
-        const reqBody = JSON.stringify({
-            email: email,
-            accountName: accountName,
-            password: password,
-        });
+    const hideErrorMessage = () => {
+        setErrMessage('');
+    };
 
+    const displayErrorMessage = (errorMessage) => {
+        switch (errorMessage) {
+            case 'WEAK_PASSWORD : Password should be at least 6 characters.':
+                setErrMessage('Password should be at least 6 characters');
+                break;
+            case 'INVALID_ID_TOKEN':
+                setErrMessage(
+                    'Your credential has expired. Please sign in again.'
+                );
+                break;
+            case 'CREDENTIAL_TOO_OLD_LOGIN_AGAIN':
+                setErrMessage('Your credential has expired. Please sign in again.');
+                break;
+            default:
+                setErrMessage(errorMessage);
+                break;
+        }
+    };
+
+    const handleChangePassword = async () => {
+        const request = {
+            token: auth.token,
+            password: password
+        }
         try {
-            const response = await axios.post(
-                'http://localhost:5000/users/reset/',
-                reqBody,
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-            auth.loginHandler(response.data.idToken);
+            setIsLoading(true);
+            hideErrorMessage();
+            const tokenData = await changePassword(request);
+            setIsLoading(false);
+            handleClose();
+            auth.loginHandler(tokenData);
         } catch (err) {
-            console.log(err);
+            if (err.response.data.message) {
+                displayErrorMessage(err.response.data.message);
+            } else {
+                displayErrorMessage('Unable to change password. Please try again.');
+            }
+            setIsLoading(false);
         }
     };
 
@@ -129,38 +167,47 @@ export default function AccountInfo(props) {
             <Dialog
                 onClose={handleClose}
                 aria-labelledby='customized-dialog-title'
-                open={open}
+                open={props.open}
             >
                 <DialogTitle id='customized-dialog-title' onClose={handleClose}>
                     Account Information
                 </DialogTitle>
                 <DialogContent dividers>
-                    <DialogContentText>
-                        In this page you can change your email as well as
-                        username. You can also reset your password. Changing the
-                        avatar image will be coming soon in a later release.
-                    </DialogContentText>
+                    <Box m={2}>
+                        <DialogContentText>
+                            In this page you can change your email as well as
+                            username. You can also reset your password. Changing the
+                            avatar image will be coming soon in a later release.
+                        </DialogContentText>
+                    </Box>
                     <Grid
                         container
                         alignItems='center'
-                        justify='center'
+                        justifyContent='center'
                         direction='row'
                     >
                         <Avatar className={classes.avatar}>
-                            {accountName.charAt(0)}
+
                         </Avatar>
+                    </Grid>
+                    <Grid 
+                        container
+                        alignItems='center'
+                        justifyContent='center'
+                        direction='row'
+                    >
                     </Grid>
                     <form noValidate autoComplete='off'>
                         <Grid
                             container
                             direction='row'
-                            justify='center'
+                            justifyContent='center'
                             alignItems='center'
                             spacing={1}
                         >
                             <Grid item sm={5}>
                                 <TextField
-                                    autoFocus
+                                    disabled
                                     variant='outlined'
                                     margin='normal'
                                     id='accountName'
@@ -176,8 +223,8 @@ export default function AccountInfo(props) {
                             </Grid>
                             <Grid item sm={5}>
                                 <TextField
+                                    disabled
                                     variant='outlined'
-                                    autoFocus
                                     margin='normal'
                                     id='email'
                                     label='Email Address'
@@ -195,22 +242,50 @@ export default function AccountInfo(props) {
                                     variant='outlined'
                                     autoFocus
                                     margin='normal'
-                                    id='email'
-                                    label='Password'
+                                    id='password'
+                                    label='Change your password'
                                     type='password'
                                     value={password}
                                     onChange={(event) => {
                                         setpassword(event.target.value);
                                     }}
+                                    autoComplete='new-password'
+                                    fullWidth
+                                    required
+                                />
+                                <TextField
+                                    disabled={!password}
+                                    variant='outlined'
+                                    margin='normal'
+                                    id='confirm_password'
+                                    label='Confirm your password'
+                                    type='password'
+                                    value={confirmPassword}
+                                    onChange={(event) => {
+                                        setConfirmPassword(event.target.value);
+                                    }}
+                                    autoComplete='new-password'
                                     fullWidth
                                     required
                                 />
                             </Grid>
+                            <Typography
+                            className={classes.signUp_error}
+                            variant='body1'
+                            color='error'
+                        >
+                            {hasError && (
+                                <>
+                                    <ErrorOutlineIcon color='error' />
+                                    {errMessage}
+                                </>
+                            )}
+                        </Typography>
                         </Grid>
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button disabled onClick={handleSave} color='primary'>
+                    <Button disabled={(password !== confirmPassword) || isLoading || !password} onClick={handleChangePassword} color='primary'>
                         Save changes
                     </Button>
                 </DialogActions>
