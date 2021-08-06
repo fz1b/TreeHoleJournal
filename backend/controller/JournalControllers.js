@@ -205,12 +205,15 @@ const getDateOverview = async (req, res) => {
                 filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(filter,
-                ['date']
+                ['date', '-_id']
             )
-                .distinct('date')
-                .then((journals) => {
-                    // console.log(journals);
-                    res.status(200).json(journals);
+                .then((dates) => {
+                    // console.log(dates);
+                    let uniqueDates = new Set();
+                    for (let date of dates){
+                        uniqueDates.add(new Date(date.date).setHours(0,0,0,0));
+                    }
+                    res.status(200).json([...uniqueDates]);
                 })
                 .catch((err) => {
                     console.error(err);
@@ -221,6 +224,7 @@ const getDateOverview = async (req, res) => {
             console.log(err);
             res.status(500).json(err);
         });
+
 }
 
 // get the user's journal filtered by a given date

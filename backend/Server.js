@@ -14,7 +14,6 @@ const path = require("path");
 
 let server = app.listen(PORT, function () {
     let port = server.address().port;
-    console.log(process.env.MONGO_URL);
     mongoose
         .connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
