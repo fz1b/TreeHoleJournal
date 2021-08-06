@@ -148,7 +148,9 @@ export default function Me() {
         setJournals([]);
         fetchJournals(null, null);
         getDateOverview(auth.token)
-            .then(res=> console.log(res))
+            .then(dates=> {
+                // Emily's code here
+            })
             .catch(err=> {
                 // do nothing
             });

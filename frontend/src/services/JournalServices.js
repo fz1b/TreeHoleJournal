@@ -121,7 +121,7 @@ export function searchUserJournals(idToken, criteria, last_id, last_date) {
 // get the dates that the user has journals on
 // req-param: idToken
 // req-body: null
-// response: list of Date that the user has journals on
+// response: list of Date obj that the user has journals on
 export function getDateOverview(idToken) {
     return axios
         .get('/me/date_overview/' + idToken)
