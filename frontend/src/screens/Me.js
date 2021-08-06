@@ -9,10 +9,11 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import JounalModal from '../components/JournalModal';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
+import Coda from '../components/Coda';
 import {
     getUserJournals,
     searchUserJournals,
-    getUserJournalsByDate
+    getUserJournalsByDate,
 } from '../services/JournalServices';
 import LoadingSpinner from '../components/LoadingSpinner';
 const useStyles = makeStyles((theme) => ({
@@ -50,8 +51,8 @@ let newJournal = {
 const fetchMode = {
     GENERAL: 'general',
     SEARCH: 'search',
-    DATE: 'date'
-}
+    DATE: 'date',
+};
 
 export default function Me() {
     const auth = useContext(AuthContext);
@@ -78,7 +79,7 @@ export default function Me() {
     };
     const handleSearch = () => {
         setLoading(true);
-        if(searchContent){
+        if (searchContent) {
             setMode(fetchMode.SEARCH);
             setHasMore(true);
             searchUserJournals(auth.token, searchContent)
@@ -86,7 +87,7 @@ export default function Me() {
                     setJournals(res);
                     setLoading(false);
                 })
-                .catch(err=>{
+                .catch((err) => {
                     // do nothing
                     setLoading(false);
                 });
@@ -124,26 +125,29 @@ export default function Me() {
                     setJournals(res);
                     setLoading(false);
                 })
-                .catch(err=>{
+                .catch((err) => {
                     // do nothing
                     setLoading(false);
-                })
+                });
         }
-    }
+    };
 
-    const fetchJournals = useCallback((last_id, last_date) => {
-        setLoading(true);
-        getUserJournals(auth.token, last_id, last_date)
-            .then((res) => {
-                setJournals(res);
-                setLoading(false);
-            })
-            .catch((err) => {
-                // setJournals([]);
-                console.error(err);
-                setLoading(false);
-            });
-    }, [auth.token]);
+    const fetchJournals = useCallback(
+        (last_id, last_date) => {
+            setLoading(true);
+            getUserJournals(auth.token, last_id, last_date)
+                .then((res) => {
+                    setJournals(res);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    // setJournals([]);
+                    console.error(err);
+                    setLoading(false);
+                });
+        },
+        [auth.token]
+    );
 
     useEffect(() => {
         setJournals([]);
@@ -151,45 +155,56 @@ export default function Me() {
     }, [auth.token, fetchJournals]);
 
     // load more journals when scrolled to the bottom
-    window.onscroll = function() {
+    window.onscroll = function () {
         let d = document.documentElement;
         let offset = d.scrollTop + window.innerHeight;
         let height = d.offsetHeight;
 
-        if (offset >= height-5 && !loading && hasMore) {
+        if (offset >= height - 5 && !loading && hasMore) {
             setLoading(true);
-            let last_id, last_date = null;
-            if (journals.length>0){
-                last_id = journals[journals.length-1]._id;
-                last_date = journals[journals.length-1].date;
+            let last_id,
+                last_date = null;
+            if (journals.length > 0) {
+                last_id = journals[journals.length - 1]._id;
+                last_date = journals[journals.length - 1].date;
             }
 
-            let fetchFunction = () =>{
+            let fetchFunction = () => {
                 return getUserJournals(auth.token, last_id, last_date);
-            }
+            };
             switch (mode) {
                 case fetchMode.SEARCH:
-                    fetchFunction = () =>{
-                        return searchUserJournals(auth.token,searchContent, last_id, last_date);
-                    }
+                    fetchFunction = () => {
+                        return searchUserJournals(
+                            auth.token,
+                            searchContent,
+                            last_id,
+                            last_date
+                        );
+                    };
                     break;
                 case fetchMode.DATE:
-                    fetchFunction = () =>{
-                        return getUserJournalsByDate(auth.token, dateFilter, last_id, last_date);
-                    }
+                    fetchFunction = () => {
+                        return getUserJournalsByDate(
+                            auth.token,
+                            dateFilter,
+                            last_id,
+                            last_date
+                        );
+                    };
                     break;
                 default:
-                    fetchFunction = () =>{
+                    fetchFunction = () => {
                         return getUserJournals(auth.token, last_id, last_date);
-                    }
+                    };
                     break;
             }
 
             fetchFunction()
-                .then(res=>{
-                    if (res.length > 0){
-                        setJournals(prev => {
-                            return [...prev, ...res]
+                .then((res) => {
+                    if (res.length > 0) {
+                        setJournals((prev) => {
+                            return [...prev, ...res];
                         });
                         setHasMore(true);
                     } else {
@@ -201,7 +216,7 @@ export default function Me() {
                     // setJournals([]);
                     console.error(err);
                     setLoading(false);
-                })
+                });
         }
     };
 
@@ -219,18 +234,18 @@ export default function Me() {
     // };
 
     const createJournalHandler = (newJournal) => {
-        setJournals((prev)=>{
+        setJournals((prev) => {
             let newArr = prev;
             newArr.unshift(newJournal);
             return newArr;
-        })
-    }
+        });
+    };
     const deleteJournalHandler = (deletedJournalId) => {
         const newData = journals.filter((journal) => {
             return journal._id !== deletedJournalId;
         });
         setJournals(newData);
-    }
+    };
 
     return (
         <ThemeProvider theme={customizedTheme}>
@@ -262,13 +277,13 @@ export default function Me() {
                         authorMode={true}
                         refreshJournals={fetchJournals}
                         isCompose={true}
-                        onCreateJournal = {createJournalHandler}
+                        onCreateJournal={createJournalHandler}
                     >
                         {' '}
                         handleSave={handleSave}{' '}
                     </JounalModal>
                 )}
-                {showSearchTag && searchContent&&(
+                {showSearchTag && searchContent && (
                     <SearchTag
                         content={searchContent}
                         count={journals.length}
@@ -282,10 +297,8 @@ export default function Me() {
                     refreshJournals={fetchJournals}
                     onDelete={deleteJournalHandler}
                 />
-                {loading &&
-                    <LoadingSpinner/>}
-                {!hasMore &&
-                    <h1>No More..</h1>}
+                {loading && <LoadingSpinner />}
+                {!hasMore && <Coda />}
             </div>
         </ThemeProvider>
     );
