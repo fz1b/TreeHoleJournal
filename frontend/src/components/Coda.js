@@ -7,7 +7,7 @@ export default function Coda() {
             <div>🚧</div>
         </Grid>
         <Grid item xs={6}>
-            <h3>Constrution in progress</h3>
+            <h3>Journaling started here</h3>
         </Grid>
     </Grid>
     )
