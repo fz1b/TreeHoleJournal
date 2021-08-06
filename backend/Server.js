@@ -14,6 +14,7 @@ const path = require("path");
 
 let server = app.listen(PORT, function () {
     let port = server.address().port;
+    console.log(process.env.MONGO_URL);
     mongoose
         .connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
@@ -87,6 +88,8 @@ app.delete('/explore/comments/:journal_id/:comment_id', journalController.delete
 app.get('/me/:idToken', journalController.getUserJournals);
 // get journals written by the given user that contain the string in title or content
 app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
+// get a list of dates that the user wrote journals on
+app.get('/me/date_overview/:idToken', journalController.getDateOverview);
 // get journals written by the given user on the specified date
 app.get('/me/date/:idToken/:date', journalController.getUserJournalsByDate);
 // create a new journal

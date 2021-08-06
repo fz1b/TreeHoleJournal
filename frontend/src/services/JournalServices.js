@@ -118,15 +118,35 @@ export function searchUserJournals(idToken, criteria, last_id, last_date) {
         });
 }
 
+// get the dates that the user has journals on
+// req-param: idToken
+// req-body: null
+// response: list of Date that the user has journals on
+export function getDateOverview(idToken) {
+    return axios
+        .get('/me/date_overview/' + idToken)
+        .then((res) => {
+            // convert date from string to Date
+            let dates = [];
+            for (let date of res.data) {
+                dates.push(new Date(date));
+            }
+            return dates;
+        })
+        .catch((err) => {
+            console.error(err);
+            return [];
+        });
+}
+
 // get the user's journal filtered by a given date
 // input: user_token, Date, last_id id of the last loaded journal, last_date
 // req-body: void
 // response: list of Journals JSON obj
 export function getUserJournalsByDate(idToken, date, last_id, last_date) {
     if (!date) date = new Date();
-    let dateYYYY_MM_DD = date.toISOString().substring(0, 10);
     return axios
-        .get('/me/date/' + idToken + '/' + dateYYYY_MM_DD,
+        .get('/me/date/' + idToken + '/' + date.toUTCString(),
             { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
             // console.log(res.data);

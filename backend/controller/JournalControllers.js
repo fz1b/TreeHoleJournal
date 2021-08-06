@@ -191,6 +191,38 @@ const searchUserJournals = async (req, res) => {
         });
 };
 
+// get the dates that the user has journals on
+// req-param: idToken
+// req-body: null
+// response: list of Date that the user has journals on
+const getDateOverview = async (req, res) => {
+    axios
+        .get(process.env.BACKEND_URL + 'users/info/secure/' + req.params.idToken)
+        .then((user) => {
+            let filter = { author_id: user.data.userData._id };
+            // get only the journals created before the last journal
+            if (req.query.last_id && req.query.last_date ) {
+                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+            }
+            Journal.find(filter,
+                ['date']
+            )
+                .distinct('date')
+                .then((journals) => {
+                    // console.log(journals);
+                    res.status(200).json(journals);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    res.status(500).json(err);
+                });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+}
+
 // get the user's journal filtered by a given date
 // if a journal_id and date is provided in the query, return only the journals
 // created before the given journal (for pagination)
@@ -207,7 +239,7 @@ const getUserJournalsByDate = async (req, res) => {
             let end = new Date(req.params.date);
             end.setDate(end.getDate()+1);
             end.setHours(0,0,0,0);
-            // console.log('start: ' + start);
+            // console.log('start: ' + start + 'ori: '+ req.params.date);
             // console.log('end: ' + end);
             let filter = {
                 author_id: user.data.userData._id,
@@ -255,7 +287,6 @@ const modifyFilterToLoadAfter = (filter, last_id, last_date) => {
     }
     return filter;
 }
-
 
 // get the journal's author info
 // req-param: journal_id
@@ -553,6 +584,7 @@ exports.searchExploreJournals = searchExploreJournals;
 exports.getUserJournals = getUserJournals;
 exports.searchUserJournals = searchUserJournals;
 exports.getUserJournalsByDate = getUserJournalsByDate;
+exports.getDateOverview = getDateOverview;
 exports.getJournalAuthor = getJournalAuthor;
 exports.createNewJournal = createNewJournal;
 exports.verifyEditingAccess = verifyEditingAccess;
