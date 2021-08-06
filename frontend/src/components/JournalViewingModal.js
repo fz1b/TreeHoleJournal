@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import { FiEdit } from 'react-icons/fi';
 import Badge from '@material-ui/core/Badge';
 import styled from 'styled-components';
-import imgPlaceholder from '../assets/photo_placeholder.svg';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsFillChatSquareDotsFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
@@ -71,19 +70,6 @@ const Date = styled.span`
     color: grey;
 `;
 
-const ImgPlaceholder = styled.div`
-    background-image: url(${imgPlaceholder});
-    background-color: aliceblue;
-    background-repeat: no-repeat;
-    background-size: 60%;
-    height: 25vh;
-    width: 564px;
-    background-position: 60%;
-    border-radius: 10px;
-    border-style: dashed;
-    border-color: lightgrey;
-`;
-
 export default function CustomizedDialogs({
     journal,
     handleEdit,
@@ -107,7 +93,7 @@ export default function CustomizedDialogs({
 
     useEffect(() => {
         setLiked(like);
-    }, [like])
+    }, [like]);
 
     return (
         <div>
@@ -116,23 +102,20 @@ export default function CustomizedDialogs({
                 aria-labelledby='customized-dialog-title'
                 open={true}
                 maxWidth='sm'
+                fullWidth
             >
-                <DialogTitle id='customized-dialog-title' onClose={handleClose}>
+                <DialogTitle id='customized-dialog-title' style={{height:'32px'}} onClose={handleClose}>
                     {journal.title}
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography component={'span'} gutterBottom>
-                        {!journal.image && (
-                            <>
-                                <ImgPlaceholder />{' '}
-                            </>
-                        )}
-
-                        <Image src={journal.image} alt='' />
+                        {journal.image && <Image src={journal.image} alt='' />}
                         {journal.content}
                     </Typography>
                 </DialogContent>
-                {journal.location && <JournalLocation address={journal.location.address} />}
+                {journal.location && (
+                    <JournalLocation address={journal.location.address} />
+                )}
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (

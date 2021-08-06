@@ -138,14 +138,14 @@ export default function EntryCards(props) {
                     subheader={journalContent.date.toDateString()}
                 />
                 <CardActionArea style={{ display: 'block' }}>
-                    <CardMedia
+                    {journalContent.image && <CardMedia
                         component='img'
-                        alt='journalContent.title'
+                        alt='props.content.image'
                         height='200'
                         image={journalContent.image}
                         className={classes.coverImage}
                         onClick={toggleModal}
-                    />
+                    />}
                     <CardContent onClick={toggleModal}>
                         <Typography gutterBottom variant='h5' component='h2'>
                             {journalContent.title}
