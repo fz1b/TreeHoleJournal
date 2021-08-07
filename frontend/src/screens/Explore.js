@@ -3,16 +3,17 @@ import CardHolder from '../components/CardHolder';
 import Header from '../components/Header';
 import { makeStyles, ThemeProvider } from '@material-ui/core';
 import bgImg from '../assets/explore_bg.svg';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     getExploreJournals,
     searchExploreJournals,
-    getNearbyJournals, getUserJournals, searchUserJournals, getUserJournalsByDate
+    getNearbyJournals
 } from "../services/JournalServices";
 import ExploreTabs from '../components/ExploreTabs';
-import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
 import LoadingSpinner from '../components/LoadingSpinner';
+import useMountedState from '../customHooks/useMountedState';
+
 const useStyles = makeStyles((theme) => ({
     explore_bg: {
         backgroundImage: `url(${bgImg})`,
@@ -32,7 +33,6 @@ const fetchMode = {
 }
 
 export default function Explore() {
-    const auth = useContext(AuthContext);
     const classes = useStyles();
     const [journals, setJournals] = useState([]);
     const [searchContent, setSearchContent] = useState('');
@@ -41,6 +41,7 @@ export default function Explore() {
     const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
     const [mode, setMode] = useState(fetchMode.GENERAL);
+    const isMounted = useMountedState();
 
     const handleTab = (value) => {
         setTab(value);
@@ -72,45 +73,28 @@ export default function Explore() {
             setShowSearchTag(true);
         }
     };
-    const fetchJournals = (last_id, last_date) => {
-        setLoading(true);
+    const fetchJournals = useCallback((last_id, last_date) => {
+        if (isMounted())
+            setLoading(true);
         getExploreJournals(last_id, last_date)
             .then((res) => {
-                setJournals(res);
-                setLoading(false);
+                if (isMounted())
+                    setJournals(res);
+                if (isMounted())
+                    setLoading(false);
             })
             .catch((err) => {
-                setJournals([]);
-                setLoading(false);
+                if (isMounted())
+                    setJournals([]);
+                if (isMounted())
+                    setLoading(false);
                 console.error(err);
             });
-    };
+    },[isMounted]);
 
     useEffect(() => {
         fetchJournals(null, null);
-    },[]);
-
-    // useEffect(() => {
-    //     let isMounted = true;
-    //     if (tab === "Newest") {
-    //         setMode(fetchMode.GENERAL);
-    //         setJournals([]);
-    //         setHasMore(true);
-    //     }
-    //     if (tab === "Nearby") {
-    //         setMode(fetchMode.NEARBY);
-    //         setJournals([]);
-    //         setHasMore(true);
-    //         navigator.geolocation.getCurrentPosition(function (position) {
-    //             const lat = position.coords.latitude;
-    //             const lng = position.coords.longitude
-    //             getNearbyJournals(lat, lng).then(res => {
-    //                 if (isMounted) setJournals(res);
-    //             })
-    //         });
-    //     }
-    //     return () => { isMounted = false };
-    // }, [tab]);
+    },[fetchJournals]);
 
     // load more journals when scrolled to the bottom
     window.onscroll = function() {
@@ -119,7 +103,7 @@ export default function Explore() {
         let height = d.offsetHeight;
 
         if (offset >= height-5 && !loading && hasMore) {
-            setLoading(true);
+            if (isMounted()) setLoading(true);
             let last_id, last_date = null;
             if (journals.length>0){
                 last_id = journals[journals.length-1]._id;
@@ -139,7 +123,7 @@ export default function Explore() {
                             const lat = position.coords.latitude;
                             const lng = position.coords.longitude
                             getNearbyJournals(lat, lng).then(res => {
-                                setJournals(res);
+                                if (isMounted()) setJournals(res);
                             })
                         })
                     }
@@ -154,19 +138,19 @@ export default function Explore() {
             fetchFunction()
                 .then(res=>{
                     if (res.length > 0){
-                        setJournals(prev => {
+                        if (isMounted()) setJournals(prev => {
                             return [...prev, ...res]
                         });
-                        setHasMore(true);
+                        if (isMounted()) setHasMore(true);
                     } else {
-                        setHasMore(false);
+                        if (isMounted()) setHasMore(false);
                     }
-                    setLoading(false);
+                    if (isMounted()) setLoading(false);
                 })
                 .catch((err) => {
                     // setJournals([]);
                     console.error(err);
-                    setLoading(false);
+                    if (isMounted()) setLoading(false);
                 })
         }
     };

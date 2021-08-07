@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useMountedState from '../customHooks/useMountedState';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
@@ -28,6 +29,7 @@ function Comment(props) {
     const [initial, setInitial] = useState('');
     const [anchorEl,setAnchorEl] = useState(null);
     const [isEditable, setIsEditable] = useState(false);
+    const isMounted = useMountedState();
 
     const handleCommentEdit = (event) => {
         setAnchorEl(event.currentTarget);
@@ -41,18 +43,18 @@ function Comment(props) {
     useEffect(()=>{
         getCommentAuthor(props.journalID, props.comment._id)
         .then((res) => {
-            setName(res.name);
-            setInitial(res.name.charAt(0));
+            if(isMounted()) setName(res.name);
+            if(isMounted()) setInitial(res.name.charAt(0));
             if (res.name=== props.myName || props.authorMode) {
-                setIsEditable(true);
+                if(isMounted()) setIsEditable(true);
             } else {
-                setIsEditable(false);
+                if(isMounted()) setIsEditable(false);
             }
         })
         .catch((err) => {
             // do nothing, display empty profile pic
         });
-    },[props.journalID, props.comment._id, props.myName, props.authorMode])
+    },[props.journalID, props.comment._id, props.myName, props.authorMode, isMounted])
 
     return (
         <Box display='flex' mb={2}>
