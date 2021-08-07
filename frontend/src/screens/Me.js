@@ -146,7 +146,7 @@ export default function Me() {
                 console.error(err);
                 if (isMounted()) setLoading(false);
             });
-    }, [auth.token]);
+    }, [auth.token, isMounted]);
 
     useEffect(() => {
         setJournals([]);
