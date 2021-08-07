@@ -1,31 +1,15 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import useMountedState from '../customHooks/useMountedState';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import JournalModal from './JournalModal';
-import {
-    Card,
-    CardActions,
-    CardActionArea,
-    CardContent,
-    CardMedia,
-    Typography,
-    CardHeader,
-    Avatar,
-    IconButton,
-    Box,
-} from '@material-ui/core';
+import {Card, CardActions, CardActionArea, CardContent, CardMedia, Typography, CardHeader, Avatar, IconButton, Box} from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import EditIcon from '@material-ui/icons/Edit';
-import { grey } from '@material-ui/core/colors';
-import {
-    getJournalAuthor,
-    getJournalLikeStatus,
-    verifyEditingAccess,
-} from '../services/JournalServices';
-import { likeJournal, unlikeJournal } from '../services/UserServices';
+import {grey} from '@material-ui/core/colors';
+import {getJournalAuthor, getJournalLikeStatus, verifyEditingAccess} from '../services/JournalServices';
+import {likeJournal, unlikeJournal} from '../services/UserServices';
 import AuthContext from '../authAPI/auth-context';
-import { useHistory } from 'react-router';
-import { sizing } from '@material-ui/system';
+import {useHistory} from 'react-router';
 
 const useStyles = makeStyles({
     avatar: {
@@ -93,34 +77,34 @@ export default function EntryCards(props) {
 
     const initializeEntryCard = useCallback(async () => {
         try {
-            if (auth.token==='') {
+            if (auth.token === '') {
                 if (isMounted()) setEditable(false);
             } else {
                 const isEditableResponse = await verifyEditingAccess(journalContent._id, auth.token);
                 if (isMounted()) setEditable(isEditableResponse);
             }
-        } catch(err) {
+        } catch (err) {
             if (isMounted()) setEditable(false);
         }
 
         try {
-            if (auth.token==='') {
+            if (auth.token === '') {
                 if (isMounted()) setIsLiked(false);
             } else {
                 const islikedResponse = await getJournalLikeStatus(auth.token, journalContent._id);
                 if (isMounted()) setIsLiked(islikedResponse);
             }
-        } catch(err) {
+        } catch (err) {
             if (isMounted()) setIsLiked(false);
         }
 
         try {
             const authorResponse = await getJournalAuthor(journalContent._id);
             if (isMounted()) setAuthorName(authorResponse.name);
-        } catch(err) {
+        } catch (err) {
             if (isMounted()) setAuthorName('');
         }
-    },[journalContent, auth.token, isMounted]);
+    }, [journalContent, auth.token, isMounted]);
 
     useEffect(() => {
         setJournalContent(props.content);
@@ -132,78 +116,59 @@ export default function EntryCards(props) {
 
     return (
         <>
-            <Card style={{ height: '100%'}}>
-            <Box height="100%" display="flex" justifyContent="space-between" flexDirection='column'>
-                <Box>
-                <CardHeader
-                    avatar={
-                        <Avatar
-                            className={
-                                isAnonymous
-                                    ? classes.anonymous_avatar
-                                    : classes.avatar
-                            }
-                        />
-                    }
-                    title={authorName}
-                    subheader={journalContent.date.toDateString()}
-                />
-                </Box>
-                <Box height="100%" display="flex" justifyContent="space-between" flexDirection='column'>
-                        
-                <CardActionArea style={{ display: 'block' }}>
+            <Card style={{height: '100%'}}>
+                <Box height='100%' display='flex' justifyContent='space-between' flexDirection='column'>
                     <Box>
-                    {journalContent.image && (
-                        <CardMedia
-                            component='img'
-                            alt='props.content.image'
-                            height='200'
-                            image={journalContent.image}
-                            className={classes.coverImage}
-                            onClick={toggleModal}
+                        <CardHeader
+                            avatar={<Avatar className={isAnonymous ? classes.anonymous_avatar : classes.avatar} />}
+                            title={authorName}
+                            subheader={journalContent.date.toDateString()}
                         />
-                    )}
+                    </Box>
+                    <Box height='100%' display='flex' justifyContent='space-between' flexDirection='column'>
+                        <CardActionArea style={{display: 'block'}}>
+                            <Box>
+                                {journalContent.image && (
+                                    <CardMedia
+                                        component='img'
+                                        alt='props.content.image'
+                                        height='200'
+                                        image={journalContent.image}
+                                        className={classes.coverImage}
+                                        onClick={toggleModal}
+                                    />
+                                )}
+                            </Box>
+                            <Box>
+                                <CardContent onClick={toggleModal}>
+                                    <Typography gutterBottom variant='h5' component='h2'>
+                                        {journalContent.title}
+                                    </Typography>
+                                    <Typography variant='body2' color='textSecondary' component='p'>
+                                        {journalContent.content.slice(0, 550) + '...'}
+                                    </Typography>
+                                </CardContent>
+                            </Box>
+                        </CardActionArea>
                     </Box>
                     <Box>
-                    <CardContent onClick={toggleModal}>
-                        <Typography gutterBottom variant='h5' component='h2'>
-                            {journalContent.title}
-                        </Typography>
-                            <Typography
-                                variant='body2'
-                                color='textSecondary'
-                                component='p'
-                            >
-                                {journalContent.content.slice(0,550)+ '...'}
-                            </Typography>
-                    </CardContent>
-                    </Box>
-                </CardActionArea>
-                </Box>
-                <Box>
-                <CardActions>
-                        <IconButton
-                            aria-label='add to favorites'
-                            onClick={likeHandler}
-                        >
-                            {isLiked && (
-                                <FavoriteIcon className={classes.heart_red} />
-                            )}
-                            {!isLiked && <FavoriteIcon />}
-                        </IconButton>
-                        {isEditable && (
-                            <IconButton
-                                aria-label='edit'
-                                onClick={() => {
-                                    toggleModal();
-                                    editHandler(true);
-                                }}
-                            >
-                                <EditIcon />
+                        <CardActions>
+                            <IconButton aria-label='add to favorites' onClick={likeHandler}>
+                                {isLiked && <FavoriteIcon className={classes.heart_red} />}
+                                {!isLiked && <FavoriteIcon />}
                             </IconButton>
-                        )}
-
-                    </CardActions>
+                            {isEditable && (
+                                <IconButton
+                                    aria-label='edit'
+                                    onClick={() => {
+                                        toggleModal();
+                                        editHandler(true);
+                                    }}
+                                >
+                                    <EditIcon />
+                                </IconButton>
+                            )}
+                        </CardActions>
                     </Box>
                 </Box>
             </Card>
