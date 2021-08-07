@@ -127,9 +127,9 @@ export default function EntryCards(props) {
                     </Box>
                     <Box height='100%' display='flex' flexDirection='column'>
                         {!journalContent.image && (
-                            <CardActionArea style={{minHeight: '100%'}}>
+                            <CardActionArea style={{minHeight: '100%'}} onClick={toggleModal}>
                                 <Box height='100%' display='flex' justifyContent='flex-start'>
-                                    <CardContent onClick={toggleModal}>
+                                    <CardContent>
                                         <Typography gutterBottom variant='h5' component='h2'>
                                             {journalContent.title}
                                         </Typography>
