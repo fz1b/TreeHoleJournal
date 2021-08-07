@@ -3,15 +3,13 @@ import { Grid, Box } from '@material-ui/core/';
 import JournalCalendar from './JournalCalendar';
 
 export function CardHolder({ handleDateSelection,showCalendar, journals, refreshJournals, onDelete }) {
-
     return (
         <>
             <Box m={5} mt={0}>
                 <Grid
                     container
                     direction='row'
-                    justifyContent='center'
-                    alignItems='center'
+
                     spacing={3}
                 >
                     {showCalendar && (
