@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useCallback } from 'react';
+import useMountedState from '../customHooks/useMountedState';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import customizedTheme from '../customizedTheme';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -97,20 +98,21 @@ export default function AccountInfo(props) {
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
     const [errMessage, setErrMessage] = React.useState('');
+    const isMounted = useMountedState();
     const hasError = !!errMessage;
 
-    const fetchNameEmail = useCallback(async (isMounted) => {
-        const userData = await fetchUserInfo(auth.token)
+    const fetchNameEmail = useCallback(async () => {
+        const userData = await fetchUserInfo(auth.token);
         if (userData) {
-            if (isMounted) setAccountName(userData.name);
-            if (isMounted) setEmail(userData.email);
+            if (isMounted())
+                setAccountName(userData.name);
+            if (isMounted())
+                setEmail(userData.email);
         }
-    },[auth.token]);
+    },[auth.token, isMounted]);
 
     useEffect(() => {
-        let isMounted=true;
-        fetchNameEmail(isMounted);
-        return ()=>{isMounted=false};
+        fetchNameEmail();
     }, [fetchNameEmail]);
 
     const handleClose = () => {

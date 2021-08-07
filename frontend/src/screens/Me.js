@@ -9,12 +9,15 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import JounalModal from '../components/JournalModal';
 import AuthContext from '../authAPI/auth-context';
 import SearchTag from '../components/SearchTag';
+import Coda from '../components/Coda';
 import {
     getUserJournals,
     searchUserJournals,
     getUserJournalsByDate, getDateOverview
 } from "../services/JournalServices";
 import LoadingSpinner from '../components/LoadingSpinner';
+import useMountedState from '../customHooks/useMountedState';
+
 const useStyles = makeStyles((theme) => ({
     my_journals_bg: {
         backgroundImage: `url(${journalImg})`,
@@ -50,8 +53,8 @@ let newJournal = {
 const fetchMode = {
     GENERAL: 'general',
     SEARCH: 'search',
-    DATE: 'date'
-}
+    DATE: 'date',
+};
 
 export default function Me() {
     const auth = useContext(AuthContext);
@@ -64,6 +67,7 @@ export default function Me() {
     const [dateFilter, setDateFilter] = useState(null);
     const [showSearchTag, setShowSearchTag] = useState(false);
     const [mode, setMode] = useState(fetchMode.GENERAL);
+    const isMounted = useMountedState();
 
     const handleClearSearch = () => {
         setMode(fetchMode.GENERAL);
@@ -78,7 +82,7 @@ export default function Me() {
     };
     const handleSearch = () => {
         setLoading(true);
-        if(searchContent){
+        if (searchContent) {
             setMode(fetchMode.SEARCH);
             setHasMore(true);
             searchUserJournals(auth.token, searchContent)
@@ -86,7 +90,7 @@ export default function Me() {
                     setJournals(res);
                     setLoading(false);
                 })
-                .catch(err=>{
+                .catch((err) => {
                     // do nothing
                     setLoading(false);
                 });
@@ -123,120 +127,123 @@ export default function Me() {
                     setJournals(res);
                     setLoading(false);
                 })
-                .catch(err=>{
+                .catch((err) => {
                     // do nothing
                     setLoading(false);
-                })
+                });
         }
-    }
+    };
 
-    const fetchJournals = useCallback((last_id, last_date) => {
-        setLoading(true);
-        getUserJournals(auth.token, last_id, last_date)
-            .then((res) => {
-                setJournals(res);
-                setLoading(false);
-            })
-            .catch((err) => {
-                // setJournals([]);
-                console.error(err);
-                setLoading(false);
-            });
-    }, [auth.token]);
+    const fetchJournals = useCallback(
+        (last_id, last_date) => {
+            if (isMounted()) setLoading(true);
+            getUserJournals(auth.token, last_id, last_date)
+                .then((res) => {
+                    if (isMounted()) setJournals(res);
+                    if (isMounted()) setLoading(false);
+                })
+                .catch((err) => {
+                    // setJournals([]);
+                    console.error(err);
+                    if (isMounted()) setLoading(false);
+                });
+        },
+        [auth.token, isMounted]
+    );
 
     useEffect(() => {
         setJournals([]);
+        setHasMore(true);
         fetchJournals(null, null);
         getDateOverview(auth.token)
-            .then(dates=> {
+            .then(dates => {
                 // Emily's code here
             })
-            .catch(err=> {
+            .catch(err => {
                 // do nothing
             });
     }, [auth.token, fetchJournals]);
 
     // load more journals when scrolled to the bottom
-    window.onscroll = function() {
+    window.onscroll = function () {
         let d = document.documentElement;
         let offset = d.scrollTop + window.innerHeight;
         let height = d.offsetHeight;
 
-        if (offset >= height-5 && !loading && hasMore) {
-            setLoading(true);
+        if (offset >= height - 5 && !loading && hasMore) {
+            if (isMounted()) setLoading(true);
             let last_id, last_date = null;
-            if (journals.length>0){
-                last_id = journals[journals.length-1]._id;
-                last_date = journals[journals.length-1].date;
+            if (journals.length > 0) {
+                last_id = journals[journals.length - 1]._id;
+                last_date = journals[journals.length - 1].date;
             }
 
-            let fetchFunction = () =>{
+            let fetchFunction = () => {
                 return getUserJournals(auth.token, last_id, last_date);
-            }
+            };
             switch (mode) {
                 case fetchMode.SEARCH:
-                    fetchFunction = () =>{
-                        return searchUserJournals(auth.token,searchContent, last_id, last_date);
-                    }
+                    fetchFunction = () => {
+                        return searchUserJournals(
+                            auth.token,
+                            searchContent,
+                            last_id,
+                            last_date
+                        );
+                    };
                     break;
                 case fetchMode.DATE:
-                    fetchFunction = () =>{
-                        return getUserJournalsByDate(auth.token, dateFilter, last_id, last_date);
-                    }
+                    fetchFunction = () => {
+                        return getUserJournalsByDate(
+                            auth.token,
+                            dateFilter,
+                            last_id,
+                            last_date
+                        );
+                    };
                     break;
                 default:
-                    fetchFunction = () =>{
+                    fetchFunction = () => {
                         return getUserJournals(auth.token, last_id, last_date);
-                    }
+                    };
                     break;
             }
 
             fetchFunction()
-                .then(res=>{
-                    if (res.length > 0){
-                        setJournals(prev => {
-                            return [...prev, ...res]
-                        });
-                        setHasMore(true);
+                .then(res => {
+                    if (res.length > 0) {
+                        if (isMounted()) {
+                            setJournals(prev => {
+                                return [...prev, ...res]
+                            });
+                        }
+                        if (isMounted()) setHasMore(true);
                     } else {
-                        setHasMore(false);
+                        if (isMounted()) setHasMore(false);
                     }
-                    setLoading(false);
+                    if (isMounted()) setLoading(false);
                 })
                 .catch((err) => {
                     // setJournals([]);
                     console.error(err);
-                    setLoading(false);
-                })
+                    if (isMounted()) setLoading(false);
+                });
         }
     };
 
-    // const refreshJournals = () => {
-    //     // refresh the page to re-render CardHolder
-    //     // window.location.reload();
-    //     getUserJournals(auth.token)
-    //         .then((res) => {
-    //             setJournals(res);
-    //         })
-    //         .catch((err) => {
-    //             setJournals([]);
-    //             console.error(err);
-    //         });
-    // };
-
     const createJournalHandler = (newJournal) => {
-        setJournals((prev)=>{
+        setJournals((prev) => {
             let newArr = prev;
             newArr.unshift(newJournal);
             return newArr;
-        })
-    }
+        });
+    };
     const deleteJournalHandler = (deletedJournalId) => {
         const newData = journals.filter((journal) => {
             return journal._id !== deletedJournalId;
         });
         setJournals(newData);
-    }
+    };
 
     return (
         <ThemeProvider theme={customizedTheme}>
@@ -268,13 +275,13 @@ export default function Me() {
                         authorMode={true}
                         refreshJournals={fetchJournals}
                         isCompose={true}
-                        onCreateJournal = {createJournalHandler}
+                        onCreateJournal={createJournalHandler}
                     >
                         {' '}
                         handleSave={handleSave}{' '}
                     </JounalModal>
                 )}
-                {showSearchTag && searchContent&&(
+                {showSearchTag && searchContent && (
                     <SearchTag
                         content={searchContent}
                         count={journals.length}
@@ -288,10 +295,8 @@ export default function Me() {
                     refreshJournals={fetchJournals}
                     onDelete={deleteJournalHandler}
                 />
-                {loading &&
-                    <LoadingSpinner/>}
-                {!hasMore &&
-                    <h1>No More..</h1>}
+                {loading && <LoadingSpinner />}
+                {!hasMore && <Coda />}
             </div>
         </ThemeProvider>
     );
