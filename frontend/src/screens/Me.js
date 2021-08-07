@@ -16,6 +16,8 @@ import {
     getUserJournalsByDate, getDateOverview
 } from "../services/JournalServices";
 import LoadingSpinner from '../components/LoadingSpinner';
+import useMountedState from '../customHooks/useMountedState';
+
 const useStyles = makeStyles((theme) => ({
     my_journals_bg: {
         backgroundImage: `url(${journalImg})`,
@@ -65,6 +67,7 @@ export default function Me() {
     const [dateFilter, setDateFilter] = useState(null);
     const [showSearchTag, setShowSearchTag] = useState(false);
     const [mode, setMode] = useState(fetchMode.GENERAL);
+    const isMounted = useMountedState();
 
     const handleClearSearch = () => {
         setMode(fetchMode.GENERAL);
@@ -133,29 +136,30 @@ export default function Me() {
 
     const fetchJournals = useCallback(
         (last_id, last_date) => {
-            setLoading(true);
+            if (isMounted()) setLoading(true);
             getUserJournals(auth.token, last_id, last_date)
                 .then((res) => {
-                    setJournals(res);
-                    setLoading(false);
+                    if (isMounted()) setJournals(res);
+                    if (isMounted()) setLoading(false);
                 })
                 .catch((err) => {
                     // setJournals([]);
                     console.error(err);
-                    setLoading(false);
+                    if (isMounted()) setLoading(false);
                 });
         },
-        [auth.token]
+        [auth.token, isMounted]
     );
 
     useEffect(() => {
         setJournals([]);
+        setHasMore(true);
         fetchJournals(null, null);
         getDateOverview(auth.token)
-            .then(dates=> {
+            .then(dates => {
                 // Emily's code here
             })
-            .catch(err=> {
+            .catch(err => {
                 // do nothing
             });
     }, [auth.token, fetchJournals]);
@@ -167,9 +171,8 @@ export default function Me() {
         let height = d.offsetHeight;
 
         if (offset >= height - 5 && !loading && hasMore) {
-            setLoading(true);
-            let last_id,
-                last_date = null;
+            if (isMounted()) setLoading(true);
+            let last_id, last_date = null;
             if (journals.length > 0) {
                 last_id = journals[journals.length - 1]._id;
                 last_date = journals[journals.length - 1].date;
@@ -207,37 +210,26 @@ export default function Me() {
             }
 
             fetchFunction()
-                .then((res) => {
+                .then(res => {
                     if (res.length > 0) {
-                        setJournals((prev) => {
-                            return [...prev, ...res];
-                        });
-                        setHasMore(true);
+                        if (isMounted()) {
+                            setJournals(prev => {
+                                return [...prev, ...res]
+                            });
+                        }
+                        if (isMounted()) setHasMore(true);
                     } else {
-                        setHasMore(false);
+                        if (isMounted()) setHasMore(false);
                     }
-                    setLoading(false);
+                    if (isMounted()) setLoading(false);
                 })
                 .catch((err) => {
                     // setJournals([]);
                     console.error(err);
-                    setLoading(false);
+                    if (isMounted()) setLoading(false);
                 });
         }
     };
-
-    // const refreshJournals = () => {
-    //     // refresh the page to re-render CardHolder
-    //     // window.location.reload();
-    //     getUserJournals(auth.token)
-    //         .then((res) => {
-    //             setJournals(res);
-    //         })
-    //         .catch((err) => {
-    //             setJournals([]);
-    //             console.error(err);
-    //         });
-    // };
 
     const createJournalHandler = (newJournal) => {
         setJournals((prev) => {
