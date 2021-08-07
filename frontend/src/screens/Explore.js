@@ -39,17 +39,20 @@ const fetchMode = {
 
 export default function Explore() {
     const classes = useStyles();
+    const isMounted = useMountedState();
     const [journals, setJournals] = useState([]);
     const [searchContent, setSearchContent] = useState('');
     const [showSearchTag, setShowSearchTag] = useState(false);
-    const [tab, setTab] = useState('');
+    const [location, setLocation] = useState({lat: 0, lng: 0})
+
+    // infinite scrolling
+    const [mode, setMode] = useState(fetchMode.GENERAL);
     const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
-    const [mode, setMode] = useState(fetchMode.GENERAL);
-    const isMounted = useMountedState();
+
 
     const handleTab = (value) => {
-        setTab(value);
+        setLoading(true);
         setShowSearchTag(false);
         setJournals([]);
         switch (value) {
@@ -58,12 +61,31 @@ export default function Explore() {
                 break;
             case 'Nearby':
                 setMode(fetchMode.NEARBY);
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    if (isMounted()){
+                        setLocation({lat: position.coords.latitude, lng: position.coords.longitude});
+                        getNearbyJournals(position.coords.latitude, position.coords.longitude, null, null)
+                            .then((res) => {
+                                if (isMounted())
+                                    setJournals(res);
+                                if (isMounted())
+                                    setLoading(false);
+                            })
+                            .catch((err) => {
+                                if (isMounted())
+                                    setJournals([]);
+                                if (isMounted())
+                                    setLoading(false);
+                                console.error(err);
+                            });
+                    }
+                })
                 break;
             default:
                 setMode(fetchMode.GENERAL)
+                fetchJournals(null, null);
                 break;
         }
-        setLoading(false);
         setHasMore(true);
     };
     const handleClearSearch = () => {
@@ -131,7 +153,7 @@ export default function Explore() {
             if (journals.length > 0) {
                 last_id = journals[journals.length - 1]._id;
                 last_date = journals[journals.length - 1].date;
-                last_dist = journals[journals.length - 1].dist;
+                last_dist = journals[journals.length - 1].distance;
             }
 
             let fetchFunction;
@@ -147,11 +169,7 @@ export default function Explore() {
                     break;
                 case fetchMode.NEARBY:
                     fetchFunction = () => {
-                        return navigator.geolocation.getCurrentPosition(function (position) {
-                            const lat = position.coords.latitude;
-                            const lng = position.coords.longitude;
-                            return getNearbyJournals(lat, lng, last_id, last_dist);
-                        });
+                        return getNearbyJournals(location.lat, location.lng, last_id, last_dist);
                     }
                     break;
                 case fetchMode.HOTTEST:

@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
 const User = require('../models/UserSchema');
-const { getDistance } = require("geolib");
 const loadBatchSize = 3;
 
 // get #loadBatchSize journals with PUBLIC or ANONYMOUS setting ordered by date,
