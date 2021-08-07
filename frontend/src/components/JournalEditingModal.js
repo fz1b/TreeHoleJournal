@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom'
-import { useState } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React, {useContext, useEffect} from 'react';
+import {useLocation} from 'react-router-dom';
+import {useState} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -10,19 +10,15 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import {FaRegTrashAlt} from 'react-icons/fa';
 import styled from 'styled-components';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import { BootstrapInput } from './CustomizedComponents';
-import {
-    createJournal,
-    deleteJournal,
-    editJournal,
-} from '../services/JournalServices';
+import {BootstrapInput} from './CustomizedComponents';
+import {createJournal, deleteJournal, editJournal} from '../services/JournalServices';
 import JournalLocation from './JournalLocation';
-import { useDropzone } from 'react-dropzone';
+import {useDropzone} from 'react-dropzone';
 import AuthContext from '../authAPI/auth-context';
 import S3 from 'aws-s3';
 import sha256 from 'crypto-js/sha256';
@@ -41,16 +37,12 @@ const styles = (theme) => ({
 });
 
 const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const {children, classes, onClose, ...other} = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant='h6'>{children}</Typography>
             {onClose ? (
-                <IconButton
-                    aria-label='close'
-                    className={classes.closeButton}
-                    onClick={onClose}
-                >
+                <IconButton aria-label='close' className={classes.closeButton} onClick={onClose}>
                     <CloseIcon />
                 </IconButton>
             ) : null}
@@ -110,16 +102,7 @@ const config = {
     secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
 };
 
-export default function CustomizedDialogs({
-    journal,
-    handleClose,
-    authorMode,
-    handleEdit,
-    isCompose,
-    onDelete,
-    onRefreshOneJournal,
-    onCreateJournal
-}) {
+export default function CustomizedDialogs({journal, handleClose, authorMode, handleEdit, isCompose, onDelete, onRefreshOneJournal, onCreateJournal}) {
     const [privacy, setPrivacy] = useState(journal.privacy);
     const [content, setContent] = useState(journal.content);
     const [location, setLocation] = useState(journal.location);
@@ -147,33 +130,23 @@ export default function CustomizedDialogs({
     };
 
     const handleDelete = async () => {
-        try{
+        try {
             handleClose();
-            if (journal.image){
+            if (journal.image) {
                 await S3Client.deleteFile(journal.image.split('/')[3]);
             }
             await deleteJournal(auth.token, journal._id);
             onDelete(journal._id);
-        }catch(err){
-            console.log(err)
+        } catch (err) {
+            console.log(err);
         }
     };
 
-    const handleSave = async (
-        title,
-        date,
-        weather,
-        content,
-        location,
-        privacy
-    ) => {
+    const handleSave = async (title, date, weather, content, location, privacy) => {
         try {
             setIsSaving(true);
             if (files.length > 0) {
-                const data = await S3Client.uploadFile(
-                    files[0],
-                    sha256(files[0].name)
-                );
+                const data = await S3Client.uploadFile(files[0], sha256(files[0].name));
                 setUpLoaded(true);
                 imageURL = data.location;
             } else {
@@ -181,33 +154,14 @@ export default function CustomizedDialogs({
             }
 
             if (!journal._id) {
-                const newJournal = await createJournal(
-                    auth.token,
-                    title,
-                    date,
-                    imageURL,
-                    weather,
-                    content,
-                    location,
-                    privacy
-                );
+                const newJournal = await createJournal(auth.token, title, date, imageURL, weather, content, location, privacy);
                 onCreateJournal(newJournal);
                 handleClose();
             } else {
-                const updatedJournal = await editJournal(
-                    journal.author_id,
-                    journal._id,
-                    title,
-                    date,
-                    imageURL,
-                    weather,
-                    content,
-                    location,
-                    privacy
-                );
+                const updatedJournal = await editJournal(journal.author_id, journal._id, title, date, imageURL, weather, content, location, privacy);
                 onRefreshOneJournal(updatedJournal);
                 setIsSaving(false);
-                if (privacy==="PRIVATE" && route.pathname==='/') {
+                if (privacy === 'PRIVATE' && route.pathname === '/') {
                     handleClose();
                     onDelete(journal._id);
                 } else {
@@ -254,7 +208,7 @@ export default function CustomizedDialogs({
         margin: 10,
     };
 
-    const { getRootProps, getInputProps } = useDropzone({
+    const {getRootProps, getInputProps} = useDropzone({
         accept: 'image/*',
         onDrop: (acceptedFiles) => {
             setFiles(
@@ -285,42 +239,18 @@ export default function CustomizedDialogs({
 
     return (
         <div>
-            <Dialog
-                onClose={handleClose}
-                aria-labelledby='customized-dialog-title'
-                open={true}
-                fullWidth={true}
-                maxWidth='sm'
-            >
+            <Dialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={true} fullWidth={true} maxWidth='sm'>
                 <DialogTitle id='customized-dialog-title' onClose={handleClose}>
-                    <TitleInput
-                        id='outlined-basic'
-                        label='Title'
-                        variant='outlined'
-                        size='small'
-                        value={title}
-                        onChange={handleTitleChange}
-                    />
+                    <TitleInput id='outlined-basic' label='Title' variant='outlined' size='small' value={title} onChange={handleTitleChange} />
                 </DialogTitle>
                 <DialogContent dividers>
                     {files.length === 0 && <Image src={journal.image} alt='' />}
                     <section className='container'>
                         {files.length === 0 && (
-                            <Dropzone
-                                {...getRootProps({ className: 'dropzone' })}
-                            >
+                            <Dropzone {...getRootProps({className: 'dropzone'})}>
                                 <input {...getInputProps()} />
-                                {!journal.image && (
-                                    <p>
-                                        Drag the cover image, or click to upload
-                                    </p>
-                                )}
-                                {journal.image && (
-                                    <p>
-                                        Drag the cover image, or click to
-                                        replace current
-                                    </p>
-                                )}
+                                {!journal.image && <p>Drag the cover image, or click to upload</p>}
+                                {journal.image && <p>Drag the cover image, or click to replace current</p>}
                             </Dropzone>
                         )}
                         <aside style={thumbsContainer}>{thumbs}</aside>
@@ -334,13 +264,7 @@ export default function CustomizedDialogs({
                         >
                             {files.length !== 0 && (
                                 <div>
-                                    <Button
-                                        onClick={() => setFiles([])}
-                                        style={buttonStyle}
-                                        variant='contained'
-                                        color='secondary'
-                                        disabled={uploaded}
-                                    >
+                                    <Button onClick={() => setFiles([])} style={buttonStyle} variant='contained' color='secondary' disabled={uploaded}>
                                         Remove Upload
                                     </Button>
                                 </div>
@@ -349,30 +273,15 @@ export default function CustomizedDialogs({
                     </section>
 
                     <Typography component={'span'} gutterBottom>
-                        <TextField
-                            fullWidth
-                            label='Content'
-                            id='outlined-basic'
-                            variant='outlined'
-                            multiline
-                            rows='10'
-                            value={content}
-                            onChange={handleContentChange}
-                        />
+                        <TextField fullWidth label='Content' id='outlined-basic' variant='outlined' multiline rows='10' value={content} onChange={handleContentChange} />
                     </Typography>
                 </DialogContent>
-                <JournalLocation handleLocation={handleLocation} address={journal.location?journal.location.address:""} editing={true}/>
+                <JournalLocation handleLocation={handleLocation} address={journal.location ? journal.location.address : ''} editing={true} />
                 <DialogActions>
                     <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
                         <>
-                            <Select
-                                labelId='demo-customized-select-label'
-                                id='demo-customized-select'
-                                value={privacy}
-                                onChange={handlePrivacyChange}
-                                input={<BootstrapInput />}
-                            >
+                            <Select labelId='demo-customized-select-label' id='demo-customized-select' value={privacy} onChange={handlePrivacyChange} input={<BootstrapInput />}>
                                 <MenuItem value='PUBLIC'>PUBLIC</MenuItem>
                                 <MenuItem value='ANONYMOUS'>ANONYMOUS</MenuItem>
                                 <MenuItem value='PRIVATE'>PRIVATE</MenuItem>
@@ -382,25 +291,18 @@ export default function CustomizedDialogs({
                     <>
                         {authorMode && (
                             <>
-                                {!isCompose && <span onClick={handleDelete}>
-                                    <IconButton>
-                                        <FaRegTrashAlt />
-                                    </IconButton>
-                                </span>}
+                                {!isCompose && (
+                                    <span onClick={handleDelete}>
+                                        <IconButton>
+                                            <FaRegTrashAlt />
+                                        </IconButton>
+                                    </span>
+                                )}
                                 <Button
                                     variant='contained'
                                     color='primary'
                                     disabled={isSaving}
-                                    onClick={() =>
-                                        handleSave(
-                                            title,
-                                            journal.date,
-                                            journal.weather,
-                                            content,
-                                            location,
-                                            privacy
-                                        )
-                                    }
+                                    onClick={() => handleSave(title, journal.date, journal.weather, content, location, privacy)}
                                 >
                                     Save
                                 </Button>
