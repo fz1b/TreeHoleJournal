@@ -227,7 +227,7 @@ export default function Me() {
                     // setJournals([]);
                     console.error(err);
                     if (isMounted()) setLoading(false);
-                })
+                });
         }
     };
 

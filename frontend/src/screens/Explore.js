@@ -132,11 +132,11 @@ export default function Explore() {
                     fetchFunction = () => {
                         return navigator.geolocation.getCurrentPosition(function (position) {
                             const lat = position.coords.latitude;
-                            const lng = position.coords.longitude
+                            const lng = position.coords.longitude;
                             getNearbyJournals(lat, lng).then(res => {
                                 if (isMounted()) setJournals(res);
-                            })
-                        })
+                            });
+                        });
                     }
                     break;
                 default:
@@ -164,7 +164,7 @@ export default function Explore() {
                     // setJournals([]);
                     console.error(err);
                     if (isMounted()) setLoading(false);
-                })
+                });
         }
     };
 
