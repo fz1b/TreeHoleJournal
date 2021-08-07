@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const fetchMode = {
     GENERAL: 'general',
     SEARCH: 'search',
+    HOTTEST: 'hottest',
     NEARBY: 'nearby',
 };
 
@@ -49,6 +50,21 @@ export default function Explore() {
 
     const handleTab = (value) => {
         setTab(value);
+        setShowSearchTag(false);
+        setJournals([]);
+        switch (value) {
+            case 'Hottest':
+                setMode(fetchMode.HOTTEST);
+                break;
+            case 'Nearby':
+                setMode(fetchMode.NEARBY);
+                break;
+            default:
+                setMode(fetchMode.GENERAL)
+                break;
+        }
+        setLoading(false);
+        setHasMore(true);
     };
     const handleClearSearch = () => {
         setMode(fetchMode.GENERAL);
@@ -111,10 +127,11 @@ export default function Explore() {
 
         if (offset >= height - 5 && !loading && hasMore) {
             if (isMounted()) setLoading(true);
-            let last_id, last_date = null;
+            let last_id, last_date, last_dist = null;
             if (journals.length > 0) {
                 last_id = journals[journals.length - 1]._id;
                 last_date = journals[journals.length - 1].date;
+                last_dist = journals[journals.length - 1].dist;
             }
 
             let fetchFunction;
@@ -133,11 +150,11 @@ export default function Explore() {
                         return navigator.geolocation.getCurrentPosition(function (position) {
                             const lat = position.coords.latitude;
                             const lng = position.coords.longitude;
-                            getNearbyJournals(lat, lng).then(res => {
-                                if (isMounted()) setJournals(res);
-                            });
+                            return getNearbyJournals(lat, lng, last_id, last_dist);
                         });
                     }
+                    break;
+                case fetchMode.HOTTEST:
                     break;
                 default:
                     fetchFunction = () => {
