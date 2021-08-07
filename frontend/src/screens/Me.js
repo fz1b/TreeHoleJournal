@@ -67,6 +67,7 @@ export default function Me() {
     const [dateFilter, setDateFilter] = useState(null);
     const [showSearchTag, setShowSearchTag] = useState(false);
     const [mode, setMode] = useState(fetchMode.GENERAL);
+    const [validDates, setValidDates] = useState([]);
     const isMounted = useMountedState();
 
     const handleClearSearch = () => {
@@ -157,7 +158,10 @@ export default function Me() {
         fetchJournals(null, null);
         getDateOverview(auth.token)
             .then(dates => {
-                // Emily's code here
+                const dateStrings = dates.map(d=>d.toDateString());
+                console.log(dateStrings);
+
+                setValidDates(dateStrings);
             })
             .catch(err => {
                 // do nothing
@@ -292,6 +296,7 @@ export default function Me() {
                     handleDateSelection={handleDateSelection}
                     journals={journals}
                     showCalendar={true}
+                    validDates={validDates}
                     refreshJournals={fetchJournals}
                     onDelete={deleteJournalHandler}
                 />
