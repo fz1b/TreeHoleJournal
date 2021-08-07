@@ -12,8 +12,8 @@ import SearchTag from '../components/SearchTag';
 import {
     getUserJournals,
     searchUserJournals,
-    getUserJournalsByDate
-} from '../services/JournalServices';
+    getUserJournalsByDate, getDateOverview
+} from "../services/JournalServices";
 import LoadingSpinner from '../components/LoadingSpinner';
 const useStyles = makeStyles((theme) => ({
     my_journals_bg: {
@@ -106,7 +106,6 @@ export default function Me() {
         setShowModal(false);
     };
     const handleDateSelection = (date) => {
-        // console.log(date);
         if (!date) {
             setMode(fetchMode.GENERAL);
             setHasMore(true);
@@ -119,7 +118,7 @@ export default function Me() {
             setJournals([]);
             setLoading(true);
             setDateFilter(date);
-            getUserJournalsByDate(auth.token, dateFilter)
+            getUserJournalsByDate(auth.token, date)
                 .then((res) => {
                     setJournals(res);
                     setLoading(false);
@@ -148,6 +147,13 @@ export default function Me() {
     useEffect(() => {
         setJournals([]);
         fetchJournals(null, null);
+        getDateOverview(auth.token)
+            .then(dates=> {
+                // Emily's code here
+            })
+            .catch(err=> {
+                // do nothing
+            });
     }, [auth.token, fetchJournals]);
 
     // load more journals when scrolled to the bottom
