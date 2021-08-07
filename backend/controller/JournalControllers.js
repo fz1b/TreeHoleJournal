@@ -22,7 +22,7 @@ const getExploreJournals = async (req, res) => {
     }
     // get only the journals created before the last journal
     if (req.query.last_id && req.query.last_date ) {
-        filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+        filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
     }
 
     Journal.find(
@@ -40,6 +40,64 @@ const getExploreJournals = async (req, res) => {
             res.status(500).json(err);
         });
 };
+
+// get journals ordered by their distance to a give location
+// if a journal_id and date is provided in the query, return only the journals
+// created before the given journal (for pagination)
+// req-param: lat, lng
+// req-query: last_id (id of the last loaded journal), last_dist
+// req-body: void
+// response: list of Journals JSON obj
+const getNearbyJournals = async (req, res) => {
+    let preFilter = {
+        $and: [
+            {
+                $or: [
+                    { privacy: PRIVACY.PUBLIC },
+                    { privacy: PRIVACY.ANONYMOUS }
+                ]
+            },
+            {location: {$ne: null}}
+        ]
+    }
+    // get only the journals created before the last journal
+    let postFilter = {};
+    if (req.query.last_id && req.query.last_dist) {
+        let last_dist = parseFloat(req.query.last_dist);
+        let last_id = mongoose.Types.ObjectId(req.query.last_id);
+        postFilter = {
+            $and: [
+                { distance: { $gte:  last_dist } },
+                { _id: { $lt: last_id}}
+            ]
+        }
+    }
+
+    Journal.aggregate([
+        {$match: preFilter},
+        {$addFields: {
+            distance: {
+                $sqrt: {
+                    $add: [
+                        { $pow: [ { $subtract: [ {$toDouble: "$location.lat"}, {$toDouble: req.params.lat} ] }, 2 ] },
+                        { $pow: [ { $subtract: [ {$toDouble: "$location.lng"}, {$toDouble: req.params.lng} ] }, 2 ] }
+                    ]
+                }
+            }
+        }},
+        {$sort: {distance: 1, _id: -1}},
+        {$match: postFilter},
+    ])
+        .limit(loadBatchSize)
+        .then((journals) => {
+            // console.log(journals);
+            res.status(200).json(journals);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json(err);
+        });
+}
 
 // get #loadBatchSize journals with PUBLIC or ANONYMOUS setting
 // that contain the criteria string in title or content,
@@ -79,7 +137,7 @@ const searchExploreJournals = async (req, res) => {
 
     // get only the journals created before the last journal
     if (req.query.last_id && req.query.last_date ) {
-        filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+        filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
     }
 
     Journal.find(
@@ -112,7 +170,7 @@ const getUserJournals = async (req, res) => {
             let filter = { author_id: user.data.userData._id };
             // get only the journals created before the last journal
             if (req.query.last_id && req.query.last_date ) {
-                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+                filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(filter,
                 ['-author_id', '-comments.author_id']
@@ -168,7 +226,7 @@ const searchUserJournals = async (req, res) => {
             };
             if (req.query.last_id && req.query.last_date ) {
                 console.log(req.query.last_id);
-                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+                filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(
                 filter,
@@ -202,7 +260,7 @@ const getDateOverview = async (req, res) => {
             let filter = { author_id: user.data.userData._id };
             // get only the journals created before the last journal
             if (req.query.last_id && req.query.last_date ) {
-                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+                filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(filter,
                 ['date', '-_id']
@@ -253,7 +311,7 @@ const getUserJournalsByDate = async (req, res) => {
                 }
             }
             if (req.query.last_id && req.query.last_date ) {
-                filter = modifyFilterToLoadAfter(filter, req.query.last_id, req.query.last_date)
+                filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(
                 filter,
@@ -279,7 +337,7 @@ const getUserJournalsByDate = async (req, res) => {
 // modify the find filter so that DB load only the journals after the given journal (for pagination)
 // input: last_id (last loaded journal id), last date
 // return: the modified filter
-const modifyFilterToLoadAfter = (filter, last_id, last_date) => {
+const modifyFilterToLoadAfterDate = (filter, last_id, last_date) => {
     // get only the journals created before the last journal
     let lastDate = new Date(last_date);
     filter = {
@@ -585,6 +643,7 @@ const getJournalLike = async (req, res) => {
 
 exports.getExploreJournals = getExploreJournals;
 exports.searchExploreJournals = searchExploreJournals;
+exports.getNearbyJournals =getNearbyJournals;
 exports.getUserJournals = getUserJournals;
 exports.searchUserJournals = searchUserJournals;
 exports.getUserJournalsByDate = getUserJournalsByDate;

@@ -31,7 +31,7 @@ function processJournals(journals) {
 export function getExploreJournals(last_id, last_date) {
     return axios
         .get('/explore',
-            { params: { last_id: last_id, last_date: last_date } })
+            { params: { last_id: last_id, last_date: last_date }})
         .then((res) => {
             // console.log(res.data);
             return processJournals(res.data);
@@ -42,23 +42,16 @@ export function getExploreJournals(last_id, last_date) {
         });
 }
 
-export function getNearbyJournals(lat, lng) {
+// get all PUBLIC and ANONYMOUS journals sorted by distance
+// input: lat latitude of the user's current location, lng,
+//        last_id id of the last loaded journal, last_dist
+// response: list of journals JSON obj
+export function getNearbyJournals(lat, lng, last_id, last_dist) {
     return axios
-        .get('/explore')
+        .get('/explore/nearby/' + lat + '/' + lng,
+            { params: { last_id: last_id, last_dist: last_dist }})
         .then((res) => {
-            let journals=processJournals(res.data).filter((j)=>j.location);
-            journals.sort(function(a,b){
-                const distA = getDistance(
-                    {latitude: lat, longitude: lng},
-                    {latitude: a.location.lat, longitude:a.location.lng},
-                );
-                const distB = getDistance(
-                    {latitude: lat, longitude: lng},
-                    {latitude: b.location.lat, longitude: b.location.lng},
-                );
-                return (distA-distB);
-            });
-            return journals;
+            return processJournals(res.data);
         })
         .catch((err) => {
             console.error(err);
