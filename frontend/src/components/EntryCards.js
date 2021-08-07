@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
+import useMountedState from '../customHooks/useMountedState';
 import { makeStyles } from '@material-ui/core/styles';
 import JournalModal from './JournalModal';
 import {
@@ -49,6 +50,7 @@ export default function EntryCards(props) {
     const [isLiked, setIsLiked] = useState(false);
     const [editing, setEditing] = useState(false);
     const [journalContent, setJournalContent] = useState(props.content);
+    const isMounted = useMountedState();
     const isAnonymous = journalContent.privacy === 'ANONYMOUS';
 
     const toggleModal = () => {
@@ -89,58 +91,43 @@ export default function EntryCards(props) {
         setJournalContent(journal);
     };
 
-    const initializeEntryCard = useCallback(
-        async (isMounted) => {
-            try {
-                if (auth.token === '') {
-                    if (isMounted) setEditable(false);
-                } else {
-                    const isEditableResponse = await verifyEditingAccess(
-                        journalContent._id,
-                        auth.token
-                    );
-                    if (isMounted) setEditable(isEditableResponse);
-                }
-            } catch (err) {
-                if (isMounted) setEditable(false);
+    const initializeEntryCard = useCallback(async () => {
+        try {
+            if (auth.token==='') {
+                if (isMounted()) setEditable(false);
+            } else {
+                const isEditableResponse = await verifyEditingAccess(journalContent._id, auth.token);
+                if (isMounted()) setEditable(isEditableResponse);
             }
+        } catch(err) {
+            if (isMounted()) setEditable(false);
+        }
 
-            try {
-                if (auth.token === '') {
-                    if (isMounted) setIsLiked(false);
-                } else {
-                    const islikedResponse = await getJournalLikeStatus(
-                        auth.token,
-                        journalContent._id
-                    );
-                    if (isMounted) setIsLiked(islikedResponse);
-                }
-            } catch (err) {
-                if (isMounted) setIsLiked(false);
+        try {
+            if (auth.token==='') {
+                if (isMounted()) setIsLiked(false);
+            } else {
+                const islikedResponse = await getJournalLikeStatus(auth.token, journalContent._id);
+                if (isMounted()) setIsLiked(islikedResponse);
             }
+        } catch(err) {
+            if (isMounted()) setIsLiked(false);
+        }
 
-            try {
-                const authorResponse = await getJournalAuthor(
-                    journalContent._id
-                );
-                if (isMounted) setAuthorName(authorResponse.name);
-            } catch (err) {
-                if (isMounted) setAuthorName('');
-            }
-        },
-        [journalContent, auth.token]
-    );
+        try {
+            const authorResponse = await getJournalAuthor(journalContent._id);
+            if (isMounted()) setAuthorName(authorResponse.name);
+        } catch(err) {
+            if (isMounted()) setAuthorName('');
+        }
+    },[journalContent, auth.token, isMounted]);
 
     useEffect(() => {
         setJournalContent(props.content);
     }, [props.content]);
 
     useEffect(() => {
-        let isMounted = true;
-        initializeEntryCard(isMounted);
-        return () => {
-            isMounted = false;
-        };
+        initializeEntryCard();
     }, [initializeEntryCard]);
 
     return (
