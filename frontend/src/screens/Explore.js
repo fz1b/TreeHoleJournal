@@ -17,7 +17,7 @@ import ExploreTabs from '../components/ExploreTabs';
 import SearchTag from '../components/SearchTag';
 import LoadingSpinner from '../components/LoadingSpinner';
 import useMountedState from '../customHooks/useMountedState';
-
+import LocationError from '../components/LocationError.js';
 const useStyles = makeStyles((theme) => ({
     explore_bg: {
         backgroundImage: `url(${bgImg})`,
@@ -49,7 +49,7 @@ export default function Explore() {
     const [mode, setMode] = useState(fetchMode.GENERAL);
     const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
-
+    const [locationAcess,setLocationAccess] = useState(true);
 
     const handleTab = (value) => {
         setLoading(true);
@@ -63,6 +63,7 @@ export default function Explore() {
                 setMode(fetchMode.NEARBY);
                 navigator.geolocation.getCurrentPosition(function (position) {
                     if (isMounted()){
+                        setLocationAccess(true);
                         setLocation({lat: position.coords.latitude, lng: position.coords.longitude});
                         getNearbyJournals(position.coords.latitude, position.coords.longitude, null, null)
                             .then((res) => {
@@ -78,6 +79,11 @@ export default function Explore() {
                                     setLoading(false);
                                 console.error(err);
                             });
+                    }
+                },function(err){
+                    if(err.PERMISSION_DENIED){
+                        setLocationAccess(false)
+                        console.log("permisson denied");
                     }
                 })
                 break;
@@ -236,6 +242,7 @@ export default function Explore() {
                 />
             </div>
             {loading && <LoadingSpinner />}
+            {!locationAcess && mode===fetchMode.NEARBY&&<LocationError/>}
             {!hasMore && <Coda />}
         </ThemeProvider>
     );
