@@ -316,7 +316,7 @@ export default function PrimarySearchAppBar(props) {
                     >
                         {pageName}
                     </Typography>
-                    {!open && (
+                    {!open && props.isSearchEnabled && (
                         <div className={classes.search}>
                             <div
                                 className={classes.searchIcon}

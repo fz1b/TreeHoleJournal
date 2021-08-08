@@ -1,7 +1,7 @@
 import Me from './screens/Me';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp';
-import SavedJournals from './screens/SavedJournals'
+import Liked from './screens/Liked'
 import {
     BrowserRouter as Router,
     Switch,
@@ -38,15 +38,14 @@ function App() {
                     {isLoggedIn && <Me />}
                     {!isLoggedIn && <Redirect to='/login' />}
                 </Route>
-
                 {!isLoggedIn && <Route exact path='/login' component={Login} />}
-
                 {!isLoggedIn && (
                     <Route exact path='/signUp' component={SignUp} />
                 )}
-
-                <Route exact path='/saved' component={SavedJournals} />
-
+                <Route exact path='/liked'>
+                    {isLoggedIn && <Liked/>}
+                    {!isLoggedIn && <Redirect to='/login' />}
+                </Route>
                 <Route path='*'>
                     <Redirect to='/' />
                 </Route>
