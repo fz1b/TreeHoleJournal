@@ -112,6 +112,8 @@ const getNearbyJournals = async (req, res) => {
 // req-body: void
 // response: list of Journals JSON obj
 const getHottestJournals = async (req, res) => {
+    let weight_Likes = 1;
+    let weight_Comments = 2;
     let preFilter = {
         $and: [
             {
@@ -145,8 +147,8 @@ const getHottestJournals = async (req, res) => {
         {$addFields: {
                 popularity: {
                     $sum: [
-                        {$size: '$likedby'},
-                        {$size: '$comments'}
+                        { $multiply: [{ $size: "$likedby" }, weight_Likes] },
+                        { $multiply: [{$size: '$comments'}, weight_Comments]}
                     ]
                 }
         }},
