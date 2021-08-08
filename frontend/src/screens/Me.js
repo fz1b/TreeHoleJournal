@@ -125,12 +125,16 @@ export default function Me() {
             setDateFilter(date);
             getUserJournalsByDate(auth.token, date)
                 .then((res) => {
-                    setJournals(res);
-                    setLoading(false);
+                    if (isMounted()){
+                        setJournals(res);
+                        setLoading(false);
+                    }
                 })
                 .catch((err) => {
                     // do nothing
-                    setLoading(false);
+                    if (isMounted()){
+                        setLoading(false);
+                    }
                 });
         }
     };
@@ -158,8 +162,10 @@ export default function Me() {
         fetchJournals(null, null);
         getDateOverview(auth.token)
             .then(dates => {
-                const dateStrings = dates.map(d=>d.toDateString());
-                  setValidDates(dateStrings);
+                if (isMounted()){
+                    const dateStrings = dates.map(d=>d.toDateString());
+                    setValidDates(dateStrings);
+                }
             })
             .catch(err => {
                 // do nothing
