@@ -9,10 +9,8 @@ import {
     getExploreJournals,
     searchExploreJournals,
     getNearbyJournals,
-    getUserJournals,
-    searchUserJournals,
-    getUserJournalsByDate,
-} from '../services/JournalServices';
+    getHottestJournals
+} from "../services/JournalServices";
 import ExploreTabs from '../components/ExploreTabs';
 import SearchTag from '../components/SearchTag';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -58,6 +56,20 @@ export default function Explore() {
         switch (value) {
             case 'Hottest':
                 setMode(fetchMode.HOTTEST);
+                getHottestJournals(null, null)
+                    .then((res) => {
+                        if (isMounted())
+                            setJournals(res);
+                        if (isMounted())
+                            setLoading(false);
+                    })
+                    .catch((err) => {
+                        if (isMounted())
+                            setJournals([]);
+                        if (isMounted())
+                            setLoading(false);
+                        console.error(err);
+                    })
                 break;
             case 'Nearby':
                 setMode(fetchMode.NEARBY);
@@ -155,11 +167,12 @@ export default function Explore() {
 
         if (offset >= height - 5 && !loading && hasMore) {
             if (isMounted()) setLoading(true);
-            let last_id, last_date, last_dist = null;
+            let last_id, last_date, last_dist, last_popularity = null;
             if (journals.length > 0) {
                 last_id = journals[journals.length - 1]._id;
                 last_date = journals[journals.length - 1].date;
                 last_dist = journals[journals.length - 1].distance;
+                last_popularity = journals[journals.length - 1].popularity;
             }
 
             let fetchFunction;
@@ -179,6 +192,9 @@ export default function Explore() {
                     }
                     break;
                 case fetchMode.HOTTEST:
+                    fetchFunction = () => {
+                        return getHottestJournals(last_id, last_popularity);
+                    }
                     break;
                 default:
                     fetchFunction = () => {
