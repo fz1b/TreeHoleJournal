@@ -60,6 +60,8 @@ app.get('/users/like/journals/:idToken', userController.getLikedJournalsByUserTo
 app.get('/explore', journalController.getExploreJournals);
 // get public and anonymous journals filtered by search criteria
 app.get('/explore/search/:criteria', journalController.searchExploreJournals);
+// get public and anonymous journals ordered by their popularity (num. of likedby + comments)
+app.get('/explore/hottest', journalController.getHottestJournals);
 // get nearby public and anonymous journals order by their distance
 app.get('/explore/nearby/:lat/:lng', journalController.getNearbyJournals);
 // get the journal's author info

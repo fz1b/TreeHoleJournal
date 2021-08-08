@@ -42,6 +42,22 @@ export function getExploreJournals(last_id, last_date) {
         });
 }
 
+// get all PUBLIC and ANONYMOUS journals sorted by popularity (num of liked by + comments)
+// input: last_id id of the last loaded journal, last_popularity
+// response: list of journals JSON obj
+export function getHottestJournals(last_id, last_popularity) {
+    return axios
+        .get('/explore/hottest/',
+            { params: { last_id: last_id, last_popularity: last_popularity }})
+        .then((res) => {
+            return processJournals(res.data);
+        })
+        .catch((err) => {
+            console.error(err);
+            return err;
+        });
+}
+
 // get all PUBLIC and ANONYMOUS journals sorted by distance
 // input: lat latitude of the user's current location, lng,
 //        last_id id of the last loaded journal, last_dist
