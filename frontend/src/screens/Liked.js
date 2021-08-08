@@ -51,7 +51,7 @@ export default function Liked() {
             setLoading(true);
             getLikedJournalsByUserToken(auth.token)
                 .then((res) => {
-                    console.log(res[0]);
+                    // console.log(res[0]);
                     if (isMounted()) setJournals(res);
                     if (isMounted()) setLoading(false);
                 })
