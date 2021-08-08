@@ -240,6 +240,7 @@ export default function Explore() {
                     searchContent={searchContent}
                     handleSearchChange={handleSearchChange}
                     handleSearch={handleSearch}
+                    isSearchEnabled={true}
                 />
                 <div className={classes.explore_bg} />
                 <ExploreTabs handleTab={handleTab} />
