@@ -12,11 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExploreIcon from '@material-ui/icons/Explore';
 import PersonIcon from '@material-ui/icons/Person';
-import PeopleIcon from '@material-ui/icons/People';
-import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import SettingsIcon from '@material-ui/icons/Settings';
-import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 
 export default function LeftNavBarDrawer(props) {
     const drawerWidth = props.dWidth;
@@ -96,12 +92,6 @@ export default function LeftNavBarDrawer(props) {
                     </ListItemIcon>
                     <ListItemText primary='Explore' />
                 </ListItem>
-                <ListItem button key='Follow'>
-                    <ListItemIcon className={classes.contrastColor}>
-                        <CenterFocusStrongIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Follow' />
-                </ListItem>
                 <ListItem button onClick={() => handleRedirect('/me')} key='Me'>
                     <ListItemIcon className={classes.contrastColor}>
                         <PersonIcon />
@@ -111,29 +101,11 @@ export default function LeftNavBarDrawer(props) {
             </List>
             <Divider />
             <List className={classes.contrastColor}>
-                <ListItem button key='Friends'>
-                    <ListItemIcon className={classes.contrastColor}>
-                        <PeopleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Friends' />
-                </ListItem>
-                <ListItem button key='Collections'>
-                    <ListItemIcon className={classes.contrastColor}>
-                        <BookmarksIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Collections' />
-                </ListItem>
-                <ListItem button key='Likes'>
+                <ListItem button onClick={() => handleRedirect('/liked')}key='Liked'>
                     <ListItemIcon className={classes.contrastColor}>
                         <FavoriteIcon />
                     </ListItemIcon>
-                    <ListItemText primary='Likes' />
-                </ListItem>
-                <ListItem button key='Settings'>
-                    <ListItemIcon className={classes.contrastColor}>
-                        <SettingsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Settings' />
+                    <ListItemText primary='Liked'/>
                 </ListItem>
             </List>
         </Drawer>

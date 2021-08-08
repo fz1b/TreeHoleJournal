@@ -370,3 +370,13 @@ export async function getJournalLikeStatus(idToken, journal_id) {
         return false;
     }
 }
+
+// get all journals liked by a given user
+// req-param: idToken
+// response: list of journals
+export async function getLikedJournalsByUserToken(idToken) {
+    try {
+        const response = await axios.get(`/users/like/journals/${idToken}`);
+        return processJournals(response.data.likedJournals);
+    } catch (err) {}
+}

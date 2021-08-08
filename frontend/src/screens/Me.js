@@ -261,6 +261,7 @@ export default function Me() {
                     searchContent={searchContent}
                     handleSearchChange={handleSearchChange}
                     handleSearch={handleSearch}
+                    isSearchEnabled={true}
                 />
 
                 <div className={classes.my_journals_bg} />
