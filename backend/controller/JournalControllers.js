@@ -27,7 +27,7 @@ const getExploreJournals = async (req, res) => {
 
     Journal.find(
         filter,
-        ['-author_id', '-comments.author_id']
+        ['-author_id', '-comments.author_id', '-likedby']
     )
         .sort({ date:-1, _id:-1 })
         .limit(loadBatchSize)
@@ -66,9 +66,14 @@ const getNearbyJournals = async (req, res) => {
         let last_dist = parseFloat(req.query.last_dist);
         let last_id = mongoose.Types.ObjectId(req.query.last_id);
         postFilter = {
-            $and: [
-                { distance: { $gte:  last_dist } },
-                { _id: { $lt: last_id}}
+            $or: [
+                {
+                    $and: [
+                        { distance: { $eq:  last_dist } },
+                        { _id: { $lt: last_id}}
+                    ]
+                },
+                {distance: { $gt:  last_dist }}
             ]
         }
     }
@@ -86,6 +91,69 @@ const getNearbyJournals = async (req, res) => {
             }
         }},
         {$sort: {distance: 1, _id: -1}},
+        {$match: postFilter},
+    ])
+        .limit(loadBatchSize)
+        .then((journals) => {
+            // console.log(journals);
+            res.status(200).json(journals);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json(err);
+        });
+}
+
+// get journals ordered by their popularity (num. of likes + comments)
+// if a journal_id and date is provided in the query, return only the journals
+// created before the given journal (for pagination)
+// req-param: void
+// req-query: last_id (id of the last loaded journal), last_popularity
+// req-body: void
+// response: list of Journals JSON obj
+const getHottestJournals = async (req, res) => {
+    let weight_Likes = 1;
+    let weight_Comments = 2;
+    let preFilter = {
+        $and: [
+            {
+                $or: [
+                    { privacy: PRIVACY.PUBLIC },
+                    { privacy: PRIVACY.ANONYMOUS }
+                ]
+            },
+        ]
+    }
+    // get only the journals created before the last journal
+    let postFilter = {};
+    if (req.query.last_id && req.query.last_popularity) {
+        let last_popularity = parseInt(req.query.last_popularity);
+        let last_id = mongoose.Types.ObjectId(req.query.last_id);
+        postFilter = {
+            $or: [
+                {
+                    $and: [
+                        { popularity: { $eq:  last_popularity } },
+                        { _id: { $lt: last_id}}
+                    ]
+                },
+                { popularity: { $lt:  last_popularity } }
+            ]
+        }
+    }
+
+    Journal.aggregate([
+        {$match: preFilter},
+        {$addFields: {
+                popularity: {
+                    $sum: [
+                        { $multiply: [{ $size: "$likedby" }, weight_Likes] },
+                        { $multiply: [{$size: '$comments'}, weight_Comments]}
+                    ]
+                }
+        }},
+        {$unset: 'likedby' },
+        {$sort: {popularity: -1, _id: -1}},
         {$match: postFilter},
     ])
         .limit(loadBatchSize)
@@ -142,7 +210,7 @@ const searchExploreJournals = async (req, res) => {
 
     Journal.find(
         filter,
-        ['-author_id', '-comments.author_id']
+        ['-author_id', '-comments.author_id', '-likedby']
     )
         .sort({ date:-1, _id:-1 })
         .limit(loadBatchSize)
@@ -173,7 +241,7 @@ const getUserJournals = async (req, res) => {
                 filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(filter,
-                ['-author_id', '-comments.author_id']
+                ['-author_id', '-comments.author_id', '-likedby']
             )
                 .sort({ date:-1, _id:-1 })
                 .limit(loadBatchSize)
@@ -230,7 +298,7 @@ const searchUserJournals = async (req, res) => {
             }
             Journal.find(
                 filter,
-                ['-author_id', '-comments.author_id']
+                ['-author_id', '-comments.author_id', '-likedby']
             )
                 .sort({ date:-1, _id:-1 })
                 .limit(loadBatchSize)
@@ -315,7 +383,7 @@ const getUserJournalsByDate = async (req, res) => {
             }
             Journal.find(
                 filter,
-                ['-author_id', '-comments.author_id']
+                ['-author_id', '-comments.author_id', '-likedby']
             )
                 .sort({ date:-1, _id:-1 })
                 .limit(loadBatchSize)
@@ -343,8 +411,17 @@ const modifyFilterToLoadAfterDate = (filter, last_id, last_date) => {
     filter = {
         $and: [
             filter,
-            { date: { $lte: lastDate } },
-            { _id: { $lt: last_id}}
+            {
+                $or: [
+                    { date: { $lt: lastDate } },
+                    {
+                        $and: [
+                            { date: { $eq: lastDate } },
+                            { _id: { $lt: last_id}}
+                        ]
+                    }
+                ]
+            },
         ]
     }
     return filter;
@@ -393,6 +470,7 @@ const createNewJournal = async (req, res) => {
                 location: req.body.location,
                 privacy: req.body.privacy,
                 comments: [],
+                likedby: []
             });
             journal
                 .save()
@@ -643,6 +721,7 @@ const getJournalLike = async (req, res) => {
 
 exports.getExploreJournals = getExploreJournals;
 exports.searchExploreJournals = searchExploreJournals;
+exports.getHottestJournals = getHottestJournals;
 exports.getNearbyJournals =getNearbyJournals;
 exports.getUserJournals = getUserJournals;
 exports.searchUserJournals = searchUserJournals;
