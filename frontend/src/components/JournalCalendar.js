@@ -5,12 +5,10 @@ import '../stylesheets/JournalCalendar.css';
 import Button from '@material-ui/core/Button';
 import { Box } from '@material-ui/core/';
 
-function JournalCalendar({ journals, handleDateSelection }) {
+function JournalCalendar({ handleDateSelection,validDates}) {
     const [date, setDate] = useState(null);
-    const validDates = journals.map((j) => j.date.toDateString());
     const handleClear = () => {
         setDate(null);
-        console.log('clear');
         handleDateSelection(null);
     };
     const handleSelect = (date) => {
