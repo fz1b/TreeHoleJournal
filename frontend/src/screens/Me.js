@@ -67,6 +67,7 @@ export default function Me() {
     const [dateFilter, setDateFilter] = useState(null);
     const [showSearchTag, setShowSearchTag] = useState(false);
     const [mode, setMode] = useState(fetchMode.GENERAL);
+    const [validDates, setValidDates] = useState([]);
     const isMounted = useMountedState();
 
     const handleClearSearch = () => {
@@ -124,12 +125,16 @@ export default function Me() {
             setDateFilter(date);
             getUserJournalsByDate(auth.token, date)
                 .then((res) => {
-                    setJournals(res);
-                    setLoading(false);
+                    if (isMounted()){
+                        setJournals(res);
+                        setLoading(false);
+                    }
                 })
                 .catch((err) => {
                     // do nothing
-                    setLoading(false);
+                    if (isMounted()){
+                        setLoading(false);
+                    }
                 });
         }
     };
@@ -157,7 +162,10 @@ export default function Me() {
         fetchJournals(null, null);
         getDateOverview(auth.token)
             .then(dates => {
-                // Emily's code here
+                if (isMounted()){
+                    const dateStrings = dates.map(d=>d.toDateString());
+                    setValidDates(dateStrings);
+                }
             })
             .catch(err => {
                 // do nothing
@@ -216,8 +224,8 @@ export default function Me() {
                             setJournals(prev => {
                                 return [...prev, ...res]
                             });
+                            setHasMore(true);
                         }
-                        if (isMounted()) setHasMore(true);
                     } else {
                         if (isMounted()) setHasMore(false);
                     }
@@ -293,6 +301,7 @@ export default function Me() {
                     handleDateSelection={handleDateSelection}
                     journals={journals}
                     showCalendar={true}
+                    validDates={validDates}
                     refreshJournals={fetchJournals}
                     onDelete={deleteJournalHandler}
                 />

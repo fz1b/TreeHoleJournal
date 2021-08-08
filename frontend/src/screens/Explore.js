@@ -243,7 +243,7 @@ export default function Explore() {
                 />
             </div>
             {loading && <LoadingSpinner />}
-            {!locationAcess && <LocationError/>}
+            {!locationAcess && mode===fetchMode.NEARBY&&<LocationError/>}
             {!hasMore && <Coda />}
         </ThemeProvider>
     );
