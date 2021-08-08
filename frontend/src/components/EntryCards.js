@@ -125,31 +125,47 @@ export default function EntryCards(props) {
                             subheader={journalContent.date.toDateString()}
                         />
                     </Box>
-                    <Box height='100%' display='flex' justifyContent='space-between' flexDirection='column'>
-                        <CardActionArea style={{display: 'block'}}>
-                            <Box>
-                                {journalContent.image && (
-                                    <CardMedia
-                                        component='img'
-                                        alt='props.content.image'
-                                        height='200'
-                                        image={journalContent.image}
-                                        className={classes.coverImage}
-                                        onClick={toggleModal}
-                                    />
-                                )}
-                            </Box>
-                            <Box>
-                                <CardContent onClick={toggleModal}>
-                                    <Typography gutterBottom variant='h5' component='h2'>
-                                        {journalContent.title}
-                                    </Typography>
-                                    <Typography variant='body2' color='textSecondary' component='p'>
-                                        {journalContent.content.slice(0, 550) + '...'}
-                                    </Typography>
-                                </CardContent>
-                            </Box>
-                        </CardActionArea>
+                    <Box height='100%' display='flex' flexDirection='column'>
+                        {!journalContent.image && (
+                            <CardActionArea style={{minHeight: '100%'}} onClick={toggleModal}>
+                                <Box height='100%' display='flex' justifyContent='flex-start'>
+                                    <CardContent>
+                                        <Typography gutterBottom variant='h5' component='h2'>
+                                            {journalContent.title}
+                                        </Typography>
+                                        <Typography variant='body2' color='textSecondary' component='p'>
+                                            {journalContent.content.slice(0, 600) + '...'}
+                                        </Typography>
+                                    </CardContent>
+                                </Box>
+                            </CardActionArea>
+                        )}
+                        {journalContent.image && (
+                            <CardActionArea>
+                                <Box>
+                                    {journalContent.image && (
+                                        <CardMedia
+                                            component='img'
+                                            alt='props.content.image'
+                                            height='200'
+                                            image={journalContent.image}
+                                            className={classes.coverImage}
+                                            onClick={toggleModal}
+                                        />
+                                    )}
+                                </Box>
+                                <Box>
+                                    <CardContent onClick={toggleModal}>
+                                        <Typography gutterBottom variant='h5' component='h2'>
+                                            {journalContent.title}
+                                        </Typography>
+                                        <Typography variant='body2' color='textSecondary' component='p'>
+                                            {journalContent.content.slice(0, 150) + '...'}
+                                        </Typography>
+                                    </CardContent>
+                                </Box>
+                            </CardActionArea>
+                        )}
                     </Box>
                     <Box>
                         <CardActions>
