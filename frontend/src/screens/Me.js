@@ -224,8 +224,8 @@ export default function Me() {
                             setJournals(prev => {
                                 return [...prev, ...res]
                             });
+                            setHasMore(true);
                         }
-                        if (isMounted()) setHasMore(true);
                     } else {
                         if (isMounted()) setHasMore(false);
                     }
