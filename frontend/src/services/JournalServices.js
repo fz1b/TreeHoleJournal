@@ -137,6 +137,8 @@ export function getDateOverview(idToken) {
         .then((res) => {
             // convert date from string to Date
             let dates = [];
+            console.log("getDateOverview res.data");
+            console.log(res.data);
             for (let date of res.data) {
                 dates.push(new Date(date));
             }

@@ -163,7 +163,9 @@ export default function Me() {
         getDateOverview(auth.token)
             .then(dates => {
                 if (isMounted()){
+                     console.log(dates);
                     const dateStrings = dates.map(d=>d.toDateString());
+                    console.log(dateStrings);
                     setValidDates(dateStrings);
                 }
             })
