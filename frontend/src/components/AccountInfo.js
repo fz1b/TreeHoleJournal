@@ -177,7 +177,7 @@ export default function AccountInfo(props) {
                 <DialogContent dividers>
                     <Box m={2}>
                         <DialogContentText>
-                            In this page you can also reset your password. Changing the avatar image, username and email will be coming soon in a later release.
+                            In this page you can reset your password. Changing the avatar image, username and email will be coming soon in a later release.
                         </DialogContentText>
                     </Box>
                     <Grid
