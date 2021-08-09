@@ -96,7 +96,7 @@ Bill spent most of his effort on developing authentication using Firebase while 
 
 Max was in charge of continuous deployment to Heroku and backend. For backend, he (...). He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
 
-### Frank Zhou
+### Frank Zhou (k2u1b)
 
 Frank designed and implemented the cards component, picture upload to Amazon S3, and user information page. He is also the primary author of this document.
 
