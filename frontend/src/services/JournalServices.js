@@ -140,6 +140,7 @@ export function getDateOverview(idToken) {
             for (let date of res.data) {
                 dates.push(new Date(date));
             }
+            // console.log('FE: ' + dates);
             return dates;
         })
         .catch((err) => {
