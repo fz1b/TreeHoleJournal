@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const { Journal, PRIVACY } = require('../models/JournalSchema');
 const User = require('../models/UserSchema');
-const loadBatchSize = 3;
+const loadBatchSize = 8;
 
 // get #loadBatchSize journals with PUBLIC or ANONYMOUS setting ordered by date,
 // if a journal_id and date is provided in the query, return only the journals
@@ -326,10 +326,6 @@ const getDateOverview = async (req, res) => {
         .get(process.env.BACKEND_URL + 'users/info/secure/' + req.params.idToken)
         .then((user) => {
             let filter = { author_id: user.data.userData._id };
-            // get only the journals created before the last journal
-            if (req.query.last_id && req.query.last_date ) {
-                filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
-            }
             Journal.find(filter,
                 ['date', '-_id']
             )
@@ -339,6 +335,7 @@ const getDateOverview = async (req, res) => {
                     for (let date of dates){
                         uniqueDates.add(new Date(date.date).setHours(0,0,0,0));
                     }
+                    // console.log('BE: ' + uniqueDates);
                     res.status(200).json([...uniqueDates]);
                 })
                 .catch((err) => {
