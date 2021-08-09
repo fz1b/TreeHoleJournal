@@ -34,6 +34,12 @@ function JournalLocation({handleLocation, address, editing}){
     useEffect(()=>{
         setLocation(address)
     },[address])
+    useEffect(()=>{
+        if(location === ""){
+            console.log("delete location")
+            handleLocation(null);
+        }
+    },[location])
 return(
     <>
     <LocationContent dividers={true}>

@@ -74,28 +74,30 @@ export default function Explore() {
             case 'Nearby':
                 setMode(fetchMode.NEARBY);
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    if (isMounted()){
+                    if(isMounted){
                         setLocationAccess(true);
                         setLocation({lat: position.coords.latitude, lng: position.coords.longitude});
                         getNearbyJournals(position.coords.latitude, position.coords.longitude, null, null)
                             .then((res) => {
-                                if (isMounted())
-                                    setJournals(res);
-                                if (isMounted())
-                                    setLoading(false);
+                                    if(isMounted){
+                                        setJournals(res);
+                                        setLoading(false);
+                                    }
                             })
                             .catch((err) => {
-                                if (isMounted())
-                                    setJournals([]);
-                                if (isMounted())
-                                    setLoading(false);
-                                console.error(err);
+                                    if(isMounted){
+                                        setJournals([]);
+                                        setLoading(false);
+                                    console.error(err);
+                                    }
                             });
                     }
+                    
                 },function(err){
                     if(err.PERMISSION_DENIED){
-                        setLocationAccess(false)
-                        console.log("permisson denied");
+                        if(isMounted){
+                            setLocationAccess(false)
+                        }
                     }
                 })
                 break;
