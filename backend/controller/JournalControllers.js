@@ -330,13 +330,7 @@ const getDateOverview = async (req, res) => {
                 ['date', '-_id']
             )
                 .then((dates) => {
-                    // console.log(dates);
-                    let uniqueDates = new Set();
-                    for (let date of dates){
-                        uniqueDates.add(new Date(date.date).setHours(0,0,0,0));
-                    }
-                    // console.log('BE: ' + uniqueDates);
-                    res.status(200).json([...uniqueDates]);
+                    res.status(200).json(dates.map(d=>d.date));
                 })
                 .catch((err) => {
                     console.error(err);
