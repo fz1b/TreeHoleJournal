@@ -147,7 +147,6 @@ export default function CustomizedDialogs({journal, handleClose, authorMode, han
             setIsSaving(true);
             if (files.length > 0) {
                 const fileName = sha256(files[0].name) + Math.floor((Math.random() * 1000) + 1);
-                console.log(fileName);
                 const data = await S3Client.uploadFile(files[0], fileName);
                 setUpLoaded(true);
                 imageURL = data.location;
