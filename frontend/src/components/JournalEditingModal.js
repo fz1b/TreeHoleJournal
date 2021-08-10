@@ -69,9 +69,11 @@ const DialogActions = withStyles((theme) => ({
     },
 }))(MuiDialogActions);
 
-const Date = styled.span`
-    position: absolute;
-    right: 75%;
+const Date = styled.div`
+    color: grey;
+    font-size: 15px;
+    margin-top: 2%;
+    margin-left: 1%
 `;
 
 const Dropzone = styled.div`
@@ -242,7 +244,9 @@ export default function CustomizedDialogs({journal, handleClose, authorMode, han
         <div>
             <Dialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={true} fullWidth={true} maxWidth='sm'>
                 <DialogTitle id='customized-dialog-title' onClose={handleClose}>
+
                     <TitleInput id='outlined-basic' label='Title' variant='outlined' size='small' value={title} onChange={handleTitleChange} />
+                    <Date>{journal.date.toDateString()}</Date>
                 </DialogTitle>
                 <DialogContent dividers>
                     {files.length === 0 && <Image src={journal.image} alt='' />}
@@ -279,7 +283,6 @@ export default function CustomizedDialogs({journal, handleClose, authorMode, han
                 </DialogContent>
                 <JournalLocation handleLocation={handleLocation} address={journal.location ? journal.location.address : ''} editing={true} />
                 <DialogActions>
-                    <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
                         <>
                             <Select labelId='demo-customized-select-label' id='demo-customized-select' value={privacy} onChange={handlePrivacyChange} input={<BootstrapInput />}>
