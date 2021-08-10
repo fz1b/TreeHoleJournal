@@ -2,8 +2,6 @@
 
 TreeHole creates a place where people can record their life through posts with both pictures and words, as well as location. A user can also view, comment and like other people's posts. The visibility of each post can be set to private, anonymous, or public based on the user. Only public and anonymous posts can be viewed and commented on by others.
 
----
-
 ## Project goal completion status
 
 ### 3-5 minimal requirements
@@ -44,7 +42,6 @@ TreeHole creates a place where people can record their life through posts with b
 
  ✅  Infinite scrolling
 
----
 
 ## Technology Usage (Incomplete)
 
@@ -64,7 +61,6 @@ React forms the backbone of the projects. We have used multiple React technologi
 
 In order to ensure users can access their information everywhere, we have hosted our website in Heroku. In Heroku, we have made use of the `Secrets` function to hide API access tokens and keys from the codebase. We have also delegated the burden to continuous deployment to **GitHub Actions,** so that changes made to the `master` branch will be applied to the website within minutes.
 
----
 
 ## Above and beyond functionality (Incomplete)
 
@@ -72,7 +68,6 @@ In order to ensure users can access their information everywhere, we have hosted
 
 ### Location Services
 
----
 
 ## Next Steps (Incomplete)
 
@@ -80,7 +75,6 @@ In order to ensure users can access their information everywhere, we have hosted
 - Ability to follow others, view all posts from another user
 - Email confirmation
 
----
 
 ## Contributions
 
@@ -100,7 +94,6 @@ Max was in charge of continuous deployment to Heroku and backend. For backend, h
 
 Frank designed and implemented the cards component, picture upload to Amazon S3, and user information page. He is also the primary author of this document.
 
----
 
 ## Project Description: TreeHole
 
@@ -128,7 +121,6 @@ create/edit/delete/change visibility
 
 Add registered professional therapist access.
 
----
 
 ## Breakdown of requirements
 
@@ -148,7 +140,6 @@ Add registered professional therapist access.
     - Image upload and storage uses AWS's S3 service
     - Other fields are preserved via useEffect on React
 
----
 
 ## Sketch prototypes of some key tasks of your app
 
