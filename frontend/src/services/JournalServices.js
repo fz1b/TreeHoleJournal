@@ -155,8 +155,12 @@ export function getDateOverview(idToken) {
 // response: list of Journals JSON obj
 export function getUserJournalsByDate(idToken, date, last_id, last_date) {
     if (!date) date = new Date();
+    date.setHours(0,0,0,0);
+    let date_end = new Date();
+    date_end.setHours(0,0,0,0);
+
     return axios
-        .get('/me/date/' + idToken + '/' + date.toUTCString(),
+        .get('/me/date/' + idToken + '/' + date.toUTCString() + '/' + date_end.toUTCString(),
             { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
             // console.log(res.data);

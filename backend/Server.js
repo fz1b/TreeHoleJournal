@@ -94,7 +94,7 @@ app.get('/me/search/:idToken/:criteria', journalController.searchUserJournals);
 // get a list of dates that the user wrote journals on
 app.get('/me/date_overview/:idToken', journalController.getDateOverview);
 // get journals written by the given user on the specified date
-app.get('/me/date/:idToken/:date', journalController.getUserJournalsByDate);
+app.get('/me/date/:idToken/:date_start/:date_end', journalController.getUserJournalsByDate);
 // create a new journal
 app.post('/me/:idToken', journalController.createNewJournal);
 // delete a journal
