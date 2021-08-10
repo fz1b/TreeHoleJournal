@@ -8,6 +8,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box'
 import {FiEdit} from 'react-icons/fi';
 import Badge from '@material-ui/core/Badge';
 import styled from 'styled-components';
@@ -61,9 +62,8 @@ const Image = styled.img`
     border-radius: 10px;
 `;
 const Date = styled.span`
-    position: absolute;
-    right: 75%;
     color: grey;
+    font-size: 17px;
 `;
 
 export default function CustomizedDialogs({journal, handleEdit, handleClose, authorMode, refreshJournals, like, onLike, onRefreshOneJournal}) {
@@ -87,20 +87,22 @@ export default function CustomizedDialogs({journal, handleEdit, handleClose, aut
             <Dialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={true} maxWidth='sm' fullWidth>
                 <DialogTitle id='customized-dialog-title' style={{height: '32px'}} onClose={handleClose}>
                     {journal.title}
+                    <Date>{" on " + journal.date.toDateString()}</Date>
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Typography component={'span'} gutterBottom>
                         {journal.image && <Image src={journal.image} alt='' />}
+                    <Box m={1} mt={2}>
+                    <Typography component={'span'} gutterBottom>
                         {journal.content}
-                    </Typography>
+                        </Typography>
+                    </Box>
                 </DialogContent>
                 {journal.location && <JournalLocation address={journal.location.address} />}
                 <DialogActions>
-                    <Date>{journal.date.toDateString()}</Date>
                     {authorMode && (
-                        <Typography component={'span'} gutterBottom>
+                         <Typography component={'span'} gutterBottom>
                             {journal.privacy}
-                        </Typography>
+                            </Typography>
                     )}
                     <>
                         <span onClick={handleLike}>
