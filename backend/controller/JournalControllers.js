@@ -347,7 +347,7 @@ const getDateOverview = async (req, res) => {
 // get the user's journal filtered by a given date
 // if a journal_id and date is provided in the query, return only the journals
 // created before the given journal (for pagination)
-// req-param: user_token, stringified Date (YYYY-MM-DD)
+// req-param: user_token, date_start, date_end
 // req-query: last_id (id of the last loaded journal), last_date
 // req-body: void
 // response: list of Journals JSON obj
@@ -355,13 +355,8 @@ const getUserJournalsByDate = async (req, res) => {
     axios
         .get(process.env.BACKEND_URL+'users/info/secure/' + req.params.idToken)
         .then((user) => {
-            let start = new Date(req.params.date);
-            start.setHours(0,0,0,0);
-            let end = new Date(req.params.date);
-            end.setDate(end.getDate()+1);
-            end.setHours(0,0,0,0);
-            // console.log('start: ' + start + 'ori: '+ req.params.date);
-            // console.log('end: ' + end);
+            let start = new Date(req.params.date_start);
+            let end = new Date(req.params.date_end);
             let filter = {
                 author_id: user.data.userData._id,
                 date: {
