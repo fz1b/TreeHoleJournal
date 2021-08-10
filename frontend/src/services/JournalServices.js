@@ -156,7 +156,8 @@ export function getDateOverview(idToken) {
 export function getUserJournalsByDate(idToken, date, last_id, last_date) {
     if (!date) date = new Date();
     date.setHours(0,0,0,0);
-    let date_end = new Date();
+    let date_end = new Date(date);
+    date_end.setDate(date_end.getDate() + 1);
     date_end.setHours(0,0,0,0);
 
     return axios

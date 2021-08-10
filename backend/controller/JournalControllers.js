@@ -357,8 +357,6 @@ const getUserJournalsByDate = async (req, res) => {
         .then((user) => {
             let start = new Date(req.params.date_start);
             let end = new Date(req.params.date_end);
-            // console.log('start: ' + start + 'ori: '+ req.params.date);
-            // console.log('end: ' + end);
             let filter = {
                 author_id: user.data.userData._id,
                 date: {
