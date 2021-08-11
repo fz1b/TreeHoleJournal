@@ -77,7 +77,7 @@ We want to have a way to confirm that a user has a working email, so that we can
 
 ## Contributions
 
-### Emily Lian (i6q1b)
+### Emily Lian (l6q1b)
 
 Emily was the owner of the viewing and editing modal of journals. She implemented most of the functionalities in the modals such as creating and editing title, content and location of each post. She was also the UI designer for this project.
 
