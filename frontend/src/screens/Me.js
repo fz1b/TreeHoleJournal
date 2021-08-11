@@ -170,7 +170,8 @@ export default function Me() {
             .catch(err => {
                 // do nothing
             });
-    }, [auth.token, fetchJournals]);
+    }, [auth.token, fetchJournals, isMounted]);
+  
     useEffect(()=>{
         getDateOverview(auth.token)
             .then(dates => {
@@ -183,6 +184,7 @@ export default function Me() {
                 // do nothing
             });
     },[journals])
+
     // load more journals when scrolled to the bottom
     window.onscroll = function () {
         let d = document.documentElement;

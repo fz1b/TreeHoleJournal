@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import {useState} from 'react';
 import {withStyles} from '@material-ui/core/styles';
@@ -113,9 +113,9 @@ export default function CustomizedDialogs({journal, handleClose, authorMode, han
     const auth = useContext(AuthContext);
     const route = useLocation();
 
-    const handleLocation = (loc) => {
+    const handleLocation = useCallback((loc) => {
         setLocation(loc);
-    };
+    },[]);
     const [files, setFiles] = useState([]);
     const [uploaded, setUpLoaded] = useState(false);
     const S3Client = new S3(config);

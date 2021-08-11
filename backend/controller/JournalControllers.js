@@ -32,7 +32,6 @@ const getExploreJournals = async (req, res) => {
         .sort({ date:-1, _id:-1 })
         .limit(loadBatchSize)
         .then((journals) => {
-            // console.log(journals);
             res.status(200).json(journals);
         })
         .catch((err) => {
@@ -95,7 +94,6 @@ const getNearbyJournals = async (req, res) => {
     ])
         .limit(loadBatchSize)
         .then((journals) => {
-            // console.log(journals);
             res.status(200).json(journals);
         })
         .catch((err) => {
@@ -158,7 +156,6 @@ const getHottestJournals = async (req, res) => {
     ])
         .limit(loadBatchSize)
         .then((journals) => {
-            // console.log(journals);
             res.status(200).json(journals);
         })
         .catch((err) => {
@@ -215,7 +212,6 @@ const searchExploreJournals = async (req, res) => {
         .sort({ date:-1, _id:-1 })
         .limit(loadBatchSize)
         .then((journals) => {
-            // console.log(journals);
             res.status(200).json(journals);
         })
         .catch((err) => {
@@ -246,7 +242,6 @@ const getUserJournals = async (req, res) => {
                 .sort({ date:-1, _id:-1 })
                 .limit(loadBatchSize)
                 .then((journals) => {
-                    // console.log(journals);
                     res.status(200).json(journals);
                 })
                 .catch((err) => {
@@ -293,7 +288,6 @@ const searchUserJournals = async (req, res) => {
                 ],
             };
             if (req.query.last_id && req.query.last_date ) {
-                console.log(req.query.last_id);
                 filter = modifyFilterToLoadAfterDate(filter, req.query.last_id, req.query.last_date)
             }
             Journal.find(
@@ -303,7 +297,6 @@ const searchUserJournals = async (req, res) => {
                 .sort({ date:-1, _id:-1 })
                 .limit(loadBatchSize)
                 .then((journals) => {
-                    console.log(journals);
                     res.status(200).json(journals);
                 })
                 .catch((err) => {
@@ -374,7 +367,6 @@ const getUserJournalsByDate = async (req, res) => {
                 .sort({ date:-1, _id:-1 })
                 .limit(loadBatchSize)
                 .then((journals) => {
-                    // console.log(journals);
                     res.status(200).json(journals);
                 })
                 .catch((err) => {
@@ -563,7 +555,6 @@ const getCommentAuthor = async (req, res) => {
         axios
             .get(process.env.BACKEND_URL+'users/info/id/' + user_id)
             .then((author) => {
-                // console.log(author.data);
                 res.status(200).json(author.data);
             })
             .catch((err) => {
