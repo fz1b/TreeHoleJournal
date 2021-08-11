@@ -30,16 +30,6 @@ TreeHole creates a place where people can record their life through posts with b
 
  ✅  Explore other posts by location
 
- ❌  Direct messages
-
- ❌  Report abuse
-
- ✅  Search functionality
-
- ❌  Filter through existing journals by date/location
-
- ❌  Add music/video support
-
  ✅  Infinite scrolling
 
 
@@ -55,6 +45,8 @@ React forms the backbone of the projects. We have used multiple React technologi
 
 ### Unit 3: Node and Express
 
+We implemented our backend with `Node.js`. We also used Express.js as our RESTful framework. The backend provides several endpoints for CRUD operations on journals, comments, as well as users, which the front end can access through `axios`.
+
 ### Unit 4: MongoDB
 
 We stored all our user generated data and user information as documents in the document-based databased MongoDB. Compared to traditional relational databases, MongoDB is more flexible accessing it is easier comapred with SQL queries. We also used `Mongoose` to connect our `Node.js` backend with the database.
@@ -64,19 +56,24 @@ We stored all our user generated data and user information as documents in the d
 In order to ensure users can access their information everywhere, we have hosted our website in Heroku. In Heroku, we have made use of the `Secrets` function to hide API access tokens and keys from the codebase. We have also delegated the burden to continuous deployment to **GitHub Actions,** so that changes made to the `master` branch will be applied to the website within minutes.
 
 
-## Above and beyond functionality (Incomplete)
+## Above and beyond functionality
 
 ### Infinite Scrolling
 
+To improve the user experience, the frontend will not fetch and render all posts at once. Instead, it will fetch and render the first batch, and when the user scrolls to the bottom, the next batch will be loaded. We custom designed a flagpoint that consists of the journal id and the time the journal is composed.
+
 ### Location Services
+
+Location services is enabled by the Google Maps API. This enables both location auto complete when creating a modal, and also sort by location. We use a custom algorithm to find all nearby journals, and display them in sorted order. Users can use this to discover point of interest near them.
 
 ## Next Steps (Incomplete)
 
 - Move requests information to headers
-> Currently all requests are being sent over the url. We plan to move these requests in the header since we can have more request data stored in a header as we plan for more complex queries
+> Currently all requests are being sent over the url. We plan to move these requests in the header since we can have more request data stored in a header as we plan for more complex queries.
 - Ability to follow others, view all posts from another user
-> 
+> Similar to other social media apps, a user may want to explore all the posts created by someone that they follow. In the future we may include a personal page that can be customized by the user, and includes all of the user's public posts.
 - Email confirmation
+> We want to have a way to confirm that a user has a working email, so that we can send notifications when their posts is being commented and liked. A valid email address also allows to add other verification features, like reset password.
 
 ## Contributions
 
