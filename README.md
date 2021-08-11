@@ -91,7 +91,7 @@ Max was in charge of continuous deployment to Heroku and the backend. He set up 
 
 ### Frank Zhou (k2u1b)
 
-Frank designed and implemented the cards component, card layouts, picture upload to Amazon S3, and user information page. He is also the primary author of this document.
+Frank designed and implemented the cards component and screen layout, configured Amazon S3 and connected it to TreeHole to enable picture upload, and created the account info page. He was in charge of setting up JIRA as well as setting up documentations, incuding this document.
 
 ## Project Description: TreeHole
 
