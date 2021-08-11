@@ -80,7 +80,7 @@ In order to ensure users can access their information everywhere, we have hosted
 
 ### Emily Lian
 
-Emily was the owner of the viewing and editing modal of journals. She implemented most of the functionalities in the modals such as creating and editing title, content and location of each post. She was also the author of all the background pictures.
+Emily was the owner of the viewing and editing modal of journals. She implemented most of the functionalities in the modals such as creating and editing title, content and location of each post. She was also the UI designer for this project.
 
 ### Bill Liu
 
