@@ -32,7 +32,6 @@ export function getExploreJournals(last_id, last_date) {
         .get('/explore',
             { params: { last_id: last_id, last_date: last_date }})
         .then((res) => {
-            // console.log(res.data);
             return processJournals(res.data);
         })
         .catch((err) => {
@@ -83,7 +82,6 @@ export function searchExploreJournals(criteria, last_id, last_date) {
         .get('/explore/search/' + criteria,
             { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
-            // console.log(res.data);
             return processJournals(res.data);
         })
         .catch((err) => {
@@ -117,7 +115,6 @@ export function searchUserJournals(idToken, criteria, last_id, last_date) {
         .get('/me/search/' + idToken + '/' + criteria,
             { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
-            // console.log(res.data);
             return processJournals(res.data);
         })
         .catch((err) => {
@@ -139,7 +136,6 @@ export function getDateOverview(idToken) {
             for (let date of res.data) {
                 dates.push(new Date(date));
             }
-            // console.log('FE: ' + dates);
             return dates;
         })
         .catch((err) => {
@@ -163,7 +159,6 @@ export function getUserJournalsByDate(idToken, date, last_id, last_date) {
         .get('/me/date/' + idToken + '/' + date.toUTCString() + '/' + date_end.toUTCString(),
             { params: { last_id: last_id, last_date: last_date } })
         .then((res) => {
-            // console.log(res.data);
             return processJournals(res.data);
         })
         .catch((err) => {
@@ -180,7 +175,6 @@ export function getJournalAuthor(journal_id) {
     return axios
         .get('/journals/author/' + journal_id)
         .then((res) => {
-            // console.log(res.data);
             return res.data;
         })
         .catch((err) => {
@@ -196,7 +190,6 @@ export function verifyEditingAccess(journal_id, user_token) {
     return axios
         .get('/journal/access/' + journal_id + '/' + user_token)
         .then((res) => {
-            // console.log(res.data);
             return res.data.editable;
         })
         .catch((err) => {
@@ -368,7 +361,6 @@ export function getCommentAuthor(journal_id, comment_id) {
     return axios
         .get('/comments/' + journal_id + '/' + comment_id)
         .then((res) => {
-            // console.log(res.data);
             return res.data.data;
         })
         .catch((err) => {
