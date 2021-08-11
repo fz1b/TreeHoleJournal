@@ -30,20 +30,10 @@ TreeHole creates a place where people can record their life through posts with b
 
  ✅  Explore other posts by location
 
- ❌  Direct messages
-
- ❌  Report abuse
-
- ✅  Search functionality
-
- ❌  Filter through existing journals by date/location
-
- ❌  Add music/video support
-
  ✅  Infinite scrolling
 
 
-## Technology Usage (Incomplete)
+## Technology Usage
 
 ### Unit 1
 
@@ -55,45 +45,53 @@ React forms the backbone of the projects. We have used multiple React technologi
 
 ### Unit 3: Node and Express
 
+We implemented our backend with `Node.js`. We also used Express.js as our RESTful framework. The backend provides several endpoints for CRUD operations on journals, comments, as well as users, which the front end can access through `axios`.
+
 ### Unit 4: MongoDB
+
+We stored all our user generated data and user information as documents in the document-based databased MongoDB. Compared to traditional relational databases, MongoDB is more flexible accessing it is easier comapred with SQL queries. We also used `Mongoose` to connect our `Node.js` backend with the database.
 
 ### Unit 5: Release Engineering
 
 In order to ensure users can access their information everywhere, we have hosted our website in Heroku. In Heroku, we have made use of the `Secrets` function to hide API access tokens and keys from the codebase. We have also delegated the burden to continuous deployment to **GitHub Actions,** so that changes made to the `master` branch will be applied to the website within minutes.
 
 
-## Above and beyond functionality (Incomplete)
+## Above and beyond functionality
 
 ### Infinite Scrolling
 
+To improve the user experience, the frontend will not fetch and render all posts at once. Instead, it will fetch and render the first batch, and when the user scrolls to the bottom, the next batch will be loaded. We custom designed a flagpoint that consists of the journal id and the time the journal is composed.
+
 ### Location Services
 
+Location services is enabled by the Google Maps API. This enables both location auto complete when creating a modal, and also sort by location. We use a custom algorithm to find all nearby journals, and display them in sorted order. Users can use this to discover point of interest near them.
 
-## Next Steps (Incomplete)
+## Next Steps
 
 - Move requests information to headers
+Currently all requests are being sent over the url. We plan to move these requests in the header since we can have more request data stored in a header as we plan for more complex queries.
 - Ability to follow others, view all posts from another user
+Similar to other social media apps, a user may want to explore all the posts created by someone that they follow. In the future we may include a personal page that can be customized by the user, and includes all of the user's public posts.
 - Email confirmation
-
+We want to have a way to confirm that a user has a working email, so that we can send notifications when their posts is being commented and liked. A valid email address also allows to add other verification features, like reset password.
 
 ## Contributions
 
 ### Emily Lian (l6q1b)
 
-Emily was the owner of the viewing and editing modal of journals. She implemented most of the functionalities in the modals such as creating and editing title, content and location of each post. She was also the author of all the background pictures.
+Emily was the owner of the viewing and editing modal of journals. She implemented most of the functionalities in the modals such as creating and editing title, content and location of each post. She was also the UI designer for this project.
 
-### Bill Liu (d6h0b)
+### Yuchen Liu (d6h0b)
 
-Bill spent most of his effort on developing authentication using Firebase while also contributing to the backend to enable multiple database actions such as (...). Bill also designed the navigation bar used in all screens.
+For backend, Yuchen spent most of his effort on developing authentication using Firebase while also contributing to the backend to enable multiple database actions such as creating/ updating/ validating users' profile in database, letting users like/unlike journals, querying various user information via secured methods. Yuchen designed the navigation bar used in all screens, optimized card component fetching logic, prevented useEffect call memory leak, and established journal like button logic.
 
-### Maxwell Wang (i4j1b)
+### Maxwell Wang (i4j4b)
 
-Max was in charge of continuous deployment to Heroku and backend. For backend, he (...). He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
+Max was in charge of continuous deployment to Heroku and the backend. He set up the MongoDB database and implemented the C.U.R.D. functionalities for handling journals. He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
 
 ### Frank Zhou (k2u1b)
 
-Frank designed and implemented the cards component, picture upload to Amazon S3, and user information page. He is also the primary author of this document.
-
+Frank designed and implemented the cards component, card layouts, picture upload to Amazon S3, and user information page. He is also the primary author of this document.
 
 ## Project Description: TreeHole
 
