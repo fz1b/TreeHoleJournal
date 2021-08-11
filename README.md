@@ -78,15 +78,15 @@ In order to ensure users can access their information everywhere, we have hosted
 
 ## Contributions
 
-### Emily Lian
+### Emily Lian (l6q1b)
 
 Emily was the owner of the viewing and editing modal of journals. She implemented most of the functionalities in the modals such as creating and editing title, content and location of each post. She was also the author of all the background pictures.
 
-### Bill Liu
+### Bill Liu (d6h0b)
 
 Bill spent most of his effort on developing authentication using Firebase while also contributing to the backend to enable multiple database actions such as (...). Bill also designed the navigation bar used in all screens.
 
-### Maxwell Wang
+### Maxwell Wang (i4j1b)
 
 Max was in charge of continuous deployment to Heroku and backend. For backend, he (...). He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
 
