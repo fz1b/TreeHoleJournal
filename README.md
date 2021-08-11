@@ -87,7 +87,7 @@ For backend, Yuchen spent most of his effort on developing authentication using 
 
 ### Maxwell Wang (i4j4b)
 
-Max was in charge of continuous deployment to Heroku and the backend. He set up the MongoDB database and implemented the C.U.R.D. functionalities for handling journals. He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
+Max was in charge of continuous deployment to Heroku and the backend. He set up the MongoDB database and implemented the C.R.U.D. functionalities for handling journals. He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
 
 ### Frank Zhou (k2u1b)
 
