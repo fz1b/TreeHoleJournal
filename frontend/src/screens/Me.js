@@ -163,7 +163,6 @@ export default function Me() {
         getDateOverview(auth.token)
             .then(dates => {
                 if (isMounted()){
-                    console.log(dates);
                     const dateStrings = dates.map(d=>d.toDateString());
                     setValidDates(dateStrings);
                 }
@@ -171,7 +170,7 @@ export default function Me() {
             .catch(err => {
                 // do nothing
             });
-    }, [auth.token, fetchJournals]);
+    }, [auth.token, fetchJournals, isMounted]);
 
     // load more journals when scrolled to the bottom
     window.onscroll = function () {

@@ -1,5 +1,4 @@
 // services for journals
-import {getDistance} from 'geolib';
 const axios = require('axios').default;
 
 // convert journal date from string to Date obj
