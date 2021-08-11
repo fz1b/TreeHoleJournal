@@ -171,6 +171,19 @@ export default function Me() {
                 // do nothing
             });
     }, [auth.token, fetchJournals, isMounted]);
+  
+    useEffect(()=>{
+        getDateOverview(auth.token)
+            .then(dates => {
+                if (isMounted()){
+                    const dateStrings = dates.map(d=>d.toDateString());
+                    setValidDates(dateStrings);
+                }
+            })
+            .catch(err => {
+                // do nothing
+            });
+    },[journals])
 
     // load more journals when scrolled to the bottom
     window.onscroll = function () {
@@ -240,11 +253,7 @@ export default function Me() {
     };
 
     const createJournalHandler = (newJournal) => {
-        setJournals((prev) => {
-            let newArr = prev;
-            newArr.unshift(newJournal);
-            return newArr;
-        });
+        setJournals(prev=>[newJournal,...prev]);
     };
     const deleteJournalHandler = (deletedJournalId) => {
         const newData = journals.filter((journal) => {
