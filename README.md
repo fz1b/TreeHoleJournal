@@ -57,6 +57,8 @@ React forms the backbone of the projects. We have used multiple React technologi
 
 ### Unit 4: MongoDB
 
+We stored all our user generated data and user information as documents in the document-based databased MongoDB. Compared to traditional relational databases, MongoDB is more flexible accessing it is easier comapred with SQL queries. We also used `Mongoose` to connect our `Node.js` backend with the database.
+
 ### Unit 5: Release Engineering
 
 In order to ensure users can access their information everywhere, we have hosted our website in Heroku. In Heroku, we have made use of the `Secrets` function to hide API access tokens and keys from the codebase. We have also delegated the burden to continuous deployment to **GitHub Actions,** so that changes made to the `master` branch will be applied to the website within minutes.
@@ -68,13 +70,13 @@ In order to ensure users can access their information everywhere, we have hosted
 
 ### Location Services
 
-
 ## Next Steps (Incomplete)
 
 - Move requests information to headers
+> Currently all requests are being sent over the url. We plan to move these requests in the header since we can have more request data stored in a header as we plan for more complex queries
 - Ability to follow others, view all posts from another user
+> 
 - Email confirmation
-
 
 ## Contributions
 
