@@ -183,7 +183,7 @@ export default function Me() {
             .catch(err => {
                 // do nothing
             });
-    },[journals])
+    },[journals, auth.token, isMounted])
 
     // load more journals when scrolled to the bottom
     window.onscroll = function () {
