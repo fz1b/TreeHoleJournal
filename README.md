@@ -33,7 +33,7 @@ TreeHole creates a place where people can record their life through posts with b
  ✅  Infinite scrolling
 
 
-## Technology Usage (Incomplete)
+## Technology Usage
 
 ### Unit 1
 
@@ -66,14 +66,14 @@ To improve the user experience, the frontend will not fetch and render all posts
 
 Location services is enabled by the Google Maps API. This enables both location auto complete when creating a modal, and also sort by location. We use a custom algorithm to find all nearby journals, and display them in sorted order. Users can use this to discover point of interest near them.
 
-## Next Steps (Incomplete)
+## Next Steps
 
 - Move requests information to headers
-> Currently all requests are being sent over the url. We plan to move these requests in the header since we can have more request data stored in a header as we plan for more complex queries.
+Currently all requests are being sent over the url. We plan to move these requests in the header since we can have more request data stored in a header as we plan for more complex queries.
 - Ability to follow others, view all posts from another user
-> Similar to other social media apps, a user may want to explore all the posts created by someone that they follow. In the future we may include a personal page that can be customized by the user, and includes all of the user's public posts.
+Similar to other social media apps, a user may want to explore all the posts created by someone that they follow. In the future we may include a personal page that can be customized by the user, and includes all of the user's public posts.
 - Email confirmation
-> We want to have a way to confirm that a user has a working email, so that we can send notifications when their posts is being commented and liked. A valid email address also allows to add other verification features, like reset password.
+We want to have a way to confirm that a user has a working email, so that we can send notifications when their posts is being commented and liked. A valid email address also allows to add other verification features, like reset password.
 
 ## Contributions
 
