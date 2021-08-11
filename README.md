@@ -88,7 +88,7 @@ Bill spent most of his effort on developing authentication using Firebase while 
 
 ### Maxwell Wang
 
-Max was in charge of continuous deployment to Heroku and backend. For backend, he (...). He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
+Max was in charge of continuous deployment to Heroku and the backend. He set up the MongoDB database and implemented the C.U.R.D. functionalities for handling journals. He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
 
 ### Frank Zhou (k2u1b)
 
