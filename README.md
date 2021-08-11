@@ -77,22 +77,21 @@ We want to have a way to confirm that a user has a working email, so that we can
 
 ## Contributions
 
-### Emily Lian
+### Emily Lian (i6q1b)
 
 Emily was the owner of the viewing and editing modal of journals. She implemented most of the functionalities in the modals such as creating and editing title, content and location of each post. She was also the UI designer for this project.
 
-### Bill Liu
+### Yuchen Liu (d6h0b)
 
-Bill spent most of his effort on developing authentication using Firebase while also contributing to the backend to enable multiple database actions such as (...). Bill also designed the navigation bar used in all screens.
+For backend, Yuchen spent most of his effort on developing authentication using Firebase while also contributing to the backend to enable multiple database actions such as creating/ updating/ validating users' profile in database, letting users like/unlike journals, querying various user information via secured methods. Yuchen designed the navigation bar used in all screens, optimized card component fetching logic, prevented useEffect call memory leak, and established journal like button logic.
 
-### Maxwell Wang
+### Maxwell Wang (i4j4b)
 
 Max was in charge of continuous deployment to Heroku and the backend. He set up the MongoDB database and implemented the C.U.R.D. functionalities for handling journals. He is also the person behind the stunning infinite scrolling feature in the Explore and Me page.
 
 ### Frank Zhou (k2u1b)
 
-Frank designed and implemented the cards component, picture upload to Amazon S3, and user information page. He is also the primary author of this document.
-
+Frank designed and implemented the cards component, card layouts, picture upload to Amazon S3, and user information page. He is also the primary author of this document.
 
 ## Project Description: TreeHole
 
