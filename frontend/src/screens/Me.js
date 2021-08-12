@@ -148,7 +148,6 @@ export default function Me() {
                     if (isMounted()) setLoading(false);
                 })
                 .catch((err) => {
-                    // setJournals([]);
                     console.error(err);
                     if (isMounted()) setLoading(false);
                 });
