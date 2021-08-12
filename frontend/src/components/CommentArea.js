@@ -12,7 +12,6 @@ import AuthContext from '../authAPI/auth-context';
 function CommentArea(props) {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState(props.comments);
-    // const [anchorEl, setAnchorEl] = useState(null);
     const auth = useContext(AuthContext);
 
     const handleCommentChange = (e) => {

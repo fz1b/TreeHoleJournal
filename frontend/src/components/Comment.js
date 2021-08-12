@@ -18,12 +18,6 @@ const Date = styled.span`
     color: grey;
 `;
 
-// const DeletedName = styled.span`
-//     font-size: 0.9rem;
-//     font-weight: bolder;
-//     color: grey;
-// `;
-
 function Comment(props) {
     const [name, setName] = useState('name');
     const [initial, setInitial] = useState('');
