@@ -68,11 +68,11 @@ Location services is enabled by the Google Maps API. This enables both location 
 
 ## Next Steps
 
-- Move requests information to headers
+- **Move requests information to headers**  
 Currently all requests are being sent over the url. We plan to move these requests in the header since we can have more request data stored in a header as we plan for more complex queries.
-- Ability to follow others, view all posts from another user
+- **Ability to follow others, view all posts from another user**   
 Similar to other social media apps, a user may want to explore all the posts created by someone that they follow. In the future we may include a personal page that can be customized by the user, and includes all of the user's public posts.
-- Email confirmation
+- **Email confirmation**  
 We want to have a way to confirm that a user has a working email, so that we can send notifications when their posts is being commented and liked. A valid email address also allows to add other verification features, like reset password.
 
 ## Contributions
@@ -91,7 +91,9 @@ Max was in charge of continuous deployment to Heroku and the backend. He set up 
 
 ### Frank Zhou (k2u1b)
 
-Frank designed and implemented the cards component and screen layout, configured Amazon S3 and connected it to TreeHole to enable picture upload, and created the account info page. He was in charge of setting up JIRA as well as setting up documentations, incuding this document.
+Frank designed and implemented the cards component and screen layout, configured Amazon S3, connected S3 to TreeHole to enable picture upload, and created the account info page. He was in charge of setting up JIRA, GitHub, as well as setting up relevant documentations, including this document.
+
+---
 
 ## Project Description: TreeHole
 
