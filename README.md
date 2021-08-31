@@ -198,11 +198,11 @@ Emily was the owner of the viewing and editing modal of journals. She implemente
 
 Frank designed and implemented the cards component and screen layout, configured Amazon S3, connected S3 to TreeHole to enable picture upload, and created the account info page. He was in charge of setting up JIRA, GitHub, as well as setting up relevant documentations, including this document.
 
-### Maxwell Wang
-
-Max was in charge of setting up the MongoDB database and developing the C.R.U.D. (Create, Read, Update, Delete) functionalities for handling journals and comments. He implemented the search and sorting mechanism for explore page. He is also the person behind the infinite scrolling feature.
-
 ### Yuchen Liu
 
 For backend, Yuchen spent most of his effort on developing authentication using Firebase while also contributing to the backend to enable multiple database actions such as creating/ updating/ validating users' profile in database, letting users like/unlike journals, querying various user information via secured methods. Yuchen designed the navigation bar used in all screens, optimized card component fetching logic, prevented useEffect call memory leak, and established journal like button logic.
+
+### Yuhua (Maxwell) Wang
+
+Max was in charge of setting up the MongoDB database and developing the C.R.U.D. (Create, Read, Update, Delete) functionalities for handling journals and comments. He implemented the search and sorting mechanism for explore page. He is also the person behind the infinite scrolling feature.
 
