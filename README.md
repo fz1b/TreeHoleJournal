@@ -8,8 +8,8 @@ https://treehole-journals.herokuapp.com/
 - **[Introduction](#treehole)**
 - **[Features](#features)**
 - **[Get Started](#get-started)**
-  - **[Use the Already Deployed Web App](use-the-already-deployed-web-app)**
-  - **[Play With the Code](play-with-the-code)**
+  - **[Use the Already Deployed Web App](#use-the-already-deployed-web-app)**
+  - **[Play With the Code](#play-with-the-code)**
 - **[Project Structure](#project-structure)**
 - **[Technology Usage](#technology-usage)**
 - **[Challenges](#challenges)**
