@@ -2,6 +2,9 @@
 
 TreeHole creates a place where people can record their life through posts with both pictures and words, as well as location. A user can also view, comment and like other people's posts. The visibility of each post can be set to private, anonymous, or public based on the user. Only public and anonymous posts can be viewed and commented on by others.
 
+## Screenshots
+Screenshots are located in the `DemoImages` folder.
+
 ## Project goal completion status
 
 ### 3-5 minimal requirements
