@@ -8,7 +8,7 @@ Screenshots are located in the `DemoImages` folder.
 ## Project Strcuture
 
 ```bash
-cpsc455_p
+TreeHoleJournal
 ├── DemoImages
 │   ├── Comments.png
 │   ├── Compose.png
