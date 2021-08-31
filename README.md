@@ -5,6 +5,99 @@ TreeHole creates a place where people can record their life through posts with b
 ## Screenshots
 Screenshots are located in the `DemoImages` folder.
 
+## Project Strcuture
+
+```bash
+cpsc455_p
+├── DemoImages
+│   ├── Comments.png
+│   ├── Compose.png
+│   ├── Explore.png
+│   ├── Me.png
+│   └── Search.png
+├── Procfile
+├── README.md
+├── backend
+│   ├── Server.js
+│   ├── controller
+│   │   ├── JournalControllers.js
+│   │   └── UserControllers.js
+│   └── models
+│       ├── JournalSchema.js
+│       └── UserSchema.js
+├── frontend
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── logo.png
+│   │   ├── logo192.png
+│   │   ├── logo512.png
+│   │   ├── manifest.json
+│   │   ├── robots.txt
+│   │   └── treeicon.png
+│   └── src
+│       ├── App.js
+│       ├── App.test.js
+│       ├── GlobalCss.js
+│       ├── assets
+│       │   ├── collection_bg.svg
+│       │   ├── explore_bg.svg
+│       │   ├── login_background.png
+│       │   ├── login_image.png
+│       │   ├── myjournals_bg.svg
+│       │   ├── photo_placeholder.svg
+│       │   ├── saved_page_bg.svg
+│       │   └── sign_up_image.png
+│       ├── authAPI
+│       │   └── auth-context.js
+│       ├── components
+│       │   ├── AccountInfo.js
+│       │   ├── CardHolder.js
+│       │   ├── Coda.js
+│       │   ├── Comment.js
+│       │   ├── CommentArea.js
+│       │   ├── CustomizedComponents.js
+│       │   ├── EntryCards.js
+│       │   ├── ExploreTabs.js
+│       │   ├── Header.js
+│       │   ├── JournalCalendar.js
+│       │   ├── JournalEditingModal.js
+│       │   ├── JournalLocation.js
+│       │   ├── JournalModal.js
+│       │   ├── JournalViewingModal.js
+│       │   ├── LeftNavBarDrawer.js
+│       │   ├── LoadingSpinner.js
+│       │   ├── LocationError.js
+│       │   └── SearchTag.js
+│       ├── customHooks
+│       │   └── useMountedState.js
+│       ├── customizedTheme.js
+│       ├── index.css
+│       ├── index.js
+│       ├── reportWebVitals.js
+│       ├── screens
+│       │   ├── Explore.js
+│       │   ├── Liked.js
+│       │   ├── Login.js
+│       │   ├── Me.js
+│       │   └── SignUp.js
+│       ├── services
+│       │   ├── JournalServices.js
+│       │   └── UserServices.js
+│       ├── setupTests.js
+│       └── stylesheets
+│           ├── App.css
+│           ├── JournalCalendar.css
+│           ├── LoginStyle.js
+│           ├── SignUpStyle.js
+│           └── modal.css
+├── nodemon.json
+├── package-lock.json
+└── package.json
+```
+
 ## Project goal completion status
 
 ### 3-5 minimal requirements
