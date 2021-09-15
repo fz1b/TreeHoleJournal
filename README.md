@@ -171,9 +171,9 @@ In order to ensure users can access their information everywhere, we have hosted
 
 A challenge that we have met during our process to design the explore page was its scalability. When there are thousands of journals in the page, performing lazy loading to download all the journals at once would likely result in a serious lag in time. Therefore, we turned our attention to infinite scrolling which loads only a batch of journals every time the user scrolls to the bottom of the page.
 
-Because MongoDB does not have built-in pagination functionality, we have to implement the feature by ourselves. A straightforward solution to this is to keep the number of loaded items, and let the database skip the items everytime it is queried. However, this design is still susceptible to scalability issue because the database still needs to traverse throught all the loaded items.
+Because MongoDB does not have built-in pagination functionality, we have to implement the feature by ourselves. A straightforward solution to this is to keep the number of loaded items, and let the database skip the items every time it is queried. However, this design is still susceptible to scalability issue because the database still needs to traverse throught all the loaded items.
 
-Therefore, we decide to use flag points to reference where the database should start to load. Since the journals are sorted by the date they are composed, we use a flag point that comprises the Date (or popularity for hottest, location for nearest) and journalID. When we query the database we use this flag point to locate the last loaded journal and load the ones after this point. As Date and JournalID are indexed in the database, this solution works really well, achieving comparable speed as compared with other social media platforms.
+Therefore, we decide to use flag points to reference where the database should start to load. Since the journals are sorted by the date they are composed, we use a flag point that comprises the Date (or popularity for hottest, location for nearest) and journalID. When we query the database, we use this flag point to locate the last loaded journal and load the ones after this point. As Date and JournalID are indexed in the database, this solution works really well, achieving comparable speed as compared with other social media platforms.
 
 ### Auto Logout 
 	
